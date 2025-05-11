@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spudy Intelligence Technology Games</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            overflow-x: hidden;
+            background: linear-gradient(rgba(9, 23, 47, 0.95), rgba(9, 23, 47, 0.98));
+            color: #d3e3ff;
+        }
+
+        /* Header Section */
+        .header {
+            padding: 20px 10%;
+            background: rgba(9, 23, 47, 0.95);
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: #2a75ff;
+            margin-bottom: 20px;
+            animation: slideRight 1s ease;
+        }
+
+        .game-menu {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .game-menu button {
+            padding: 15px 30px;
+            background: rgba(42, 117, 255, 0.9);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 5px 15px rgba(42, 117, 255, 0.3);
+            font-size: 1em;
+            font-weight: 600;
+        }
+
+        .game-menu button:hover {
+            background: #2a75ff;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(42, 117, 255, 0.5);
+        }
+
+        /* Game Area */
+        #game-container {
+            padding: 40px 10%;
+            min-height: 60vh;
+            background: linear-gradient(rgba(9, 23, 47, 0.95), rgba(9, 23, 47, 0.98));
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .game-ui {
+            background: rgba(42, 117, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            margin: 0 auto;
+            border: 1px solid rgba(42, 117, 255, 0.3);
+            animation: slideUp 0.5s ease;
+            box-shadow: 0 5px 15px rgba(42, 117, 255, 0.2);
+        }
+
+        .game-ui h2 {
+            font-size: 2em;
+            color: #2a75ff;
+            margin-bottom: 20px;
+        }
+
+        .game-ui p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .game-ui input[type="text"] {
+            padding: 10px;
+            font-size: 1em;
+            width: 100%;
+            max-width: 300px;
+            border: 1px solid #2a75ff;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #d3e3ff;
+            margin-bottom: 20px;
+        }
+
+        .game-ui input[type="range"] {
+            width: 100%;
+            max-width: 300px;
+            margin: 10px 0;
+        }
+
+        .game-ui button {
+            padding: 10px 20px;
+            background: rgba(42, 117, 255, 0.9);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .game-ui button:hover {
+            background: #2a75ff;
+            transform: translateY(-2px);
+        }
+
+        .game-ui img {
+            width: 100px;
+            height: auto;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .color-swatch {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            margin: 20px auto;
+            border: 1px solid #2a75ff;
+        }
+
+        /* Footer Section */
+        .footer {
+            padding: 60px 10% 40px;
+            background: linear-gradient(rgba(9, 23, 47, 0.95), rgba(9, 23, 47, 0.98));
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer h3 {
+            font-size: 2em;
+            margin-bottom: 15px;
+            color: #2a75ff;
+        }
+
+        .footer h4 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: #2a75ff;
+        }
+
+        .footer p {
+            font-size: 1em;
+            line-height: 1.8;
+            color: #d3e3ff;
+        }
+
+        .footer .quick-links, .footer .contact-links {
+            background: rgba(42, 117, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(42, 117, 255, 0.3);
+            box-shadow: 0 5px 15px rgba(42, 117, 255, 0.2);
+        }
+
+        .footer .quick-links ul, .footer .contact-links ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer .quick-links ul li, .footer .contact-links ul li {
+            margin-bottom: 12px;
+            animation: slideUp 1s ease forwards;
+            opacity: 0;
+        }
+
+        .footer .quick-links ul li:nth-child(1) { animation-delay: 0.2s; }
+        .footer .quick-links ul li:nth-child(2) { animation-delay: 0.4s; }
+        .footer .quick-links ul li:nth-child(3) { animation-delay: 0.6s; }
+        .footer .quick-links ul li:nth-child(4) { animation-delay: 0.8s; }
+        .footer .contact-links ul li:nth-child(1) { animation-delay: 0.2s; }
+        .footer .contact-links ul li:nth-child(2) { animation-delay: 0.4s; }
+        .footer .contact-links ul li:nth-child(3) { animation-delay: 0.6s; }
+        .footer .contact-links ul li:nth-child(4) { animation-delay: 0.8s; }
+        .footer .contact-links ul li:nth-child(5) { animation-delay: 1.0s; }
+        .footer .contact-links ul li:nth-child(6) { animation-delay: 1.2s; }
+
+        .footer .quick-links ul li a, .footer .contact-links ul li a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #d3e3ff;
+            font-size: 1.1em;
+            font-weight: 500;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .footer .quick-links ul li a:hover, .footer .contact-links ul li a:hover {
+            background: rgba(42, 117, 255, 0.2);
+            color: #2a75ff;
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(42, 117, 255, 0.3);
+        }
+
+        .footer .quick-links ul li a::after, .footer .contact-links ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 15px;
+            background: linear-gradient(to right, #2a75ff, #4a95ff);
+            transition: width 0.3s ease;
+        }
+
+        .footer .quick-links ul li a:hover::after, .footer .contact-links ul li a:hover::after {
+            width: calc(100% - 30px);
+        }
+
+        .footer .copyright {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #d3e3ff;
+            border-top: 1px solid rgba(42, 117, 255, 0.3);
+            padding-top: 20px;
+        }
+
+        /* Animations */
+        @keyframes slideRight {
+            from { transform: translateX(-100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Floating Elements */
+        .floating-element {
+            position: absolute;
+            background: rgba(42, 117, 255, 0.1);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(500px, 500px) rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2em; }
+            .game-menu { flex-direction: column; align-items: center; }
+            .game-menu button { padding: 12px 25px; font-size: 0.9em; }
+            .game-ui { padding: 20px; }
+            .game-ui h2 { font-size: 1.5em; }
+            .game-ui p { font-size: 1em; }
+            .game-ui input[type="text"], .game-ui input[type="range"] { max-width: 250px; }
+            .game-ui img, .color-swatch { width: 80px; height: 80px; }
+            .footer h3 { font-size: 1.5em; }
+            .footer h4 { font-size: 1.3em; }
+            .footer .quick-links, .footer .contact-links { padding: 15px; }
+            .footer .quick-links ul li a, .footer .contact-links ul li a { font-size: 1em; padding: 8px 12px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <h1>Spudy Intelligence Technology Games</h1>
+        <div class="game-menu">
+            <button onclick="startMathQuiz()"><i class="fas fa-calculator"></i> Math Quiz</button>
+            <button onclick="startSpellingBee()"><i class="fas fa-spell-check"></i> Spelling Bee</button>
+            <button onclick="startTypingSpeed()"><i class="fas fa-keyboard"></i> Typing Speed</button>
+            <button onclick="startFlagQuiz()"><i class="fas fa-flag"></i> Flag Quiz</button>
+            <button onclick="startColorMixing()"><i class="fas fa-palette"></i> Color Mixing</button>
+        </div>
+    </header>
+
+    <!-- Game Area -->
+    <section id="game-container">
+        <div class="game-ui">
+            <h2>Welcome to Spudy Games</h2>
+            <p>Select a game from the menu above to start playing!</p>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="floating-element" style="width: 100px; height: 100px; top: 20%; left: 5%;"></div>
+        <div class="footer-grid">
+            <div>
+                <h3>Spudy Intelligence Technology</h3>
+                <p>Empowering users with innovative AI-driven solutions through Spudy AI and a vibrant digital library experience via Spudy Library.</p>
+            </div>
+            <div class="quick-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html#hero"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="index.html#spudy-courses"><i class="fas fa-book"></i> Library Courses</a></li>
+                    <li><a href="index.html#spudy-careers"><i class="fas fa-briefcase"></i> Careers</a></li>
+                    <li><a href="#contact"><i class="fas fa-phone"></i> Contact</a></li>
+                </ul>
+            </div>
+            <div id="contact" class="contact-links">
+                <h4>Contact Us</h4>
+                <ul>
+                    <li><a href="mailto:spudytv14@gmail.com"><i class="fas fa-envelope"></i> Email</a></li>
+                    <li><a href="https://wa.me/263716669706"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
+                    <li><a href="https://g.co/kgs/hC6zuio"><i class="fas fa-map"></i> Google Map</a></li>
+                    <li><a href="https://facebook.com/matipaishe_blessing"><i class="fab fa-facebook-f"></i> Facebook</a></li>
+                    <li><a href="https://x.com/matipaishe_blessing"><i class="fab fa-x-twitter"></i> X</a></li>
+                    <li><a href="https://instagram.com/matipaishe_blessing"><i class="fab fa-instagram"></i> Instagram</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            © 2025 Spudy Intelligence Technology. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Utility Functions
+        function clearGameContainer() {
+            const container = document.getElementById('game-container');
+            container.innerHTML = '<div class="game-ui"></div>';
+            return container.querySelector('.game-ui');
+        }
+
+        function scrollToContact() {
+            document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Math Quiz Game
+        function startMathQuiz() {
+            const ui = clearGameContainer();
+            let score = 0;
+            let level = 1;
+            let correctCount = 0;
+            let timeLeft = 30;
+            let timer;
+
+            function getDifficulty() {
+                return {
+                    maxNum: 10 + (level - 1) * 50,
+                    ops: level === 1 ? ['+', '-'] : level === 2 ? ['+', '-', '*'] : ['+', '-', '*', '/'],
+                    timer: Math.max(10, 30 - (level - 1) * 2),
+                    answerRange: Math.max(5, 20 - level * 2) // Closer answers at higher levels
+                };
+            }
+
+            function generateQuestion() {
+                const { maxNum, ops, answerRange } = getDifficulty();
+                const op = ops[Math.floor(Math.random() * ops.length)];
+                let num1 = Math.floor(Math.random() * maxNum) + 1;
+                let num2 = Math.floor(Math.random() * maxNum) + 1;
+                let answer;
+                if (op === '/') {
+                    num1 = num2 * (Math.floor(Math.random() * 5) + 1);
+                    answer = num1 / num2;
+                } else {
+                    answer = eval(`${num1} ${op} ${num2}`);
+                }
+                const answers = [answer];
+                while (answers.length < 4) {
+                    const wrong = answer + (Math.floor(Math.random() * answerRange * 2) - answerRange);
+                    if (!answers.includes(wrong) && wrong !== answer) answers.push(wrong);
+                }
+                answers.sort(() => Math.random() - 0.5);
+                return { question: `${num1} ${op} ${num2} = ?`, answer, answers };
+            }
+
+            function updateUI(message = '') {
+                const q = generateQuestion();
+                timeLeft = getDifficulty().timer;
+                ui.innerHTML = `
+                    <h2>Math Quiz Game</h2>
+                    <p>Level: ${level} | Score: ${score} | Time: ${timeLeft}s | Questions Left: ${5 - correctCount}/5</p>
+                    ${message ? `<p style="color: #2a75ff">${message}</p>` : ''}
+                    <p>${q.question}</p>
+                    ${q.answers.map(a => `<button onclick="checkMathAnswer(${a}, ${q.answer})">${a}</button>`).join('')}
+                    <p><button onclick="restartMathQuiz()">Restart</button> <button onclick="backToMenu()">Back to Menu</button></p>
+                `;
+                clearInterval(timer);
+                timer = setInterval(() => {
+                    timeLeft--;
+                    if (timeLeft <= 0) {
+                        score -= 5 * level;
+                        updateUI();
+                    }
+                    ui.querySelector('p').textContent = `Level: ${level} | Score: ${score} | Time: ${timeLeft}s | Questions Left: ${5 - correctCount}/5`;
+                }, 1000);
+            }
+
+            window.checkMathAnswer = (userAnswer, correctAnswer) => {
+                clearInterval(timer);
+                if (userAnswer === correctAnswer) {
+                    score += 10 * level;
+                    correctCount++;
+                    if (correctCount >= 5) {
+                        level++;
+                        correctCount = 0;
+                        updateUI(`Level Up! Now on Level ${level}`);
+                    } else {
+                        updateUI();
+                    }
+                } else {
+                    score -= 5 * level;
+                    updateUI();
+                }
+            };
+
+            window.restartMathQuiz = () => {
+                score = 0;
+                level = 1;
+                correctCount = 0;
+                updateUI();
+            };
+
+            updateUI();
+        }
+
+        // Spelling Bee Game
+        function startSpellingBee() {
+            const ui = clearGameContainer();
+            const words = {
+                easy: ['cat', 'dog', 'book', 'fish', 'tree'],
+                medium: ['apple', 'house', 'smile', 'river', 'chair'],
+                hard: ['elephant', 'computer', 'mountain', 'umbrella', 'butterfly']
+            };
+            let score = 0;
+            let level = 1;
+            let correctCount = 0;
+            let timeLeft = 20;
+            let timer;
+            let currentWord;
+
+            function getDifficulty() {
+                return {
+                    wordList: level === 1 ? words.easy : level === 2 ? words.medium : words.hard.concat(words.medium),
+                    timer: Math.max(5, 20 - (level - 1)),
+                    maxLength: 3 + level * 2
+                };
+            }
+
+            function generateWord() {
+                const { wordList, maxLength } = getDifficulty();
+                let filtered = wordList.filter(w => w.length <= maxLength);
+                return filtered[Math.floor(Math.random() * filtered.length)];
+            }
+
+            function updateUI(message = '') {
+                currentWord = generateWord();
+                timeLeft = getDifficulty().timer;
+                ui.innerHTML = `
+                    <h2>Spelling Bee Game</h2>
+                    <p>Level: ${level} | Score: ${score} | Time: ${timeLeft}s | Words Left: ${5 - correctCount}/5</p>
+                    ${message ? `<p style="color: #2a75ff">${message}</p>` : ''}
+                    <p>Spell: ${currentWord}</p>
+                    <input type="text" id="spell-input" placeholder="Type the word">
+                    <p><button onclick="checkSpelling()">Submit</button></p>
+                    <p><button onclick="restartSpellingBee()">Restart</button> <button onclick="backToMenu()">Back to Menu</button></p>
+                `;
+                const input = ui.querySelector('#spell-input');
+                input.focus();
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') checkSpelling();
+                });
+                clearInterval(timer);
+                timer = setInterval(() => {
+                    timeLeft--;
+                    if (timeLeft <= 0) {
+                        score -= 5 * level;
+                        updateUI();
+                    }
+                    ui.querySelector('p').textContent = `Level: ${level} | Score: ${score} | Time: ${timeLeft}s | Words Left: ${5 - correctCount}/5`;
+                }, 1000);
+            }
+
+            window.checkSpelling = () => {
+                const input = ui.querySelector('#spell-input').value.toLowerCase();
+                clearInterval(timer);
+                if (input === currentWord) {
+                    score += 10 * level;
+                    correctCount++;
+                    if (correctCount >= 5) {
+                        level++;
+                        correctCount = 0;
+                        updateUI(`Level Up! Now on Level ${level}`);
+                    } else {
+                        updateUI();
+                    }
+                } else {
+                    score -= 5 * level;
+                    updateUI();
+                }
+            };
+
+            window.restartSpellingBee = () => {
+                score = 0;
+                level = 1;
+                correctCount = 0;
+                updateUI();
+            };
+
+            updateUI();
+        }
+
+        // Typing Speed Challenge
+        function startTypingSpeed() {
+            const ui = clearGameContainer();
+            const phrases = {
+                easy: ['quick fox', 'sunny hill', 'blue sea'],
+                medium: ['fast typing', 'green forest', 'bright star'],
+                hard: ['swift river flows', 'tall mountain peak', 'deep ocean waves']
+            };
+            let score = 0;
+            let level = 1;
+            let correctCount = 0;
+            let timeLeft = 60;
+            let timer;
+            let startTime = Date.now();
+            let currentPhrase;
+
+            function getDifficulty() {
+                return {
+                    phraseList: level === 1 ? phrases.easy : level === 2 ? phrases.medium : phrases.hard.concat(phrases.medium),
+                    timer: Math.max(20, 60 - (level - 1) * 5),
+                    maxWords: 2 + level * 2
+                };
+            }
+
+            function generatePhrase() {
+                const { phraseList, maxWords } = getDifficulty();
+                let filtered = phraseList.filter(p => p.split(' ').length <= maxWords);
+                return filtered[Math.floor(Math.random() * filtered.length)];
+            }
+
+            function calculateWPM() {
+                const timeElapsed = (Date.now() - startTime) / 1000 / 60;
+                return timeElapsed > 0 ? Math.round(score / timeElapsed) : 0;
+            }
+
+            function updateUI(message = '') {
+                currentPhrase = generatePhrase();
+                timeLeft = getDifficulty().timer;
+                ui.innerHTML = `
+                    <h2>Typing Speed Challenge</h2>
+                    <p>Level: ${level} | Score: ${score} | Time: ${timeLeft}s | Phrases Left: ${5 - correctCount}/5 | WPM: ${calculateWPM()}</p>
+                    ${message ? `<p style="color: #2a75ff">${message}</p>` : ''}
+                    <p>Type: ${currentPhrase}</p>
+                    <input type="text" id="type-input" placeholder="Type the phrase">
+                    <p><button onclick="checkTyping()">Submit</button></p>
+                    <p><button onclick="restartTypingSpeed()">Restart</button> <button onclick="backToMenu()">Back to Menu</button></p>
+                `;
+                const input = ui.querySelector('#type-input');
+                input.focus();
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') checkTyping();
+                });
+                clearInterval(timer);
+                timer = setInterval(() => {
+                    timeLeft--;
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        ui.innerHTML = `
+                            <h2>Game Over</h2>
+                            <p>Final Score: ${score} | WPM: ${calculateWPM()}</p>
+                            <p><button onclick="restartTypingSpeed()">Restart</button> <button onclick="backToMenu()">Back to Menu</button></p>
+                        `;
+                    } else {
+                        ui.querySelector('p').textContent = `Level: ${level} | Score: ${score} | Time: ${timeLeft}s | Phrases Left: ${5 - correctCount}/5 | WPM: ${calculateWPM()}`;
+                    }
+                }, 1000);
+            }
+
+            window.checkTyping = () => {
+                const input = ui.querySelector('#type-input').value;
+                if (input === currentPhrase) {
+                    score += 5 * level;
+                    correctCount++;
+                    if (correctCount >= 5) {
+                        level++;
+                        correctCount = 0;
+                        updateUI(`Level Up! Now on Level ${level}`);
+                    } else {
+                        updateUI();
+                    }
+                } else {
+                    updateUI();
+                }
+            };
+
+            window.restartTypingSpeed = () => {
+                score = 0;
+                level = 1;
+                correctCount = 0;
+                startTime = Date.now();
+                updateUI();
+            };
+
+            updateUI();
+        }
+
+        // Flag Quiz Game
+        function startFlagQuiz() {
+            const ui = clearGameContainer();
+            const countries = {
+                easy: [
+                    { name: 'Brazil', flag: 'https://via.placeholder.com/100x60?text=Brazil+Flag' },
+                    { name: 'Canada', flag: 'https://via.placeholder.com/100x60?text=Canada+Flag' },
+                    { name: 'Japan', flag: 'https://via.placeholder.com/100x60?text=Japan+Flag' }
+                ],
+                medium: [
+                    { name: 'Australia', flag: 'https://via.placeholder.com/100x60?text=Australia+Flag' },
+                    { name: 'Germany', flag: 'https://via.placeholder.com/100x60?text=Germany+Flag' }
+                ],
+                hard: [
+                    { name: 'Monaco', flag: 'https://via.placeholder.com/100x60?text=Monaco+Flag' },
+                    { name: 'Sudan', flag: 'https://via.placeholder.com/100x60?text=Sudan+Flag' }
+                ]
+            };
+            let score = 0;
+            let level = 1;
+            let correctCount = 0;
+            let timeLeft = 20;
+            let timer;
+
+            function getDifficulty() {
+                return {
+                    countryList: level === 1 ? countries.easy : level === 2 ? countries.medium.concat(countries.easy) : countries.hard.concat(countries.medium, countries.easy),
+                    timer: Math.max(5, 20 - (level - 1))
+                };
+            }
+
+            function generateQuestion() {
+                const { countryList } = getDifficulty();
+                const correct = countryList[Math.floor(Math.random() * countryList.length)];
+                const answers = [correct.name];
+                while (answers.length < 4) {
+                    const wrong = countryList[Math.floor(Math.random() * countryList.length)].name;
+                    if (!answers.includes(wrong)) answers.push(wrong);
+                }
+                answers.sort(() => Math.random() - 0.5);
+                return { flag: correct.flag, answer: correct.name, answers };
+            }
+
+            function updateUI(message = '') {
+                const q = generateQuestion();
+                timeLeft = getDifficulty().timer;
+                ui.innerHTML = `
+                    <h2>Flag Quiz Game</h2>
+                    <p>Level: ${level} | Score: ${score} | Time: ${timeLeft}s | Questions Left: ${5 - correctCount}/5</p>
+                    ${message ? `<p style="color: #2a75ff">${message}</p>` : ''}
+                    <img src="${q.flag}" alt="Country Flag">
+                    <p>Which country?</p>
+                    ${q.answers.map(a => `<button onclick="checkFlagAnswer('${a}', '${q.answer}')">${a}</button>`).join('')}
+                    <p><button onclick="restartFlagQuiz()">Restart</button> <button onclick="backToMenu()">Back to Menu</button></p>
+                `;
+                clearInterval(timer);
+                timer = setInterval(() => {
+                    timeLeft--;
+                    if (timeLeft <= 0) {
+                        score -= 5 * level;
+                        updateUI();
+                    }
+                    ui.querySelector('p').textContent = `Level: ${level} | Score: ${score} | Time: ${timeLeft}s | Questions Left: ${5 - correctCount}/5`;
+                }, 1000);
+            }
+
+            window.checkFlagAnswer = (userAnswer, correctAnswer) => {
+                clearInterval(timer);
+                if (userAnswer === correctAnswer) {
+                    score += 10 * level;
+                    correctCount++;
+                    if (correctCount >= 5) {
+                        level++;
+                        correctCount = 0;
+                        updateUI(`Level Up! Now on Level ${level}`);
+                    } else {
+                        updateUI();
+                    }
+                } else {
+                    score -= 5 * level;
+                    updateUI();
+                }
+            };
+
+            window.restartFlagQuiz = () => {
+                score = 0;
+                level = 1;
+                correctCount = 0;
+                updateUI();
+            };
+
+            updateUI();
+        }
+
+        // Color Mixing Game
+        function startColorMixing() {
+            const ui = clearGameContainer();
+            let score = 0;
+            let level = 1;
+            let correctCount = 0;
+            let timeLeft = 30;
+            let timer;
+            let targetColor = generateColor();
+            let userColor = { r: 128, g: 128, b: 128 };
+
+            function generateColor() {
+                const range = Math.max(20, 50 - level * 5);
+                const base = Math.floor(Math.random() * 256);
+                return {
+                    r: Math.min(255, Math.max(0, base + (Math.random() * range - range / 2))),
+                    g: Math.min(255, Math.max(0, base + (Math.random() * range - range / 2))),
+                    b: Math.min(255, Math.max(0, base + (Math.random() * range - range / 2)))
+                };
+            }
+
+            function calculateScore() {
+                return Math.max(0, 255 - (Math.abs(targetColor.r - userColor.r) + Math.abs(targetColor.g - userColor.g) + Math.abs(targetColor.b - userColor.b)));
+            }
+
+            function getHint() {
+                if (level >= 4) return '';
+                const delay = level === 1 ? 0 : level === 2 ? 10 : 15;
+                if (timeLeft > delay) return '';
+                let hints = [];
+                if (Math.abs(targetColor.r - userColor.r) > 20) hints.push(userColor.r < targetColor.r ? 'Increase Red' : 'Decrease Red');
+                if (Math.abs(targetColor.g - userColor.g) > 20) hints.push(userColor.g < targetColor.g ? 'Increase Green' : 'Decrease Green');
+                if (Math.abs(targetColor.b - userColor.b) > 20) hints.push(userColor.b < targetColor.b ? 'Increase Blue' : 'Decrease Blue');
+                return hints.length > 0 ? hints.join(', ') : 'You’re close!';
+            }
+
+            function updateUI(message = '') {
+                targetColor = generateColor();
+                userColor = { r: 128, g: 128, b: 128 };
+                timeLeft = Math.max(10, 30 - (level - 1) * 2);
+                ui.innerHTML = `
+                    <h2>Color Mixing Game</h2>
+                    <p>Level: ${level} | Score: ${score} | Time: ${timeLeft}s | Colors Left: ${3 - correctCount}/3</p>
+                    ${message ? `<p style="color: #2a75ff">${message}</p>` : ''}
+                    <div class="color-swatch" style="background: rgb(${targetColor.r}, ${targetColor.g}, ${targetColor.b})"></div>
+                    <p>Your Color:</p>
+                    <div class="color-swatch" id="user-color" style="background: rgb(${userColor.r}, ${userColor.g}, ${userColor.b})"></div>
+                    <p>Red: <input type="range" id="red" min="0" max="255" value="128"></p>
+                    <p>Green: <input type="range" id="green" min="0" max="255" value="128"></p>
+                    <p>Blue: <input type="range" id="blue" min="0" max="255" value="128"></p>
+                    <p id="hint"></p>
+                    <p><button onclick="checkColor()">Submit</button></p>
+                    <p><button onclick="restartColorMixing()">Restart</button> <button onclick="backToMenu()">Back to Menu</button></p>
+                `;
+                ui.querySelector('#red').addEventListener('input', updateUserColor);
+                ui.querySelector('#green').addEventListener('input', updateUserColor);
+                ui.querySelector('#blue').addEventListener('input', updateUserColor);
+                clearInterval(timer);
+                timer = setInterval(() => {
+                    timeLeft--;
+                    if (timeLeft <= 0) {
+                        updateUI();
+                    }
+                    ui.querySelector('p').textContent = `Level: ${level} | Score: ${score} | Time: ${timeLeft}s | Colors Left: ${3 - correctCount}/3`;
+                    ui.querySelector('#hint').textContent = getHint();
+                }, 1000);
+            }
+
+            function updateUserColor() {
+                userColor.r = parseInt(ui.querySelector('#red').value);
+                userColor.g = parseInt(ui.querySelector('#green').value);
+                userColor.b = parseInt(ui.querySelector('#blue').value);
+                ui.querySelector('#user-color').style.background = `rgb(${userColor.r}, ${userColor.g}, ${userColor.b})`;
+                ui.querySelector('#hint').textContent = getHint();
+            }
+
+            window.checkColor = () => {
+                clearInterval(timer);
+                const roundScore = calculateScore();
+                score += roundScore * level;
+                if (roundScore > 200) {
+                    correctCount++;
+                    if (correctCount >= 3) {
+                        level++;
+                        correctCount = 0;
+                        updateUI(`Level Up! Now on Level ${level}`);
+                    } else {
+                        updateUI();
+                    }
+                } else {
+                    updateUI();
+                }
+            };
+
+            window.restartColorMixing = () => {
+                score = 0;
+                level = 1;
+                correctCount = 0;
+                updateUI();
+            };
+
+            updateUI();
+        }
+
+        // Back to Menu
+        function backToMenu() {
+            const ui = clearGameContainer();
+            ui.innerHTML = `
+                <h2>Welcome to Spudy Games</h2>
+                <p>Select a game from the menu above to start playing!</p>
+            `;
+        }
+
+        // Floating Elements
+        for (let i = 0; i < 3; i++) {
+            const element = document.createElement('div');
+            element.className = 'floating-element';
+            element.style.width = Math.random() * 80 + 50 + 'px';
+            element.style.height = element.style.width;
+            element.style.top = Math.random() * 100 + '%';
+            element.style.left = Math.random() * 100 + '%';
+            element.style.animationDuration = Math.random() * 15 + 10 + 's';
+            document.getElementById('game-container').appendChild(element);
+        }
+    </script>
+</body>
+</html>
