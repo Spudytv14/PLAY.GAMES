@@ -3,1244 +3,288 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spudy Intelligence Technology Games</title>
+    <title>Spudy Games</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-        }
-
-        body {
-            overflow-x: hidden;
-            background: linear-gradient(rgba(9, 23, 47, 0.95), rgba(9, 23, 47, 0.98));
-            color: #d3e3ff;
-        }
-
-        /* Header Section */
-        .header {
-            padding: 20px 10%;
-            background: rgba(9, 23, 47, 0.95);
-            text-align: center;
-            position: relative;
-            z-index: 2;
-        }
-
-        .header h1 {
-            font-size: 2.5em;
-            color: #2a75ff;
-            margin-bottom: 20px;
-            animation: slideRight 1s ease;
-        }
-
-        .game-menu {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-        }
-
-        .game-menu button {
-            padding: 15px 30px;
-            background: rgba(42, 117, 255, 0.9);
-            color: white;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-            box-shadow: 0 5px 15px rgba(42, 117, 255, 0.3);
-            font-size: 1em;
-            font-weight: 600;
-        }
-
-        .game-menu button:hover {
-            background: #2a75ff;
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(42, 117, 255, 0.5);
-        }
-
-        /* Game Area */
-        #game-container {
-            padding: 40px 10%;
-            min-height: 60vh;
-            background: linear-gradient(rgba(9, 23, 47, 0.95), rgba(9, 23, 47, 0.98));
-            position: relative;
-            z-index: 2;
-            text-align: center;
-        }
-
-        .game-ui {
-            background: rgba(42, 117, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 600px;
-            margin: 0 auto;
-            border: 1px solid rgba(42, 117, 255, 0.3);
-            animation: slideUp 0.5s ease;
-            box-shadow: 0 5px 15px rgba(42, 117, 255, 0.2);
-        }
-
-        .game-ui h2 {
-            font-size: 2em;
-            color: #2a75ff;
-            margin-bottom: 20px;
-        }
-
-        .game-ui p {
-            font-size: 1.2em;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-
-        .game-ui input[type="text"] {
-            padding: 10px;
-            font-size: 1em;
-            width: 100%;
-            max-width: 300px;
-            border: 1px solid #2a75ff;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #d3e3ff;
-            margin-bottom: 20px;
-        }
-
-        .game-ui input[type="range"] {
-            width: 100%;
-            max-width: 300px;
-            margin: 10px 0;
-        }
-
-        .game-ui button {
-            padding: 10px 20px;
-            background: rgba(42, 117, 255, 0.9);
-            color: white;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            margin: 5px;
-            transition: all 0.3s ease;
-        }
-
-        .game-ui button:hover {
-            background: #2a75ff;
-            transform: translateY(-2px);
-        }
-
-        .game-ui img {
-            width: 100px;
-            height: auto;
-            margin: 20px 0;
-            border-radius: 5px;
-        }
-
-        .color-swatch {
-            width: 100px;
-            height: 100px;
-            border-radius: 10px;
-            margin: 20px auto;
-            border: 1px solid #2a75ff;
-        }
-
-        .logic-grid, .memory-grid {
-            display: grid;
-            gap: 5px;
-            margin: 20px auto;
-            max-width: 300px;
-        }
-
-        .logic-grid select, .memory-grid div {
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid #2a75ff;
-            border-radius: 5px;
-            color: #d3e3ff;
-            text-align: center;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .memory-grid div.active {
-            background: #2a75ff;
-        }
-
-        .memory-grid div.correct {
-            background: #28a745;
-        }
-
-        .memory-grid div.incorrect {
-            background: #dc3545;
-        }
-
-        /* Footer Section */
-        .footer {
-            padding: 60px 10% 40px;
-            background: linear-gradient(rgba(9, 23, 47, 0.95), rgba(9, 23, 47, 0.98));
-            color: white;
-            position: relative;
-            z-index: 2;
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .footer h3 {
-            font-size: 2em;
-            margin-bottom: 15px;
-            color: #2a75ff;
-        }
-
-        .footer h4 {
-            font-size: 1.5em;
-            margin-bottom: 15px;
-            color: #2a75ff;
-        }
-
-        .footer p {
-            font-size: 1em;
-            line-height: 1.8;
-            color: #d3e3ff;
-        }
-
-        .footer .quick-links, .footer .contact-links {
-            background: rgba(42, 117, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 20px;
-            border: 1px solid rgba(42, 117, 255, 0.3);
-            box-shadow: 0 5px 15px rgba(42, 117, 255, 0.2);
-        }
-
-        .footer .quick-links ul, .footer .contact-links ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .footer .quick-links ul li, .footer .contact-links ul li {
-            margin-bottom: 12px;
-            animation: slideUp 1s ease forwards;
-            opacity: 0;
-        }
-
-        .footer .quick-links ul li:nth-child(1) { animation-delay: 0.2s; }
-        .footer .quick-links ul li:nth-child(2) { animation-delay: 0.4s; }
-        .footer .quick-links ul li:nth-child(3) { animation-delay: 0.6s; }
-        .footer .quick-links ul li:nth-child(4) { animation-delay: 0.8s; }
-        .footer .contact-links ul li:nth-child(1) { animation-delay: 0.2s; }
-        .footer .contact-links ul li:nth-child(2) { animation-delay: 0.4s; }
-        .footer .contact-links ul li:nth-child(3) { animation-delay: 0.6s; }
-        .footer .contact-links ul li:nth-child(4) { animation-delay: 0.8s; }
-        .footer .contact-links ul li:nth-child(5) { animation-delay: 1.0s; }
-        .footer .contact-links ul li:nth-child(6) { animation-delay: 1.2s; }
-
-        .footer .quick-links ul li a, .footer .contact-links ul li a {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #d3e3ff;
-            font-size: 1.1em;
-            font-weight: 500;
-            text-decoration: none;
-            padding: 10px 15px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .footer .quick-links ul li a:hover, .footer .contact-links ul li a:hover {
-            background: rgba(42, 117, 255, 0.2);
-            color: #2a75ff;
-            transform: scale(1.05);
-            box-shadow: 0 0 10px rgba(42, 117, 255, 0.3);
-        }
-
-        .footer .quick-links ul li a::after, .footer .contact-links ul li a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 15px;
-            background: linear-gradient(to right, #2a75ff, #4a95ff);
-            transition: width 0.3s ease;
-        }
-
-        .footer .quick-links ul li a:hover::after, .footer .contact-links ul li a:hover::after {
-            width: calc(100% - 30px);
-        }
-
-        .footer .copyright {
-            margin-top: 40px;
-            text-align: center;
-            font-size: 0.9em;
-            color: #d3e3ff;
-            border-top: 1px solid rgba(42, 117, 255, 0.3);
-            padding-top: 20px;
-        }
-
-        /* Animations */
-        @keyframes slideRight {
-            from { transform: translateX(-100px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* Floating Elements */
-        .floating-element {
-            position: absolute;
-            background: rgba(42, 117, 255, 0.1);
-            border-radius: 50%;
-            animation: float 20s infinite linear;
-            z-index: 1;
-        }
-
-        @keyframes float {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            100% { transform: translate(500px, 500px) rotate(360deg); }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .header h1 { font-size: 2em; }
-            .game-menu { flex-direction: column; align-items: center; }
-            .game-menu button { padding: 12px 25px; font-size: 0.9em; }
-            .game-ui { padding: 20px; }
-            .game-ui h2 { font-size: 1.5em; }
-            .game-ui p { font-size: 1em; }
-            .game-ui input[type="text"], .game-ui input[type="range"] { max-width: 250px; }
-            .game-ui img, .color-swatch { width: 80px; height: 80px; }
-            .logic-grid, .memory-grid { max-width: 200px; }
-            .logic-grid select, .memory-grid div { padding: 8px; font-size: 0.9em; }
-            .footer h3 { font-size: 1.5em; }
-            .footer h4 { font-size: 1.3em; }
-            .footer .quick-links, .footer .contact-links { padding: 15px; }
-            .footer .quick-links ul li a, .footer .contact-links ul li a { font-size: 1em; padding: 8px 12px; }
-        }
+        body { margin: 0; overflow-x: hidden; color: white; }
+        #bg-video { position: fixed; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; transform: translateX(-50%) translateY(-50%); z-index: -3; object-fit: cover; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,30,0.88); z-index: -2; }
+        .glow { text-shadow: 0 0 20px #00ffff, 0 0 40px #00cccc; }
+        .free-tag { background: linear-gradient(135deg, #10b981, #059669); }
+        .premium-tag { background: linear-gradient(135deg, #a855f7, #ec4899); }
+        .game-card { transition: all 0.4s; }
+        .game-card:hover { transform: translateY(-20px) scale(1.05); box-shadow: 0 20px 40px rgba(0,255,255,0.4); }
+        .social-icon { transition: all 0.4s; }
+        .social-icon:hover { transform: scale(1.4) rotate(15deg); }
+        .plan-current { border: 6px solid #00ff00; box-shadow: 0 0 50px #00ff00; }
+        .game-title { font-size: 1.8rem; line-height: 1.2; min-height: 60px; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
-    <!-- Header Section -->
-    <header class="header">
-        <h1>Spudy Intelligence Technology Games</h1>
-        <div class="game-menu">
-            <button onclick="startMathQuiz()"><i class="fas fa-calculator"></i> Math Quiz</button>
-            <button onclick="startSpellingBee()"><i class="fas fa-spell-check"></i> Spelling Bee</button>
-            <button onclick="startTypingSpeed()"><i class="fas fa-keyboard"></i> Typing Speed</button>
-            <button onclick="startFlagQuiz()"><i class="fas fa-flag"></i> Flag Quiz</button>
-            <button onclick="startColorMixing()"><i class="fas fa-palette"></i> Color Mixing</button>
-            <button onclick="startLogicPuzzle()"><i class="fas fa-puzzle-piece"></i> Logic Puzzle</button>
-            <button onclick="startCryptography()"><i class="fas fa-lock"></i> Cryptography</button>
-            <button onclick="startMemoryMatrix()"><i class="fas fa-brain"></i> Memory Matrix</button>
-        </div>
-    </header>
 
-    <!-- Game Area -->
-    <section id="game-container">
-        <div class="game-ui">
-            <h2>Welcome to Spudy Games</h2>
-            <p>Select a game from the menu above to start playing!</p>
+    <!-- NEON BACKGROUND -->
+    <video autoplay muted loop playsinline id="bg-video">
+        <source src="https://cdn.coverr.co/videos/coverr-neon-gaming-setup-5831/1080p.mp4" type="video/mp4">
+    </video>
+    <div class="overlay"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-black bg-opacity-95 backdrop-blur-lg border-b-4 border-cyan-500">
+        <div class="max-w-7xl mx-auto flex justify-between items-center p-6">
+            <h1 class="text-5xl font-extrabold glow">Spudy Games</h1>
+            <div class="flex gap-8 text-xl">
+                <a href="#home" class="hover:text-cyan-400">Home</a>
+                <a href="#games" class="hover:text-cyan-400">Games</a>
+                <a href="#plans" class="hover:text-cyan-400">My Plan</a>
+                <a href="#pricing" class="hover:text-cyan-400">Upgrade</a>
+                <button id="authBtn" onclick="openLogin()" class="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 px-10 py-4 rounded-full font-bold shadow-2xl">Login</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CLEAN WELCOME -->
+    <section id="home" class="min-h-screen flex flex-col justify-center items-center text-center px-8 relative z-10">
+        <h1 class="text-9xl font-extrabold glow mb-16 animate-pulse">SPUDY GAMES</h1>
+        <div class="grid md:grid-cols-2 gap-16 max-w-5xl w-full">
+            <div class="bg-gradient-to-br from-green-900 to-black p-20 rounded-3xl border-8 border-green-500 text-center transform hover:scale-105 transition">
+                <h2 class="text-6xl font-bold mb-12">FREE GAMES</h2>
+                <p class="text-4xl mb-12">Play 2 games instantly</p>
+                <button onclick="document.getElementById('free-games').scrollIntoView({behavior:'smooth'})" 
+                        class="bg-green-600 hover:bg-green-500 text-4xl font-bold py-8 px-24 rounded-full shadow-2xl">Play Free</button>
+            </div>
+            <div class="bg-gradient-to-br from-purple-900 to-pink-900 p-20 rounded-3xl border-8 border-purple-500 text-center transform hover:scale-105 transition">
+                <h2 class="text-6xl font-bold mb-12">PREMIUM</h2>
+                <p class="text-4xl mb-12">Unlock 14 exclusive games</p>
+                <button onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})" 
+                        class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-4xl font-bold py-8 px-24 rounded-full shadow-2xl">Go Premium</button>
+            </div>
         </div>
     </section>
 
-    <!-- Footer Section -->
-    <footer class="footer">
-        <div class="floating-element" style="width: 100px; height: 100px; top: 20%; left: 5%;"></div>
-        <div class="footer-grid">
-            <div>
-                <h3>Spudy Intelligence Technology</h3>
-                <p>Empowering users with innovative AI-driven solutions through Spudy AI and a vibrant digital library experience via Spudy Library.</p>
+    <!-- CLEAN WELCOME END -->
+
+    <!-- FREE GAMES -->
+    <section id="free-games" class="py-32 px-8 relative z-10">
+        <h2 class="text-7xl font-bold glow text-center mb-20">FREE GAMES</h2>
+        <div class="grid md:grid-cols-2 gap-20 max-w-5xl mx-auto">
+            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl p-16 border-8 border-green-500 text-center">
+                <div class="free-tag text-white font-bold py-4 text-2xl">FREE</div>
+                <h3 class="text-5xl glow mb-12">Math Quiz Master</h3>
+                <button onclick="startMathQuiz()" class="bg-green-600 hover:bg-green-500 text-3xl py-8 px-20 rounded-full shadow-2xl w-full">PLAY NOW</button>
             </div>
-            <div class="quick-links">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="index.html#hero"><i class="fas fa-home"></i> Home</a></li>
-                    <li><a href="index.html#spudy-courses"><i class="fas fa-book"></i> Library Courses</a></li>
-                    <li><a href="index.html#spudy-careers"><i class="fas fa-briefcase"></i> Careers</a></li>
-                    <li><a href="#contact"><i class="fas fa-phone"></i> Contact</a></li>
-                </ul>
-            </div>
-            <div id="contact" class="contact-links">
-                <h4>Contact Us</h4>
-                <ul>
-                    <li><a href="mailto:spudytv14@gmail.com"><i class="fas fa-envelope"></i> Email</a></li>
-                    <li><a href="https://wa.me/263716669706"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
-                    <li><a href="https://g.co/kgs/hC6zuio"><i class="fas fa-map"></i> Google Map</a></li>
-                    <li><a href="https://facebook.com/matipaishe_blessing"><i class="fab fa-facebook-f"></i> Facebook</a></li>
-                    <li><a href="https://x.com/matipaishe_blessing"><i class="fab fa-x-twitter"></i> X</a></li>
-                    <li><a href="https://instagram.com/matipaishe_blessing"><i class="fab fa-instagram"></i> Instagram</a></li>
-                </ul>
+            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl p-16 border-8 border-blue-500 text-center">
+                <div class="free-tag text-white font-bold py-4 text-2xl">FREE</div>
+                <h3 class="text-5xl glow mb-12">Typing Speed Pro</h3>
+                <button onclick="startTypingSpeed()" class="bg-blue-600 hover:bg-blue-500 text-3xl py-8 px-20 rounded-full shadow-2xl w-full">PLAY NOW</button>
             </div>
         </div>
-        <div class="copyright">
-            © 2025 Spudy Intelligence Technology. All rights reserved.
+    </section>
+
+    <!-- PREMIUM GAMES (14 GAMES - TITLES FIT PERFECTLY) -->
+    <section id="games" class="py-32 px-8 relative z-10">
+        <h2 class="text-7xl font-bold glow text-center mb-20">PREMIUM GAMES</h2>
+        <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-12 max-w-7xl mx-auto">
+            <!-- 14 Games - Each title fits cleanly -->
+            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl overflow-hidden border-4 border-purple-600">
+                <div class="premium-tag text-white font-bold py-3 text-center text-xl">PREMIUM</div>
+                <div class="p-10 text-center">
+                    <h3 class="game-title text-3xl glow">Spelling Bee</h3>
+                    <button onclick="checkLogin('startSpellingBee')" class="bg-purple-600 hover:bg-purple-500 text-xl py-4 px-10 rounded-full w-full mt-8">Play</button>
+                </div>
+            </div>
+            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl overflow-hidden border-4 border-red-600">
+                <div class="premium-tag text-white font-bold py-3 text-center text-xl">PREMIUM</div>
+                <div class="p-10 text-center">
+                    <h3 class="game-title text-3xl glow">Flag Quiz</h3>
+                    <button onclick="checkLogin('startFlagQuiz')" class="bg-red-600 hover:bg-red-500 text-xl py-4 px-10 rounded-full w-full mt-8">Play</button>
+                </div>
+            </div>
+            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl overflow-hidden border-4 border-yellow-600">
+                <div class="premium-tag text-white font-bold py-3 text-center text-xl">PREMIUM</div>
+                <div class="p-10 text-center">
+                    <h3 class="game-title text-3xl glow">Color Mixing</h3>
+                    <button onclick="checkLogin('startColorMixing')" class="bg-yellow-600 hover:bg-yellow-500 text-xl py-4 px-10 rounded-full w-full mt-8">Play</button>
+                </div>
+            </div>
+            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl overflow-hidden border-4 border-cyan-600">
+                <div class="premium-tag text-white font-bold py-3 text-center text-xl">PREMIUM</div>
+                <div class="p-10 text-center">
+                    <h3 class="game-title text-3xl glow">Logic Puzzle</h3>
+                    <button onclick="checkLogin('startLogicPuzzle')" class="bg-cyan-600 hover:bg-cyan-500 text-xl py-4 px-10 rounded-full w-full mt-8">Play</button>
+                </div>
+            </div>
+            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl overflow-hidden border-4 border-orange-600">
+                <div class="premium-tag text-white font-bold py-3 text-center text-xl">PREMIUM</div>
+                <div class="p-10 text-center">
+                    <h3 class="game-title text-3xl glow">Cryptography</h3>
+                    <button onclick="checkLogin('startCryptography')" class="bg-orange-600 hover:bg-orange-500 text-xl py-4 px-10 rounded-full w-full mt-8">Play</button>
+                </div>
+            </div>
+            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl overflow-hidden border-4 border-pink-600">
+                <div class="premium-tag text-white font-bold py-3 text-center text-xl">PREMIUM</div>
+                <div class="p-10 text-center">
+                    <h3 class="game-title text-3xl glow">Memory Matrix</h3>
+                    <button onclick="checkLogin('startMemoryMatrix')" class="bg-pink-600 hover:bg-pink-500 text-xl py-4 px-10 rounded-full w-full mt-8">Play</button>
+                </div>
+            </div>
+            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl overflow-hidden border-4 border-indigo-600">
+                <div class="premium-tag text-white font-bold py-3 text-center text-xl">PREMIUM</div>
+                <div class="p-10 text-center">
+                    <h3 class="game-title text-3xl glow">Spudy Snake</h3>
+                    <button onclick="checkLogin('startSnake')" class="bg-indigo-600 hover:bg-indigo-500 text-xl py-4 px-10 rounded-full w-full mt-8">Play</button>
+                </div>
+            </div>
+            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl overflow-hidden border-4 border-teal-600">
+                <div class="premium-tag text-white font-bold py-3 text-center text-xl">PREMIUM</div>
+                <div class="p-10 text-center">
+                    <h3 class="game-title text-3xl glow">Tic Tac Toe AI</h3>
+                    <button onclick="checkLogin('startTicTacToe')" class="bg-teal-600 hover:bg-teal-500 text-xl py-4 px-10 rounded-full w-full mt-8">Play</button>
+                </div>
+            </div>
+            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl overflow-hidden border-4 border-lime-600">
+                <div class="premium-tag text-white font-bold py-3 text-center text-xl">PREMIUM</div>
+                <div class="p-10 text-center">
+                    <h3 class="game-title text-3xl glow">Word Search</h3>
+                    <button onclick="checkLogin('startWordSearch')" class="bg-lime-600 hover:bg-lime-500 text-xl py-4 px-10 rounded-full w-full mt-8">Play</button>
+                </div>
+            </div>
+            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl overflow-hidden border-4 border-rose-600">
+                <div class="premium-tag text-white font-bold py-3 text-center text-xl">PREMIUM</div>
+                <div class="p-10 text-center">
+                    <h3 class="game-title text-3xl glow">2048 Spudy</h3>
+                    <button onclick="checkLogin('start2048')" class="bg-rose-600 hover:bg-rose-500 text-xl py-4 px-10 rounded-full w-full mt-8">Play</button>
+                </div>
+            </div>
+            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl overflow-hidden border-4 border-emerald-600">
+                <div class="premium-tag text-white font-bold py-3 text-center text-xl">PREMIUM</div>
+                <div class="p-10 text-center">
+                    <h3 class="game-title text-3xl glow">Sudoku Master</h3>
+                    <button onclick="checkLogin('startSudoku')" class="bg-emerald-600 hover:bg-emerald-500 text-xl py-4 px-10 rounded-full w-full mt-8">Play</button>
+                </div>
+            </div>
+            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl overflow-hidden border-4 border-amber-600">
+                <div class="premium-tag text-white font-bold py-3 text-center text-xl">PREMIUM</div>
+                <div class="p-10 text-center">
+                    <h3 class="game-title text-3xl glow">Hangman</h3>
+                    <button onclick="checkLogin('startHangman')" class="bg-amber-600 hover:bg-amber-500 text-xl py-4 px-10 rounded-full w-full mt-8">Play</button>
+                </div>
+            </div>
+            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl overflow-hidden border-4 border-violet-600">
+                <div class="premium-tag text-white font-bold py-3 text-center text-xl">PREMIUM</div>
+                <div class="p-10 text-center">
+                    <h3 class="game-title text-3xl glow">Connect Four</h3>
+                    <button onclick="checkLogin('startConnectFour')" class="bg-violet-600 hover:bg-violet-500 text-xl py-4 px-10 rounded-full w-full mt-8">Play</button>
+                </div>
+            </div>
+            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl overflow-hidden border-4 border-sky-600">
+                <div class="premium-tag text-white font-bold py-3 text-center text-xl">PREMIUM</div>
+                <div class="p-10 text-center">
+                    <h3 class="game-title text-3xl glow">Spudy Racer</h3>
+                    <button onclick="checkLogin('startRacer')" class="bg-sky-600 hover:bg-sky-500 text-xl py-4 px-10 rounded-full w-full mt-8">Play</button>
+                </div>
+            </div>
         </div>
+    </section>
+
+    <!-- CURRENT PLAN + PRICING -->
+    <section id="plans" class="py-32 px-8 relative z-10 bg-black bg-opacity-80">
+        <h2 class="text-7xl font-bold glow text-center mb-20">Your Current Plan</h2>
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="bg-gradient-to-br from-green-900 to-black p-20 rounded-3xl border-8 border-green-500 plan-current">
+                <h3 class="text-6xl font-bold mb-8">FREE PLAN</h3>
+                <p class="text-4xl mb-12">2 Free Games • Ads Included</p>
+                <p class="text-3xl opacity-80">Upgrade to unlock 14 premium games!</p>
+            </div>
+        </div>
+
+        <h2 class="text-7xl font-bold glow text-center mt-32 mb-20">Upgrade to Premium</h2>
+        <div class="grid md:grid-cols-2 gap-16 max-w-5xl mx-auto">
+            <div class="bg-gradient-to-br from-purple-900 to-pink-900 p-16 rounded-3xl text-center border-4 border-purple-500">
+                <h3 class="text-6xl font-bold mb-8">Gamer Pro</h3>
+                <p class="text-7xl font-bold mb-12">$2.51/month</p>
+                <button onclick="openPayment('Gamer Pro', 2.51)" class="w-full py-8 bg-white text-purple-600 font-bold text-3xl rounded-full">Upgrade Now</button>
+            </div>
+            <div class="bg-gradient-to-br from-yellow-600 to-orange-600 p-16 rounded-3xl text-center border-4 border-yellow-500">
+                <h3 class="text-6xl font-bold mb-8 text-black">Lifetime Legend</h3>
+                <p class="text-7xl font-bold mb-12 text-black">$49 one-time</p>
+                <button onclick="openPayment('Lifetime Legend', 49)" class="w-full py-8 bg-black text-yellow-400 font-bold text-3xl rounded-full">Get Lifetime</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT & FOOTER WITH ICONS -->
+    <footer class="py-32 text-center relative z-10 bg-black">
+        <h2 class="text-6xl font-bold glow mb-16">Contact Us</h2>
+        <div class="flex justify-center gap-20 text-8xl mb-20">
+            <a href="https://api.whatsapp.com/send?phone=263716669706" class="text-green-400 social-icon"><i class="fab fa-whatsapp"></i></a>
+            <a href="mailto:spudytv14@gmail.com" class="text-blue-400 social-icon"><i class="fas fa-envelope"></i></a>
+            <a href="https://facebook.com/matipaishe.blessing.muduchwa" class="text-blue-600 social-icon"><i class="fab fa-facebook"></i></a>
+            <a href="https://x.com/Matipa_14" class="text-white social-icon"><i class="fab fa-x-twitter"></i></a>
+            <a href="https://youtube.com/@SpudyAI" class="text-red-500 social-icon"><i class="fab fa-youtube"></i></a>
+        </div>
+        <p class="text-xl opacity-70">© 2026 Spudy Games. All Rights Reserved.</p>
+        <p class="text-4xl mt-12 text-yellow-400 font-bold">Created by Matipaishe</p>
     </footer>
 
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="fixed inset-0 bg-black bg-opacity-98 flex items-center justify-center hidden z-50">
+        <div class="bg-gray-900 p-20 rounded-3xl max-w-6xl w-full text-center relative border-8 border-yellow-500">
+            <button onclick="closePayment()" class="absolute top-8 right-12 text-6xl text-gray-400 hover:text-white">×</button>
+            <h2 class="text-7xl font-bold glow mb-12" id="planName">Gamer Pro</h2>
+            <p class="text-8xl font-bold mb-20 text-yellow-400" id="planPrice">$2.51/month</p>
+            <p class="text-4xl mb-16">Select Payment Method:</p>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-16">
+                <div class="p-12 bg-gradient-to-br from-green-900 to-black rounded-3xl cursor-pointer hover:scale-110 transition border-4 border-green-500" onclick="pay('EcoCash')">
+                    <img src="ecocash.png" class="w-48 h-48 mx-auto mb-8">
+                    <p class="text-4xl font-bold text-green-400">EcoCash</p>
+                </div>
+                <div class="p-12 bg-gradient-to-br from-blue-900 to-black rounded-3xl cursor-pointer hover:scale-110 transition border-4 border-blue-500" onclick="pay('OneMoney')">
+                    <img src="onemoney.png" class="w-48 h-48 mx-auto mb-8">
+                    <p class="text-4xl font-bold text-blue-400">OneMoney</p>
+                </div>
+                <div class="p-12 bg-gradient-to-br from-red-900 to-black rounded-3xl cursor-pointer hover:scale-110 transition border-4 border-red-500" onclick="pay('NetOne')">
+                    <img src="netone.png" class="w-48 h-48 mx-auto mb-8">
+                    <p class="text-4xl font-bold text-red-400">NetOne Cash</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script -->
     <script>
-        // Utility Functions
-        function clearGameContainer() {
-            const container = document.getElementById('game-container');
-            container.innerHTML = '<div class="game-ui"></div>';
-            return container.querySelector('.game-ui');
+        if (localStorage.getItem('spudyLoggedIn') === 'true') {
+            document.getElementById('authBtn').textContent = 'Account';
         }
 
-        function scrollToContact() {
-            document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+        function openLogin() { alert('Contact +263 71 666 9706 on WhatsApp'); }
+
+        function checkLogin(func) {
+            if (!localStorage.getItem('spudyLoggedIn')) {
+                alert('Premium game! Please login first.');
+                openLogin();
+            } else {
+                eval(func + '()');
+            }
         }
 
-        // Math Quiz Game
-        function startMathQuiz() {
-            const ui = clearGameContainer();
-            let score = 0;
-            let level = 1;
-            let correctCount = 0;
-            let timeLeft = 30;
-            let timer;
-
-            function getDifficulty() {
-                return {
-                    maxNum: 10 + (level - 1) * 50,
-                    ops: level === 1 ? ['+', '-'] : level === 2 ? ['+', '-', '*'] : ['+', '-', '*', '/'],
-                    timer: Math.max(10, 30 - (level - 1) * 2),
-                    answerRange: Math.max(5, 20 - level * 2)
-                };
-            }
-
-            function generateQuestion() {
-                const { maxNum, ops, answerRange } = getDifficulty();
-                const op = ops[Math.floor(Math.random() * ops.length)];
-                let num1 = Math.floor(Math.random() * maxNum) + 1;
-                let num2 = Math.floor(Math.random() * maxNum) + 1;
-                let answer;
-                if (op === '/') {
-                    num1 = num2 * (Math.floor(Math.random() * 5) + 1);
-                    answer = num1 / num2;
-                } else {
-                    answer = eval(`${num1} ${op} ${num2}`);
-                }
-                const answers = [answer];
-                while (answers.length < 4) {
-                    const wrong = answer + (Math.floor(Math.random() * answerRange * 2) - answerRange);
-                    if (!answers.includes(wrong) && wrong !== answer) answers.push(wrong);
-                }
-                answers.sort(() => Math.random() - 0.5);
-                return { question: `${num1} ${op} ${num2} = ?`, answer, answers };
-            }
-
-            function updateUI(message = '') {
-                const q = generateQuestion();
-                timeLeft = getDifficulty().timer;
-                ui.innerHTML = `
-                    <h2>Math Quiz Game</h2>
-                    <p>Level: ${level} | Score: ${score} | Time: ${timeLeft}s | Questions Left: ${5 - correctCount}/5</p>
-                    ${message ? `<p style="color: #2a75ff">${message}</p>` : ''}
-                    <p>${q.question}</p>
-                    ${q.answers.map(a => `<button onclick="checkMathAnswer(${a}, ${q.answer})">${a}</button>`).join('')}
-                    <p><button onclick="restartMathQuiz()">Restart</button> <button onclick="backToMenu()">Back to Menu</button></p>
-                `;
-                clearInterval(timer);
-                timer = setInterval(() => {
-                    timeLeft--;
-                    if (timeLeft <= 0) {
-                        score -= 5 * level;
-                        updateUI();
-                    }
-                    ui.querySelector('p').textContent = `Level: ${level} | Score: ${score} | Time: ${timeLeft}s | Questions Left: ${5 - correctCount}/5`;
-                }, 1000);
-            }
-
-            window.checkMathAnswer = (userAnswer, correctAnswer) => {
-                clearInterval(timer);
-                if (userAnswer === correctAnswer) {
-                    score += 10 * level;
-                    correctCount++;
-                    if (correctCount >= 5) {
-                        level++;
-                        correctCount = 0;
-                        updateUI(`Level Up! Now on Level ${level}`);
-                    } else {
-                        updateUI();
-                    }
-                } else {
-                    score -= 5 * level;
-                    updateUI();
-                }
-            };
-
-            window.restartMathQuiz = () => {
-                score = 0;
-                level = 1;
-                correctCount = 0;
-                updateUI();
-            };
-
-            updateUI();
+        function openPayment(plan, price) {
+            document.getElementById('planName').textContent = plan;
+            document.getElementById('planPrice').textContent = price === 49 ? '$49 Lifetime' : '$' + price + '/month';
+            document.getElementById('paymentModal').classList.remove('hidden');
         }
 
-        // Spelling Bee Game
-        function startSpellingBee() {
-            const ui = clearGameContainer();
-            const words = {
-                easy: ['cat', 'dog', 'book', 'fish', 'tree'],
-                medium: ['apple', 'house', 'smile', 'river', 'chair'],
-                hard: ['elephant', 'computer', 'mountain', 'umbrella', 'butterfly']
-            };
-            let score = 0;
-            let level = 1;
-            let correctCount = 0;
-            let timeLeft = 20;
-            let timer;
-            let currentWord;
-
-            function getDifficulty() {
-                return {
-                    wordList: level === 1 ? words.easy : level === 2 ? words.medium : words.hard.concat(words.medium),
-                    timer: Math.max(5, 20 - (level - 1)),
-                    maxLength: 3 + level * 2
-                };
-            }
-
-            function generateWord() {
-                const { wordList, maxLength } = getDifficulty();
-                let filtered = wordList.filter(w => w.length <= maxLength);
-                return filtered[Math.floor(Math.random() * filtered.length)];
-            }
-
-            function updateUI(message = '') {
-                currentWord = generateWord();
-                timeLeft = getDifficulty().timer;
-                ui.innerHTML = `
-                    <h2>Spelling Bee Game</h2>
-                    <p>Level: ${level} | Score: ${score} | Time: ${timeLeft}s | Words Left: ${5 - correctCount}/5</p>
-                    ${message ? `<p style="color: #2a75ff">${message}</p>` : ''}
-                    <p>Spell: ${currentWord}</p>
-                    <input type="text" id="spell-input" placeholder="Type the word">
-                    <p><button onclick="checkSpelling()">Submit</button></p>
-                    <p><button onclick="restartSpellingBee()">Restart</button> <button onclick="backToMenu()">Back to Menu</button></p>
-                `;
-                const input = ui.querySelector('#spell-input');
-                input.focus();
-                input.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') checkSpelling();
-                });
-                clearInterval(timer);
-                timer = setInterval(() => {
-                    timeLeft--;
-                    if (timeLeft <= 0) {
-                        score -= 5 * level;
-                        updateUI();
-                    }
-                    ui.querySelector('p').textContent = `Level: ${level} | Score: ${score} | Time: ${timeLeft}s | Words Left: ${5 - correctCount}/5`;
-                }, 1000);
-            }
-
-            window.checkSpelling = () => {
-                const input = ui.querySelector('#spell-input').value.toLowerCase();
-                clearInterval(timer);
-                if (input === currentWord) {
-                    score += 10 * level;
-                    correctCount++;
-                    if (correctCount >= 5) {
-                        level++;
-                        correctCount = 0;
-                        updateUI(`Level Up! Now on Level ${level}`);
-                    } else {
-                        updateUI();
-                    }
-                } else {
-                    score -= 5 * level;
-                    updateUI();
-                }
-            };
-
-            window.restartSpellingBee = () => {
-                score = 0;
-                level = 1;
-                correctCount = 0;
-                updateUI();
-            };
-
-            updateUI();
+        function pay(method) {
+            window.open(`https://api.whatsapp.com/send?phone=263716669706&text=I want to pay for Spudy Games ${document.getElementById('planName').textContent} using ${method}`, '_blank');
         }
 
-        // Typing Speed Challenge
-        function startTypingSpeed() {
-            const ui = clearGameContainer();
-            const phrases = {
-                easy: ['quick fox', 'sunny hill', 'blue sea'],
-                medium: ['fast typing', 'green forest', 'bright star'],
-                hard: ['swift river flows', 'tall mountain peak', 'deep ocean waves']
-            };
-            let score = 0;
-            let level = 1;
-            let correctCount = 0;
-            let timeLeft = 60;
-            let timer;
-            let startTime = Date.now();
-            let currentPhrase;
+        function closePayment() { document.getElementById('paymentModal').classList.add('hidden'); }
 
-            function getDifficulty() {
-                return {
-                    phraseList: level === 1 ? phrases.easy : level === 2 ? phrases.medium : phrases.hard.concat(phrases.medium),
-                    timer: Math.max(20, 60 - (level - 1) * 5),
-                    maxWords: 2 + level * 2
-                };
-            }
-
-            function generatePhrase() {
-                const { phraseList, maxWords } = getDifficulty();
-                let filtered = phraseList.filter(p => p.split(' ').length <= maxWords);
-                return filtered[Math.floor(Math.random() * filtered.length)];
-            }
-
-            function calculateWPM() {
-                const timeElapsed = (Date.now() - startTime) / 1000 / 60;
-                return timeElapsed > 0 ? Math.round(score / timeElapsed) : 0;
-            }
-
-            function updateUI(message = '') {
-                currentPhrase = generatePhrase();
-                timeLeft = getDifficulty().timer;
-                ui.innerHTML = `
-                    <h2>Typing Speed Challenge</h2>
-                    <p>Level: ${level} | Score: ${score} | Time: ${timeLeft}s | Phrases Left: ${5 - correctCount}/5 | WPM: ${calculateWPM()}</p>
-                    ${message ? `<p style="color: #2a75ff">${message}</p>` : ''}
-                    <p>Type: ${currentPhrase}</p>
-                    <input type="text" id="type-input" placeholder="Type the phrase">
-                    <p><button onclick="checkTyping()">Submit</button></p>
-                    <p><button onclick="restartTypingSpeed()">Restart</button> <button onclick="backToMenu()">Back to Menu</button></p>
-                `;
-                const input = ui.querySelector('#type-input');
-                input.focus();
-                input.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') checkTyping();
-                });
-                clearInterval(timer);
-                timer = setInterval(() => {
-                    timeLeft--;
-                    if (timeLeft <= 0) {
-                        clearInterval(timer);
-                        ui.innerHTML = `
-                            <h2>Game Over</h2>
-                            <p>Final Score: ${score} | WPM: ${calculateWPM()}</p>
-                            <p><button onclick="restartTypingSpeed()">Restart</button> <button onclick="backToMenu()">Back to Menu</button></p>
-                        `;
-                    } else {
-                        ui.querySelector('p').textContent = `Level: ${level} | Score: ${score} | Time: ${timeLeft}s | Phrases Left: ${5 - correctCount}/5 | WPM: ${calculateWPM()}`;
-                    }
-                }, 1000);
-            }
-
-            window.checkTyping = () => {
-                const input = ui.querySelector('#type-input').value;
-                if (input === currentPhrase) {
-                    score += 5 * level;
-                    correctCount++;
-                    if (correctCount >= 5) {
-                        level++;
-                        correctCount = 0;
-                        updateUI(`Level Up! Now on Level ${level}`);
-                    } else {
-                        updateUI();
-                    }
-                } else {
-                    updateUI();
-                }
-            };
-
-            window.restartTypingSpeed = () => {
-                score = 0;
-                level = 1;
-                correctCount = 0;
-                startTime = Date.now();
-                updateUI();
-            };
-
-            updateUI();
-        }
-
-        // Flag Quiz Game
-        function startFlagQuiz() {
-            const ui = clearGameContainer();
-            const countries = {
-                easy: [
-                    { name: 'Brazil', flag: 'https://via.placeholder.com/100x60?text=Brazil+Flag' },
-                    { name: 'Canada', flag: 'https://via.placeholder.com/100x60?text=Canada+Flag' },
-                    { name: 'Japan', flag: 'https://via.placeholder.com/100x60?text=Japan+Flag' }
-                ],
-                medium: [
-                    { name: 'Australia', flag: 'https://via.placeholder.com/100x60?text=Australia+Flag' },
-                    { name: 'Germany', flag: 'https://via.placeholder.com/100x60?text=Germany+Flag' }
-                ],
-                hard: [
-                    { name: 'Monaco', flag: 'https://via.placeholder.com/100x60?text=Monaco+Flag' },
-                    { name: 'Sudan', flag: 'https://via.placeholder.com/100x60?text=Sudan+Flag' }
-                ]
-            };
-            let score = 0;
-            let level = 1;
-            let correctCount = 0;
-            let timeLeft = 20;
-            let timer;
-
-            function getDifficulty() {
-                return {
-                    countryList: level === 1 ? countries.easy : level === 2 ? countries.medium.concat(countries.easy) : countries.hard.concat(countries.medium, countries.easy),
-                    timer: Math.max(5, 20 - (level - 1))
-                };
-            }
-
-            function generateQuestion() {
-                const { countryList } = getDifficulty();
-                const correct = countryList[Math.floor(Math.random() * countryList.length)];
-                const answers = [correct.name];
-                while (answers.length < 4) {
-                    const wrong = countryList[Math.floor(Math.random() * countryList.length)].name;
-                    if (!answers.includes(wrong)) answers.push(wrong);
-                }
-                answers.sort(() => Math.random() - 0.5);
-                return { flag: correct.flag, answer: correct.name, answers };
-            }
-
-            function updateUI(message = '') {
-                const q = generateQuestion();
-                timeLeft = getDifficulty().timer;
-                ui.innerHTML = `
-                    <h2>Flag Quiz Game</h2>
-                    <p>Level: ${level} | Score: ${score} | Time: ${timeLeft}s | Questions Left: ${5 - correctCount}/5</p>
-                    ${message ? `<p style="color: #2a75ff">${message}</p>` : ''}
-                    <img src="${q.flag}" alt="Country Flag">
-                    <p>Which country?</p>
-                    ${q.answers.map(a => `<button onclick="checkFlagAnswer('${a}', '${q.answer}')">${a}</button>`).join('')}
-                    <p><button onclick="restartFlagQuiz()">Restart</button> <button onclick="backToMenu()">Back to Menu</button></p>
-                `;
-                clearInterval(timer);
-                timer = setInterval(() => {
-                    timeLeft--;
-                    if (timeLeft <= 0) {
-                        score -= 5 * level;
-                        updateUI();
-                    }
-                    ui.querySelector('p').textContent = `Level: ${level} | Score: ${score} | Time: ${timeLeft}s | Questions Left: ${5 - correctCount}/5`;
-                }, 1000);
-            }
-
-            window.checkFlagAnswer = (userAnswer, correctAnswer) => {
-                clearInterval(timer);
-                if (userAnswer === correctAnswer) {
-                    score += 10 * level;
-                    correctCount++;
-                    if (correctCount >= 5) {
-                        level++;
-                        correctCount = 0;
-                        updateUI(`Level Up! Now on Level ${level}`);
-                    } else {
-                        updateUI();
-                    }
-                } else {
-                    score -= 5 * level;
-                    updateUI();
-                }
-            };
-
-            window.restartFlagQuiz = () => {
-                score = 0;
-                level = 1;
-                correctCount = 0;
-                updateUI();
-            };
-
-            updateUI();
-        }
-
-        // Color Mixing Game
-        function startColorMixing() {
-            const ui = clearGameContainer();
-            let score = 0;
-            let level = 1;
-            let correctCount = 0;
-            let timeLeft = 30;
-            let timer;
-            let targetColor = generateColor();
-            let userColor = { r: 128, g: 128, b: 128 };
-
-            function generateColor() {
-                const range = Math.max(20, 50 - level * 5);
-                const base = Math.floor(Math.random() * 256);
-                return {
-                    r: Math.min(255, Math.max(0, base + (Math.random() * range - range / 2))),
-                    g: Math.min(255, Math.max(0, base + (Math.random() * range - range / 2))),
-                    b: Math.min(255, Math.max(0, base + (Math.random() * range - range / 2)))
-                };
-            }
-
-            function calculateScore() {
-                return Math.max(0, 255 - (Math.abs(targetColor.r - userColor.r) + Math.abs(targetColor.g - userColor.g) + Math.abs(targetColor.b - userColor.b)));
-            }
-
-            function getHint() {
-                if (level >= 4) return '';
-                const delay = level === 1 ? 0 : level === 2 ? 10 : 15;
-                if (timeLeft > delay) return '';
-                let hints = [];
-                if (Math.abs(targetColor.r - userColor.r) > 20) hints.push(userColor.r < targetColor.r ? 'Increase Red' : 'Decrease Red');
-                if (Math.abs(targetColor.g - userColor.g) > 20) hints.push(userColor.g < targetColor.g ? 'Increase Green' : 'Decrease Green');
-                if (Math.abs(targetColor.b - userColor.b) > 20) hints.push(userColor.b < targetColor.b ? 'Increase Blue' : 'Decrease Blue');
-                return hints.length > 0 ? hints.join(', ') : 'You’re close!';
-            }
-
-            function updateUI(message = '') {
-                targetColor = generateColor();
-                userColor = { r: 128, g: 128, b: 128 };
-                timeLeft = Math.max(10, 30 - (level - 1) * 2);
-                ui.innerHTML = `
-                    <h2>Color Mixing Game</h2>
-                    <p>Level: ${level} | Score: ${score} | Time: ${timeLeft}s | Colors Left: ${3 - correctCount}/3</p>
-                    ${message ? `<p style="color: #2a75ff">${message}</p>` : ''}
-                    <div class="color-swatch" style="background: rgb(${targetColor.r}, ${targetColor.g}, ${targetColor.b})"></div>
-                    <p>Your Color:</p>
-                    <div class="color-swatch" id="user-color" style="background: rgb(${userColor.r}, ${userColor.g}, ${userColor.b})"></div>
-                    <p>Red: <input type="range" id="red" min="0" max="255" value="128"></p>
-                    <p>Green: <input type="range" id="green" min="0" max="255" value="128"></p>
-                    <p>Blue: <input type="range" id="blue" min="0" max="255" value="128"></p>
-                    <p id="hint"></p>
-                    <p><button onclick="checkColor()">Submit</button></p>
-                    <p><button onclick="restartColorMixing()">Restart</button> <button onclick="backToMenu()">Back to Menu</button></p>
-                `;
-                ui.querySelector('#red').addEventListener('input', updateUserColor);
-                ui.querySelector('#green').addEventListener('input', updateUserColor);
-                ui.querySelector('#blue').addEventListener('input', updateUserColor);
-                clearInterval(timer);
-                timer = setInterval(() => {
-                    timeLeft--;
-                    if (timeLeft <= 0) {
-                        updateUI();
-                    }
-                    ui.querySelector('p').textContent = `Level: ${level} | Score: ${score} | Time: ${timeLeft}s | Colors Left: ${3 - correctCount}/3`;
-                    ui.querySelector('#hint').textContent = getHint();
-                }, 1000);
-            }
-
-            function updateUserColor() {
-                userColor.r = parseInt(ui.querySelector('#red').value);
-                userColor.g = parseInt(ui.querySelector('#green').value);
-                userColor.b = parseInt(ui.querySelector('#blue').value);
-                ui.querySelector('#user-color').style.background = `rgb(${userColor.r}, ${userColor.g}, ${userColor.b})`;
-                ui.querySelector('#hint').textContent = getHint();
-            }
-
-            window.checkColor = () => {
-                clearInterval(timer);
-                const roundScore = calculateScore();
-                score += roundScore * level;
-                if (roundScore > 200) {
-                    correctCount++;
-                    if (correctCount >= 3) {
-                        level++;
-                        correctCount = 0;
-                        updateUI(`Level Up! Now on Level ${level}`);
-                    } else {
-                        updateUI();
-                    }
-                } else {
-                    updateUI();
-                }
-            };
-
-            window.restartColorMixing = () => {
-                score = 0;
-                level = 1;
-                correctCount = 0;
-                updateUI();
-            };
-
-            updateUI();
-        }
-
-        // Logic Puzzle Game
-        function startLogicPuzzle() {
-            const ui = clearGameContainer();
-            let score = 0;
-            let level = 1;
-            let correctCount = 0;
-            let timeLeft = 60;
-            let timer;
-            let puzzle;
-
-            function getDifficulty() {
-                const size = level <= 2 ? 3 : Math.min(5, 3 + Math.floor((level - 1) / 2));
-                return {
-                    size,
-                    clues: level === 1 ? 3 : level === 2 ? 5 : 5 + (level - 2) * 2,
-                    timer: Math.max(20, 60 - (level - 1) * 5),
-                    complexClues: level >= 3
-                };
-            }
-
-            function generatePuzzle() {
-                const { size, clues, complexClues } = getDifficulty();
-                const people = ['Alice', 'Bob', 'Clara', 'Dave', 'Eve'].slice(0, size);
-                const houses = Array.from({ length: size }, (_, i) => `House ${i + 1}`);
-                const pets = ['Cat', 'Dog', 'Bird', 'Fish', 'Snake'].slice(0, size);
-                const solution = {};
-                houses.forEach(h => {
-                    solution[h] = { person: people[Math.floor(Math.random() * people.length)], pet: pets[Math.floor(Math.random() * pets.length)] };
-                    people.splice(people.indexOf(solution[h].person), 1);
-                    pets.splice(pets.indexOf(solution[h].pet), 1);
-                });
-                const clueTypes = [
-                    h => `${solution[h].person} lives in ${h}.`,
-                    h => `${solution[h].pet} is in ${h}.`,
-                    h => complexClues ? `${solution[h].person} does not have a ${pets[Math.floor(Math.random() * pets.length)]}.` : null
-                ].filter(c => c);
-                const generatedClues = [];
-                const usedHouses = Object.keys(solution);
-                for (let i = 0; i < clues; i++) {
-                    const house = usedHouses[Math.floor(Math.random() * usedHouses.length)];
-                    const clueType = clueTypes[Math.floor(Math.random() * clueTypes.length)];
-                    generatedClues.push(clueType(house));
-                }
-                return { size, people, houses, pets, solution, clues: generatedClues };
-            }
-
-            function updateUI(message = '') {
-                puzzle = generatePuzzle();
-                timeLeft = getDifficulty().timer;
-                const gridStyle = `grid-template-columns: repeat(${puzzle.size}, 1fr);`;
-                ui.innerHTML = `
-                    <h2>Logic Puzzle Game</h2>
-                    <p>Level: ${level} | Score: ${score} | Time: ${timeLeft}s | Puzzles Left: ${3 - correctCount}/3</p>
-                    ${message ? `<p style="color: #2a75ff">${message}</p>` : ''}
-                    <p>Clues:</p>
-                    <ul>${puzzle.clues.map(c => `<li>${c}</li>`).join('')}</ul>
-                    <div class="logic-grid" style="${gridStyle}">
-                        ${puzzle.houses.map(h => `
-                            <div>
-                                <p>${h}</p>
-                                <select id="${h}-person">
-                                    <option value="">Select Person</option>
-                                    ${puzzle.people.map(p => `<option value="${p}">${p}</option>`).join('')}
-                                </select>
-                                <select id="${h}-pet">
-                                    <option value="">Select Pet</option>
-                                    ${puzzle.pets.map(p => `<option value="${p}">${p}</option>`).join('')}
-                                </select>
-                            </div>
-                        `).join('')}
-                    </div>
-                    <p><button onclick="checkLogicPuzzle()">Submit</button></p>
-                    <p><button onclick="restartLogicPuzzle()">Restart</button> <button onclick="backToMenu()">Back to Menu</button></p>
-                `;
-                clearInterval(timer);
-                timer = setInterval(() => {
-                    timeLeft--;
-                    if (timeLeft <= 0) {
-                        score -= 10 * level;
-                        updateUI();
-                    }
-                    ui.querySelector('p').textContent = `Level: ${level} | Score: ${score} | Time: ${timeLeft}s | Puzzles Left: ${3 - correctCount}/3`;
-                }, 1000);
-            }
-
-            window.checkLogicPuzzle = () => {
-                clearInterval(timer);
-                let correct = true;
-                puzzle.houses.forEach(h => {
-                    const person = ui.querySelector(`#${h}-person`).value;
-                    const pet = ui.querySelector(`#${h}-pet`).value;
-                    if (person !== puzzle.solution[h].person || pet !== puzzle.solution[h].pet) {
-                        correct = false;
-                    }
-                });
-                if (correct) {
-                    score += 20 * level;
-                    correctCount++;
-                    if (correctCount >= 3) {
-                        level++;
-                        correctCount = 0;
-                        updateUI(`Level Up! Now on Level ${level}`);
-                    } else {
-                        updateUI();
-                    }
-                } else {
-                    score -= 10 * level;
-                    updateUI();
-                }
-            };
-
-            window.restartLogicPuzzle = () => {
-                score = 0;
-                level = 1;
-                correctCount = 0;
-                updateUI();
-            };
-
-            updateUI();
-        }
-
-        // Cryptography Challenge
-        function startCryptography() {
-            const ui = clearGameContainer();
-            let score = 0;
-            let level = 1;
-            let correctCount = 0;
-            let timeLeft = 45;
-            let timer;
-            let message, encoded, hint;
-
-            function getDifficulty() {
-                return {
-                    cipher: level <= 2 ? 'caesar' : level === 3 ? 'substitution' : 'vigenere',
-                    shift: level === 1 ? Math.floor(Math.random() * 5) + 1 : Math.floor(Math.random() * 10) + 1,
-                    timer: Math.max(15, 45 - (level - 1) * 3),
-                    hintLevel: level <= 2 ? 1 : level === 3 ? 0.5 : 0
-                };
-            }
-
-            function generateMessage() {
-                const messages = ['BOOK', 'CODE', 'HACK', 'SPUDY', 'PUZZLE', 'SECRET'];
-                const text = messages[Math.floor(Math.random() * messages.length)];
-                const { cipher, shift, hintLevel } = getDifficulty();
-                let enc, h;
-                if (cipher === 'caesar') {
-                    enc = caesarCipher(text, shift);
-                    h = hintLevel ? `Caesar cipher, shift ${shift}` : 'Caesar cipher';
-                } else if (cipher === 'substitution') {
-                    enc = substitutionCipher(text);
-                    h = hintLevel ? `Substitution cipher, first letter maps to ${enc[0]}` : 'Substitution cipher';
-                } else {
-                    enc = vigenereCipher(text, 'KEY');
-                    h = 'Vigenère cipher, key: KEY';
-                }
-                return { text, encoded: enc, hint: h };
-            }
-
-            function caesarCipher(text, shift) {
-                return text.split('').map(c => {
-                    const code = c.charCodeAt(0) - 65 + shift;
-                    return String.fromCharCode((code % 26) + 65);
-                }).join('');
-            }
-
-            function substitutionCipher(text) {
-                const map = 'ZYXWVUTSRQPONMLKJIHGFEDCBA';
-                return text.split('').map(c => map[c.charCodeAt(0) - 65]).join('');
-            }
-
-            function vigenereCipher(text, key) {
-                let result = '';
-                for (let i = 0; i < text.length; i++) {
-                    const t = text.charCodeAt(i) - 65;
-                    const k = key.charCodeAt(i % key.length) - 65;
-                    result += String.fromCharCode(((t + k) % 26) + 65);
-                }
-                return result;
-            }
-
-            function updateUI(message = '') {
-                const data = generateMessage();
-                message = data.text;
-                encoded = data.encoded;
-                hint = data.hint;
-                timeLeft = getDifficulty().timer;
-                ui.innerHTML = `
-                    <h2>Cryptography Challenge</h2>
-                    <p>Level: ${level} | Score: ${score} | Time: ${timeLeft}s | Messages Left: ${4 - correctCount}/4</p>
-                    ${message ? `<p style="color: #2a75ff">${message}</p>` : ''}
-                    <p>Decode: ${encoded}</p>
-                    <p>Hint: ${hint}</p>
-                    <input type="text" id="crypto-input" placeholder="Enter decoded message">
-                    <p><button onclick="checkCryptography()">Submit</button></p>
-                    <p><button onclick="restartCryptography()">Restart</button> <button onclick="backToMenu()">Back to Menu</button></p>
-                `;
-                const input = ui.querySelector('#crypto-input');
-                input.focus();
-                input.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') checkCryptography();
-                });
-                clearInterval(timer);
-                timer = setInterval(() => {
-                    timeLeft--;
-                    if (timeLeft <= 0) {
-                        score -= 5 * level;
-                        updateUI();
-                    }
-                    ui.querySelector('p').textContent = `Level: ${level} | Score: ${score} | Time: ${timeLeft}s | Messages Left: ${4 - correctCount}/4`;
-                }, 1000);
-            }
-
-            window.checkCryptography = () => {
-                const input = ui.querySelector('#crypto-input').value.toUpperCase();
-                clearInterval(timer);
-                if (input === message) {
-                    score += 15 * level;
-                    correctCount++;
-                    if (correctCount >= 4) {
-                        level++;
-                        correctCount = 0;
-                        updateUI(`Level Up! Now on Level ${level}`);
-                    } else {
-                        updateUI();
-                    }
-                } else {
-                    score -= 5 * level;
-                    updateUI();
-                }
-            };
-
-            window.restartCryptography = () => {
-                score = 0;
-                level = 1;
-                correctCount = 0;
-                updateUI();
-            };
-
-            updateUI();
-        }
-
-        // Memory Matrix Game
-        function startMemoryMatrix() {
-            const ui = clearGameContainer();
-            let score = 0;
-            let level = 1;
-            let correctCount = 0;
-            let timeLeft = 30;
-            let timer;
-            let pattern = [];
-            let userPattern = [];
-            let showingPattern = false;
-
-            function getDifficulty() {
-                const size = level <= 2 ? 3 : Math.min(5, 3 + Math.floor((level - 1) / 2));
-                return {
-                    size,
-                    cells: level === 1 ? 3 : level === 2 ? 4 : 3 + level,
-                    timer: Math.max(10, 30 - (level - 1) * 2),
-                    showTime: Math.max(1, 2 - (level - 1) * 0.2)
-                };
-            }
-
-            function generatePattern() {
-                const { size, cells } = getDifficulty();
-                const pattern = [];
-                while (pattern.length < cells) {
-                    const cell = Math.floor(Math.random() * size * size);
-                    if (!pattern.includes(cell)) pattern.push(cell);
-                }
-                return pattern;
-            }
-
-            function updateUI(message = '') {
-                pattern = generatePattern();
-                userPattern = [];
-                showingPattern = true;
-                timeLeft = getDifficulty().timer;
-                const { size, showTime } = getDifficulty();
-                const gridStyle = `grid-template-columns: repeat(${size}, 1fr);`;
-                ui.innerHTML = `
-                    <h2>Memory Matrix Game</h2>
-                    <p>Level: ${level} | Score: ${score} | Time: ${timeLeft}s | Patterns Left: ${5 - correctCount}/5</p>
-                    ${message ? `<p style="color: #2a75ff">${message}</p>` : ''}
-                    <div class="memory-grid" style="${gridStyle}">
-                        ${Array.from({ length: size * size }, (_, i) => `
-                            <div id="cell-${i}" class="${pattern.includes(i) ? 'active' : ''}" onclick="selectMemoryCell(${i})"></div>
-                        `).join('')}
-                    </div>
-                    <p><button onclick="checkMemoryMatrix()">Submit</button></p>
-                    <p><button onclick="restartMemoryMatrix()">Restart</button> <button onclick="backToMenu()">Back to Menu</button></p>
-                `;
-                setTimeout(() => {
-                    showingPattern = false;
-                    ui.querySelectorAll('.memory-grid div').forEach(cell => cell.classList.remove('active'));
-                }, showTime * 1000);
-                clearInterval(timer);
-                timer = setInterval(() => {
-                    timeLeft--;
-                    if (timeLeft <= 0) {
-                        score -= 5 * level;
-                        updateUI();
-                    }
-                    ui.querySelector('p').textContent = `Level: ${level} | Score: ${score} | Time: ${timeLeft}s | Patterns Left: ${5 - correctCount}/5`;
-                }, 1000);
-            }
-
-            window.selectMemoryCell = (cell) => {
-                if (showingPattern) return;
-                if (!userPattern.includes(cell)) {
-                    userPattern.push(cell);
-                    ui.querySelector(`#cell-${cell}`).classList.add('active');
-                }
-            };
-
-            window.checkMemoryMatrix = () => {
-                clearInterval(timer);
-                let correct = userPattern.length === pattern.length && userPattern.every(c => pattern.includes(c));
-                if (correct) {
-                    score += 10 * level;
-                    correctCount++;
-                    if (correctCount >= 5) {
-                        level++;
-                        correctCount = 0;
-                        updateUI(`Level Up! Now on Level ${level}`);
-                    } else {
-                        updateUI();
-                    }
-                } else {
-                    score -= 5 * level;
-                    updateUI();
-                }
-            };
-
-            window.restartMemoryMatrix = () => {
-                score = 0;
-                level = 1;
-                correctCount = 0;
-                updateUI();
-            };
-
-            updateUI();
-        }
-
-        // Back to Menu
-        function backToMenu() {
-            const ui = clearGameContainer();
-            ui.innerHTML = `
-                <h2>Welcome to Spudy Games</h2>
-                <p>Select a game from the menu above to start playing!</p>
-            `;
-        }
-
-        // Floating Elements
-        for (let i = 0; i < 3; i++) {
-            const element = document.createElement('div');
-            element.className = 'floating-element';
-            element.style.width = Math.random() * 80 + 50 + 'px';
-            element.style.height = element.style.width;
-            element.style.top = Math.random() * 100 + '%';
-            element.style.left = Math.random() * 100 + '%';
-            element.style.animationDuration = Math.random() * 15 + 10 + 's';
-            document.getElementById('game-container').appendChild(element);
-        }
+        new Typed('#typed', { 
+            strings: ["16 Games", "2 Free • 14 Premium", "Join 15,000+ Players", "Game On!"], 
+            typeSpeed: 80, loop: true 
+        });
     </script>
 </body>
 </html>
