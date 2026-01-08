@@ -3,280 +3,325 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spudy Games</title>
+    <title>Spudy Games - Premium Arcade</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
     <style>
-        body { margin: 0; overflow-x: hidden; color: white; }
-        #bg-video { position: fixed; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; transform: translateX(-50%) translateY(-50%); z-index: -3; object-fit: cover; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,30,0.88); z-index: -2; }
-        .glow { text-shadow: 0 0 20px #00ffff, 0 0 40px #00cccc; }
-        .free-tag { background: linear-gradient(135deg, #10b981, #059669); }
-        .premium-tag { background: linear-gradient(135deg, #a855f7, #ec4899); }
-        .game-card { transition: all 0.4s; }
-        .game-card:hover { transform: translateY(-20px) scale(1.05); box-shadow: 0 20px 40px rgba(0,255,255,0.4); }
-        .social-icon { transition: all 0.4s; }
-        .social-icon:hover { transform: scale(1.4) rotate(15deg); }
-        .plan-current { border: 6px solid #00ff00; box-shadow: 0 0 50px #00ff00; }
-        .game-title { font-size: 1.8rem; line-height: 1.2; min-height: 60px; display: flex; align-items: center; justify-content: center; }
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap');
+        
+        body { margin: 0; overflow-x: hidden; color: white; font-family: 'Outfit', sans-serif; background-color: #050505; }
+        #bg-video { position: fixed; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; transform: translateX(-50%) translateY(-50%); z-index: -3; object-fit: cover; opacity: 0.4; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, rgba(10,10,30,0.8), #000); z-index: -2; }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
+        }
+
+        .premium-text {
+            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .btn-gold {
+            background: linear-gradient(45deg, #d4af37, #f1c40f);
+            color: black;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .btn-gold:hover {
+            filter: brightness(1.2);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+        }
+
+        .locked-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .glass-card:not(.unlocked) .locked-overlay {
+            opacity: 1;
+        }
+        .glass-card.unlocked .locked-overlay {
+            display: none;
+        }
+
     </style>
 </head>
 <body>
 
-    <!-- NEON BACKGROUND -->
+    <!-- Background -->
     <video autoplay muted loop playsinline id="bg-video">
         <source src="https://cdn.coverr.co/videos/coverr-neon-gaming-setup-5831/1080p.mp4" type="video/mp4">
     </video>
     <div class="overlay"></div>
 
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 bg-black bg-opacity-95 backdrop-blur-lg border-b-4 border-cyan-500">
-        <div class="max-w-7xl mx-auto flex justify-between items-center p-6">
-            <h1 class="text-5xl font-extrabold glow">Spudy Games</h1>
-            <div class="flex gap-8 text-xl">
-                <a href="#home" class="hover:text-cyan-400">Home</a>
-                <a href="#games" class="hover:text-cyan-400">Games</a>
-                <a href="#plans" class="hover:text-cyan-400">My Plan</a>
-                <a href="#pricing" class="hover:text-cyan-400">Upgrade</a>
-                <button id="authBtn" onclick="openLogin()" class="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 px-10 py-4 rounded-full font-bold shadow-2xl">Login</button>
+    <!-- Nav -->
+    <nav class="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
+        <div class="max-w-7xl mx-auto flex justify-between items-center p-4">
+            <h1 class="text-3xl font-black tracking-tighter"><span class="text-yellow-500">SPUDY</span> GAMES</h1>
+            <div class="hidden md:flex gap-6 text-sm font-medium uppercase tracking-widest text-gray-300">
+                <a href="#home" class="hover:text-yellow-400 transition">Home</a>
+                <a href="#games" class="hover:text-yellow-400 transition">Collection</a>
+                <a href="#pricing" class="hover:text-yellow-400 transition">Premium</a>
             </div>
+            <button id="authBtn" onclick="openLogin()" class="btn-gold px-6 py-2 rounded-full text-sm">Login</button>
         </div>
     </nav>
 
-    <!-- CLEAN WELCOME -->
-    <section id="home" class="min-h-screen flex flex-col justify-center items-center text-center px-8 relative z-10">
-        <h1 class="text-9xl font-extrabold glow mb-16 animate-pulse">SPUDY GAMES</h1>
-        <div class="grid md:grid-cols-2 gap-16 max-w-5xl w-full">
-            <div class="bg-gradient-to-br from-green-900 to-black p-20 rounded-3xl border-8 border-green-500 text-center transform hover:scale-105 transition">
-                <h2 class="text-6xl font-bold mb-12">FREE GAMES</h2>
-                <p class="text-4xl mb-12">Play 2 games instantly</p>
-                <button onclick="document.getElementById('free-games').scrollIntoView({behavior:'smooth'})" 
-                        class="bg-green-600 hover:bg-green-500 text-4xl font-bold py-8 px-24 rounded-full shadow-2xl">Play Free</button>
-            </div>
-            <div class="bg-gradient-to-br from-purple-900 to-pink-900 p-20 rounded-3xl border-8 border-purple-500 text-center transform hover:scale-105 transition">
-                <h2 class="text-6xl font-bold mb-12">PREMIUM</h2>
-                <p class="text-4xl mb-12">Unlock 14 exclusive games</p>
-                <button onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})" 
-                        class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-4xl font-bold py-8 px-24 rounded-full shadow-2xl">Go Premium</button>
-            </div>
+    <!-- Hero -->
+    <section id="home" class="min-h-[80vh] flex flex-col justify-center items-center text-center px-4 pt-20">
+        <h2 class="text-sm font-bold tracking-[0.3em] text-yellow-500 mb-4 animate-pulse">NEXT GEN GAMING</h2>
+        <h1 class="text-6xl md:text-8xl font-black mb-6 leading-tight">PLAY THE <br><span class="premium-text">EXTRAORDINARY</span></h1>
+        <p class="text-gray-400 text-lg md:text-xl max-w-2xl mb-10">Experience our curated collection of premium games. Dive into beloved classics and new favorites.</p>
+        <div class="flex gap-4">
+            <button onclick="document.getElementById('free-games').scrollIntoView({behavior:'smooth'})" class="px-8 py-3 rounded-full border border-white/30 hover:bg-white/10 transition font-bold">Free Games</button>
+            <button onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})" class="btn-gold px-8 py-3 rounded-full shadow-lg">Go Premium</button>
         </div>
     </section>
 
-    <!-- CLEAN WELCOME END -->
+    <!-- Games Section -->
+    <section id="games" class="py-20 px-4 max-w-7xl mx-auto">
+        
+        <!-- Free Games -->
+        <div id="free-games" class="mb-20">
+            <h3 class="text-3xl font-bold mb-8 border-l-4 border-green-500 pl-4">Free Access</h3>
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Math Quiz -->
+                <div class="glass-card p-8 rounded-2xl relative overflow-hidden group unlocked">
+                    <div class="absolute top-0 right-0 bg-green-500 text-black text-xs font-bold px-3 py-1 rounded-bl-lg">FREE</div>
+                    <div class="flex items-center gap-6">
+                        <div class="h-16 w-16 bg-green-500/20 rounded-full flex items-center justify-center text-green-400 text-3xl">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-2xl font-bold">Math Quiz Master</h4>
+                            <p class="text-gray-400 text-sm">Test your calculation skills.</p>
+                        </div>
+                    </div>
+                    <button onclick="startMathQuiz()" class="mt-6 w-full py-3 rounded-xl bg-green-600 hover:bg-green-500 transition font-bold">Play Now</button>
+                </div>
 
-    <!-- FREE GAMES -->
-    <section id="free-games" class="py-32 px-8 relative z-10">
-        <h2 class="text-7xl font-bold glow text-center mb-20">FREE GAMES</h2>
-        <div class="grid md:grid-cols-2 gap-20 max-w-5xl mx-auto">
-            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl p-16 border-8 border-green-500 text-center">
-                <div class="free-tag text-white font-bold py-4 text-2xl">FREE</div>
-                <h3 class="text-5xl glow mb-12">Math Quiz Master</h3>
-                <button onclick="startMathQuiz()" class="bg-green-600 hover:bg-green-500 text-3xl py-8 px-20 rounded-full shadow-2xl w-full">PLAY NOW</button>
+                <!-- Typing Speed -->
+                <div class="glass-card p-8 rounded-2xl relative overflow-hidden group unlocked">
+                    <div class="absolute top-0 right-0 bg-green-500 text-black text-xs font-bold px-3 py-1 rounded-bl-lg">FREE</div>
+                    <div class="flex items-center gap-6">
+                        <div class="h-16 w-16 bg-blue-500/20 rounded-full flex items-center justify-center text-blue-400 text-3xl">
+                            <i class="fas fa-keyboard"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-2xl font-bold">Typing Speed Pro</h4>
+                            <p class="text-gray-400 text-sm">How fast can you type?</p>
+                        </div>
+                    </div>
+                    <button onclick="startTypingSpeed()" class="mt-6 w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 transition font-bold">Play Now</button>
+                </div>
             </div>
-            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl p-16 border-8 border-blue-500 text-center">
-                <div class="free-tag text-white font-bold py-4 text-2xl">FREE</div>
-                <h3 class="text-5xl glow mb-12">Typing Speed Pro</h3>
-                <button onclick="startTypingSpeed()" class="bg-blue-600 hover:bg-blue-500 text-3xl py-8 px-20 rounded-full shadow-2xl w-full">PLAY NOW</button>
+        </div>
+
+        <!-- Premium Games -->
+        <div>
+            <div class="flex items-center justify-between mb-8">
+                <h3 class="text-3xl font-bold border-l-4 border-yellow-500 pl-4"><span class="premium-text">Premium Collection</span></h3>
+                <span class="text-xs font-bold bg-yellow-500/10 text-yellow-500 px-3 py-1 rounded-full border border-yellow-500/20">LOCKED</span>
             </div>
+
+            <!-- Container for JS injection -->
+            <div id="premium-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"></div>
         </div>
     </section>
 
-    <!-- PREMIUM GAMES (14 GAMES - TITLES FIT PERFECTLY) -->
-    <section id="games" class="py-32 px-8 relative z-10">
-        <h2 class="text-7xl font-bold glow text-center mb-20">PREMIUM GAMES</h2>
-        <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-12 max-w-7xl mx-auto">
-            <!-- 14 Games - Each title fits cleanly -->
-            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl overflow-hidden border-4 border-purple-600">
-                <div class="premium-tag text-white font-bold py-3 text-center text-xl">PREMIUM</div>
-                <div class="p-10 text-center">
-                    <h3 class="game-title text-3xl glow">Spelling Bee</h3>
-                    <button onclick="checkLogin('startSpellingBee')" class="bg-purple-600 hover:bg-purple-500 text-xl py-4 px-10 rounded-full w-full mt-8">Play</button>
+    <!-- Pricing -->
+    <section id="pricing" class="py-20 px-4 bg-black/50">
+        <div class="max-w-5xl mx-auto text-center">
+            <h2 class="text-4xl font-bold mb-4">Unlock the <span class="premium-text">Full Experience</span></h2>
+            <p class="text-gray-400 mb-12">Get instant access to all premium games including new releases.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="glass-card p-10 rounded-3xl border-t-4 border-purple-500 relative">
+                    <h3 class="text-2xl font-bold mb-2">Gamer Pro</h3>
+                    <div class="text-4xl font-black mb-6 text-purple-400">$2.51<span class="text-lg text-gray-500">/mo</span></div>
+                    <ul class="text-left space-y-3 mb-8 text-gray-300 text-sm">
+                        <li><i class="fas fa-check text-purple-500 mr-2"></i> All Premium Games</li>
+                        <li><i class="fas fa-check text-purple-500 mr-2"></i> Ad-free Experience</li>
+                        <li><i class="fas fa-check text-purple-500 mr-2"></i> New Games Monthly</li>
+                    </ul>
+                    <button onclick="openPayment('Gamer Pro', 2.51)" class="w-full py-3 bg-purple-600 hover:bg-purple-500 rounded-xl font-bold shadow-lg shadow-purple-900/50">Subscribe</button>
                 </div>
-            </div>
-            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl overflow-hidden border-4 border-red-600">
-                <div class="premium-tag text-white font-bold py-3 text-center text-xl">PREMIUM</div>
-                <div class="p-10 text-center">
-                    <h3 class="game-title text-3xl glow">Flag Quiz</h3>
-                    <button onclick="checkLogin('startFlagQuiz')" class="bg-red-600 hover:bg-red-500 text-xl py-4 px-10 rounded-full w-full mt-8">Play</button>
-                </div>
-            </div>
-            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl overflow-hidden border-4 border-yellow-600">
-                <div class="premium-tag text-white font-bold py-3 text-center text-xl">PREMIUM</div>
-                <div class="p-10 text-center">
-                    <h3 class="game-title text-3xl glow">Color Mixing</h3>
-                    <button onclick="checkLogin('startColorMixing')" class="bg-yellow-600 hover:bg-yellow-500 text-xl py-4 px-10 rounded-full w-full mt-8">Play</button>
-                </div>
-            </div>
-            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl overflow-hidden border-4 border-cyan-600">
-                <div class="premium-tag text-white font-bold py-3 text-center text-xl">PREMIUM</div>
-                <div class="p-10 text-center">
-                    <h3 class="game-title text-3xl glow">Logic Puzzle</h3>
-                    <button onclick="checkLogin('startLogicPuzzle')" class="bg-cyan-600 hover:bg-cyan-500 text-xl py-4 px-10 rounded-full w-full mt-8">Play</button>
-                </div>
-            </div>
-            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl overflow-hidden border-4 border-orange-600">
-                <div class="premium-tag text-white font-bold py-3 text-center text-xl">PREMIUM</div>
-                <div class="p-10 text-center">
-                    <h3 class="game-title text-3xl glow">Cryptography</h3>
-                    <button onclick="checkLogin('startCryptography')" class="bg-orange-600 hover:bg-orange-500 text-xl py-4 px-10 rounded-full w-full mt-8">Play</button>
-                </div>
-            </div>
-            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl overflow-hidden border-4 border-pink-600">
-                <div class="premium-tag text-white font-bold py-3 text-center text-xl">PREMIUM</div>
-                <div class="p-10 text-center">
-                    <h3 class="game-title text-3xl glow">Memory Matrix</h3>
-                    <button onclick="checkLogin('startMemoryMatrix')" class="bg-pink-600 hover:bg-pink-500 text-xl py-4 px-10 rounded-full w-full mt-8">Play</button>
-                </div>
-            </div>
-            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl overflow-hidden border-4 border-indigo-600">
-                <div class="premium-tag text-white font-bold py-3 text-center text-xl">PREMIUM</div>
-                <div class="p-10 text-center">
-                    <h3 class="game-title text-3xl glow">Spudy Snake</h3>
-                    <button onclick="checkLogin('startSnake')" class="bg-indigo-600 hover:bg-indigo-500 text-xl py-4 px-10 rounded-full w-full mt-8">Play</button>
-                </div>
-            </div>
-            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl overflow-hidden border-4 border-teal-600">
-                <div class="premium-tag text-white font-bold py-3 text-center text-xl">PREMIUM</div>
-                <div class="p-10 text-center">
-                    <h3 class="game-title text-3xl glow">Tic Tac Toe AI</h3>
-                    <button onclick="checkLogin('startTicTacToe')" class="bg-teal-600 hover:bg-teal-500 text-xl py-4 px-10 rounded-full w-full mt-8">Play</button>
-                </div>
-            </div>
-            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl overflow-hidden border-4 border-lime-600">
-                <div class="premium-tag text-white font-bold py-3 text-center text-xl">PREMIUM</div>
-                <div class="p-10 text-center">
-                    <h3 class="game-title text-3xl glow">Word Search</h3>
-                    <button onclick="checkLogin('startWordSearch')" class="bg-lime-600 hover:bg-lime-500 text-xl py-4 px-10 rounded-full w-full mt-8">Play</button>
-                </div>
-            </div>
-            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl overflow-hidden border-4 border-rose-600">
-                <div class="premium-tag text-white font-bold py-3 text-center text-xl">PREMIUM</div>
-                <div class="p-10 text-center">
-                    <h3 class="game-title text-3xl glow">2048 Spudy</h3>
-                    <button onclick="checkLogin('start2048')" class="bg-rose-600 hover:bg-rose-500 text-xl py-4 px-10 rounded-full w-full mt-8">Play</button>
-                </div>
-            </div>
-            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl overflow-hidden border-4 border-emerald-600">
-                <div class="premium-tag text-white font-bold py-3 text-center text-xl">PREMIUM</div>
-                <div class="p-10 text-center">
-                    <h3 class="game-title text-3xl glow">Sudoku Master</h3>
-                    <button onclick="checkLogin('startSudoku')" class="bg-emerald-600 hover:bg-emerald-500 text-xl py-4 px-10 rounded-full w-full mt-8">Play</button>
-                </div>
-            </div>
-            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl overflow-hidden border-4 border-amber-600">
-                <div class="premium-tag text-white font-bold py-3 text-center text-xl">PREMIUM</div>
-                <div class="p-10 text-center">
-                    <h3 class="game-title text-3xl glow">Hangman</h3>
-                    <button onclick="checkLogin('startHangman')" class="bg-amber-600 hover:bg-amber-500 text-xl py-4 px-10 rounded-full w-full mt-8">Play</button>
-                </div>
-            </div>
-            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl overflow-hidden border-4 border-violet-600">
-                <div class="premium-tag text-white font-bold py-3 text-center text-xl">PREMIUM</div>
-                <div class="p-10 text-center">
-                    <h3 class="game-title text-3xl glow">Connect Four</h3>
-                    <button onclick="checkLogin('startConnectFour')" class="bg-violet-600 hover:bg-violet-500 text-xl py-4 px-10 rounded-full w-full mt-8">Play</button>
-                </div>
-            </div>
-            <div class="game-card bg-gray-900 bg-opacity-80 rounded-3xl overflow-hidden border-4 border-sky-600">
-                <div class="premium-tag text-white font-bold py-3 text-center text-xl">PREMIUM</div>
-                <div class="p-10 text-center">
-                    <h3 class="game-title text-3xl glow">Spudy Racer</h3>
-                    <button onclick="checkLogin('startRacer')" class="bg-sky-600 hover:bg-sky-500 text-xl py-4 px-10 rounded-full w-full mt-8">Play</button>
+
+                <div class="glass-card p-10 rounded-3xl border-t-4 border-yellow-500 relative transform md:-translate-y-4">
+                    <div class="absolute top-0 center bg-yellow-500 text-black text-xs font-bold px-3 py-1 rounded-b-lg left-1/2 -translate-x-1/2">BEST VALUE</div>
+                    <h3 class="text-2xl font-bold mb-2 text-yellow-100">Lifetime Legend</h3>
+                    <div class="text-4xl font-black mb-6 text-yellow-400">$49<span class="text-lg text-gray-500">/once</span></div>
+                    <ul class="text-left space-y-3 mb-8 text-gray-300 text-sm">
+                        <li><i class="fas fa-star text-yellow-500 mr-2"></i> Lifetime Access</li>
+                        <li><i class="fas fa-star text-yellow-500 mr-2"></i> Exclusive Founder Badge</li>
+                        <li><i class="fas fa-star text-yellow-500 mr-2"></i> Early Access to Betas</li>
+                    </ul>
+                    <button onclick="openPayment('Lifetime Legend', 49)" class="w-full py-3 btn-gold rounded-xl font-bold shadow-lg shadow-yellow-900/50">Get Lifetime Access</button>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CURRENT PLAN + PRICING -->
-    <section id="plans" class="py-32 px-8 relative z-10 bg-black bg-opacity-80">
-        <h2 class="text-7xl font-bold glow text-center mb-20">Your Current Plan</h2>
-        <div class="max-w-4xl mx-auto text-center">
-            <div class="bg-gradient-to-br from-green-900 to-black p-20 rounded-3xl border-8 border-green-500 plan-current">
-                <h3 class="text-6xl font-bold mb-8">FREE PLAN</h3>
-                <p class="text-4xl mb-12">2 Free Games • Ads Included</p>
-                <p class="text-3xl opacity-80">Upgrade to unlock 14 premium games!</p>
-            </div>
+    <!-- Footer -->
+    <footer class="py-12 border-t border-white/10 bg-black text-center">
+        <h4 class="text-2xl font-bold mb-8">Spudy Games</h4>
+        <div class="flex justify-center gap-8 text-2xl mb-8">
+            <a href="https://api.whatsapp.com/send?phone=263776998296" class="text-green-500 hover:scale-110 transition"><i class="fab fa-whatsapp"></i></a>
+            <a href="mailto:spudytv14@gmail.com" class="text-blue-400 hover:scale-110 transition"><i class="fas fa-envelope"></i></a>
+            <a href="#" class="text-blue-600 hover:scale-110 transition"><i class="fab fa-facebook"></i></a>
+            <a href="#" class="text-white hover:scale-110 transition"><i class="fab fa-x-twitter"></i></a>
         </div>
-
-        <h2 class="text-7xl font-bold glow text-center mt-32 mb-20">Upgrade to Premium</h2>
-        <div class="grid md:grid-cols-2 gap-16 max-w-5xl mx-auto">
-            <div class="bg-gradient-to-br from-purple-900 to-pink-900 p-16 rounded-3xl text-center border-4 border-purple-500">
-                <h3 class="text-6xl font-bold mb-8">Gamer Pro</h3>
-                <p class="text-7xl font-bold mb-12">$2.51/month</p>
-                <button onclick="openPayment('Gamer Pro', 2.51)" class="w-full py-8 bg-white text-purple-600 font-bold text-3xl rounded-full">Upgrade Now</button>
-            </div>
-            <div class="bg-gradient-to-br from-yellow-600 to-orange-600 p-16 rounded-3xl text-center border-4 border-yellow-500">
-                <h3 class="text-6xl font-bold mb-8 text-black">Lifetime Legend</h3>
-                <p class="text-7xl font-bold mb-12 text-black">$49 one-time</p>
-                <button onclick="openPayment('Lifetime Legend', 49)" class="w-full py-8 bg-black text-yellow-400 font-bold text-3xl rounded-full">Get Lifetime</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- CONTACT & FOOTER WITH ICONS -->
-    <footer class="py-32 text-center relative z-10 bg-black">
-        <h2 class="text-6xl font-bold glow mb-16">Contact Us</h2>
-        <div class="flex justify-center gap-20 text-8xl mb-20">
-            <a href="https://api.whatsapp.com/send?phone=263716669706" class="text-green-400 social-icon"><i class="fab fa-whatsapp"></i></a>
-            <a href="mailto:spudytv14@gmail.com" class="text-blue-400 social-icon"><i class="fas fa-envelope"></i></a>
-            <a href="https://facebook.com/matipaishe.blessing.muduchwa" class="text-blue-600 social-icon"><i class="fab fa-facebook"></i></a>
-            <a href="https://x.com/Matipa_14" class="text-white social-icon"><i class="fab fa-x-twitter"></i></a>
-            <a href="https://youtube.com/@SpudyAI" class="text-red-500 social-icon"><i class="fab fa-youtube"></i></a>
-        </div>
-        <p class="text-xl opacity-70">© 2026 Spudy Games. All Rights Reserved.</p>
-        <p class="text-4xl mt-12 text-yellow-400 font-bold">Created by Matipaishe</p>
+        <p class="text-gray-500 text-sm">© 2026 Spudy Games. Created by Matipaishe.</p>
     </footer>
 
     <!-- Payment Modal -->
-    <div id="paymentModal" class="fixed inset-0 bg-black bg-opacity-98 flex items-center justify-center hidden z-50">
-        <div class="bg-gray-900 p-20 rounded-3xl max-w-6xl w-full text-center relative border-8 border-yellow-500">
-            <button onclick="closePayment()" class="absolute top-8 right-12 text-6xl text-gray-400 hover:text-white">×</button>
-            <h2 class="text-7xl font-bold glow mb-12" id="planName">Gamer Pro</h2>
-            <p class="text-8xl font-bold mb-20 text-yellow-400" id="planPrice">$2.51/month</p>
-            <p class="text-4xl mb-16">Select Payment Method:</p>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-16">
-                <div class="p-12 bg-gradient-to-br from-green-900 to-black rounded-3xl cursor-pointer hover:scale-110 transition border-4 border-green-500" onclick="pay('EcoCash')">
-                    <img src="ecocash.png" class="w-48 h-48 mx-auto mb-8">
-                    <p class="text-4xl font-bold text-green-400">EcoCash</p>
-                </div>
-                <div class="p-12 bg-gradient-to-br from-blue-900 to-black rounded-3xl cursor-pointer hover:scale-110 transition border-4 border-blue-500" onclick="pay('OneMoney')">
-                    <img src="onemoney.png" class="w-48 h-48 mx-auto mb-8">
-                    <p class="text-4xl font-bold text-blue-400">OneMoney</p>
-                </div>
-                <div class="p-12 bg-gradient-to-br from-red-900 to-black rounded-3xl cursor-pointer hover:scale-110 transition border-4 border-red-500" onclick="pay('NetOne')">
-                    <img src="netone.png" class="w-48 h-48 mx-auto mb-8">
-                    <p class="text-4xl font-bold text-red-400">NetOne Cash</p>
-                </div>
+    <div id="paymentModal" class="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center hidden z-[60]">
+        <div class="glass-card p-8 rounded-3xl max-w-lg w-full text-center relative mx-4">
+            <button onclick="closePayment()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fas fa-times text-2xl"></i></button>
+            <h2 class="text-3xl font-bold mb-2" id="planName">Gamer Pro</h2>
+            <p class="text-4xl font-black text-yellow-500 mb-8" id="planPrice">$2.51</p>
+            
+            <div class="bg-white/5 p-4 rounded-xl mb-6">
+                <p class="text-sm text-gray-400 mb-2">Send payment via EcoCash to:</p>
+                <p class="text-2xl font-mono font-bold text-white tracking-wider select-all">0776998296</p>
+                <p class="text-xs text-green-400 mt-1"><i class="fas fa-check-circle"></i> Matipaishe</p>
             </div>
+
+            <p class="mb-4 text-sm text-gray-300">Choose method to confirm:</p>
+            <div class="grid grid-cols-3 gap-4">
+                <button onclick="pay('EcoCash')" class="p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-blue-900 transition flex flex-col items-center gap-2">
+                    <i class="fas fa-wallet text-2xl text-blue-400"></i>
+                    <span class="text-xs font-bold">EcoCash</span>
+                </button>
+                <button onclick="pay('OneMoney')" class="p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-orange-900 transition flex flex-col items-center gap-2">
+                    <i class="fas fa-mobile-alt text-2xl text-orange-400"></i>
+                    <span class="text-xs font-bold">OneMoney</span>
+                </button>
+                <button onclick="pay('NetOne')" class="p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-red-900 transition flex flex-col items-center gap-2">
+                    <i class="fas fa-sim-card text-2xl text-red-400"></i>
+                    <span class="text-xs font-bold">NetOne</span>
+                </button>
+            </div>
+            <p class="mt-6 text-xs text-gray-500">Clicking a method will open WhatsApp to confirm your payment.</p>
         </div>
     </div>
 
-    <!-- Script -->
     <script>
+        // Game Logic Stubs
+        const games = [
+            { name: "Spelling Bee", id: "startSpellingBee", icon: "fa-spell-check", color: "purple", colorClass: "text-purple-400", bgClass: "bg-purple-500/20" },
+            { name: "Flag Quiz", id: "startFlagQuiz", icon: "fa-flag", color: "red", colorClass: "text-red-400", bgClass: "bg-red-500/20" },
+            { name: "Color Mixing", id: "startColorMixing", icon: "fa-palette", color: "yellow", colorClass: "text-yellow-400", bgClass: "bg-yellow-500/20" },
+            { name: "Logic Puzzle", id: "startLogicPuzzle", icon: "fa-puzzle-piece", color: "cyan", colorClass: "text-cyan-400", bgClass: "bg-cyan-500/20" },
+            { name: "Cryptography", id: "startCryptography", icon: "fa-key", color: "orange", colorClass: "text-orange-400", bgClass: "bg-orange-500/20" },
+            { name: "Memory Matrix", id: "startMemoryMatrix", icon: "fa-brain", color: "pink", colorClass: "text-pink-400", bgClass: "bg-pink-500/20" },
+            { name: "Spudy Snake", id: "startSnake", icon: "fa-dragon", color: "indigo", colorClass: "text-indigo-400", bgClass: "bg-indigo-500/20" },
+            { name: "Tic Tac Toe AI", id: "startTicTacToe", icon: "fa-times", color: "teal", colorClass: "text-teal-400", bgClass: "bg-teal-500/20", new: true },
+            { name: "Word Search", id: "startWordSearch", icon: "fa-search", color: "lime", colorClass: "text-lime-400", bgClass: "bg-lime-500/20" },
+            { name: "2048 Spudy", id: "start2048", icon: "fa-th", color: "rose", colorClass: "text-rose-400", bgClass: "bg-rose-500/20", new: true },
+            { name: "Sudoku Master", id: "startSudoku", icon: "fa-border-all", color: "emerald", colorClass: "text-emerald-400", bgClass: "bg-emerald-500/20" },
+            { name: "Hangman", id: "startHangman", icon: "fa-user-injured", color: "amber", colorClass: "text-amber-400", bgClass: "bg-amber-500/20" },
+            { name: "Connect Four", id: "startConnectFour", icon: "fa-circle", color: "violet", colorClass: "text-violet-400", bgClass: "bg-violet-500/20" },
+            { name: "Spudy Racer", id: "startRacer", icon: "fa-car", color: "sky", colorClass: "text-sky-400", bgClass: "bg-sky-500/20", new: true },
+            { name: "Chess Master", id: "startChess", icon: "fa-chess-knight", color: "white", colorClass: "text-white", bgClass: "bg-white/20", new: true },
+            { name: "Space Invaders", id: "startSpace", icon: "fa-rocket", color: "red", colorClass: "text-red-500", bgClass: "bg-red-500/20", new: true },
+            { name: "Cyber Poker", id: "startPoker", icon: "fa-dice", color: "purple", colorClass: "text-purple-400", bgClass: "bg-purple-500/20", new: true },
+        ];
+
+        const premiumGrid = document.getElementById('premium-grid');
+        
+        games.forEach(game => {
+            const card = document.createElement('div');
+            card.className = `glass-card p-6 rounded-xl relative overflow-hidden group`;
+            card.innerHTML = `
+                ${game.new ? '<div class="absolute top-0 right-0 bg-yellow-500 text-black text-[10px] font-bold px-2 py-0.5 rounded-bl-lg z-10">NEW</div>' : ''}
+                <div class="flex flex-col items-center text-center gap-4">
+                    <div class="h-12 w-12 ${game.bgClass} rounded-full flex items-center justify-center ${game.colorClass} text-2xl">
+                        <i class="fas ${game.icon}"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-bold leading-tight mb-1">${game.name}</h4>
+                    </div>
+                </div>
+                <button onclick="checkLogin('${game.id}', '${game.name}')" class="mt-4 w-full py-2 rounded-lg bg-white/10 hover:bg-white/20 transition text-sm font-bold border border-white/10">Play</button>
+                
+                <!-- Lock Overlay -->
+                <div class="locked-overlay" onclick="checkLogin('${game.id}', '${game.name}')">
+                    <i class="fas fa-lock text-3xl text-yellow-500 mb-2"></i>
+                    <span class="text-xs font-bold uppercase tracking-widest text-gray-300">Premium</span>
+                </div>
+            `;
+            premiumGrid.appendChild(card);
+        });
+
+        // Function Stubs
+        function startMathQuiz() { alert('Starting Math Quiz Master...'); }
+        function startTypingSpeed() { alert('Starting Typing Speed Pro...'); }
+        
+        // Dynamic functions for premium games
+        games.forEach(game => {
+            window[game.id] = function() {
+                alert(`Starting ${game.name}... (This is a premium feature!)`);
+            };
+        });
+
+        // Auth & Payment Logic
         if (localStorage.getItem('spudyLoggedIn') === 'true') {
             document.getElementById('authBtn').textContent = 'Account';
+            // Unlock games visually
+            document.querySelectorAll('.glass-card').forEach(c => c.classList.add('unlocked'));
         }
 
-        function openLogin() { alert('Contact +263 71 666 9706 on WhatsApp'); }
+        function openLogin() { 
+            const wantLogin = confirm('Contact +263 77 699 8296 on WhatsApp for login credentials?');
+            if(wantLogin) {
+                 window.open('https://api.whatsapp.com/send?phone=263776998296&text=Hello, I would like to login to Spudy Games.', '_blank');
+            }
+        }
 
-        function checkLogin(func) {
-            if (!localStorage.getItem('spudyLoggedIn')) {
-                alert('Premium game! Please login first.');
-                openLogin();
+        function checkLogin(funcName, gameName) {
+            if (localStorage.getItem('spudyLoggedIn') === 'true') {
+                if (typeof window[funcName] === 'function') {
+                    window[funcName]();
+                }
             } else {
-                eval(func + '()');
+                // Shake effect or visual cue?
+                // alert('Premium game! Please login first.');
+                openPayment('Premium Access', 2.51); // Suggest upgrade immediately
             }
         }
 
         function openPayment(plan, price) {
             document.getElementById('planName').textContent = plan;
-            document.getElementById('planPrice').textContent = price === 49 ? '$49 Lifetime' : '$' + price + '/month';
+            document.getElementById('planPrice').textContent = price === 49 ? '$49 Lifetime' : '$' + price + (price === 2.51 ? '/month' : '');
             document.getElementById('paymentModal').classList.remove('hidden');
         }
 
         function pay(method) {
-            window.open(`https://api.whatsapp.com/send?phone=263716669706&text=I want to pay for Spudy Games ${document.getElementById('planName').textContent} using ${method}`, '_blank');
+            // New number: 263776998296
+            const msg = `I want to pay for Spudy Games ${document.getElementById('planName').textContent} using ${method}. Please send payment details for EcoCash 0776998296.`;
+            window.open(`https://api.whatsapp.com/send?phone=263776998296&text=${encodeURIComponent(msg)}`, '_blank');
         }
 
         function closePayment() { document.getElementById('paymentModal').classList.add('hidden'); }
