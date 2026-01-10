@@ -227,6 +227,101 @@
         </div>
     </div>
 
+    <!-- Math Quiz Modal -->
+    <div id="mathGameModal" class="fixed inset-0 bg-black/95 backdrop-blur-xl flex items-center justify-center hidden z-[70]">
+        <div class="glass-card p-6 md:p-8 rounded-3xl max-w-2xl w-full mx-4 flex flex-col items-center text-center relative">
+            <button onclick="closeMathGame()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fas fa-times text-2xl"></i></button>
+
+            <!-- Game Header -->
+            <div class="flex justify-between w-full mb-8">
+                <div class="text-left">
+                    <p class="text-gray-400 text-xs uppercase tracking-widest">Score</p>
+                    <p class="text-2xl font-bold text-green-400" id="math-score">0</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-gray-400 text-xs uppercase tracking-widest">Level</p>
+                    <p class="text-2xl font-bold text-blue-400" id="math-level">1</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-gray-400 text-xs uppercase tracking-widest">Time</p>
+                    <p class="text-2xl font-bold text-yellow-500" id="math-timer">60s</p>
+                </div>
+            </div>
+
+            <!-- Question -->
+            <div id="math-game-view" class="w-full">
+                <div class="mb-10 py-10">
+                    <span id="math-question" class="text-5xl md:text-7xl font-black text-white tracking-tight"></span>
+                </div>
+
+                <!-- Options -->
+                <div class="grid grid-cols-2 gap-4 w-full" id="math-options">
+                    <!-- Buttons injected via JS -->
+                </div>
+            </div>
+
+            <!-- Game Over View -->
+            <div id="math-game-over" class="hidden w-full">
+                <h3 class="text-3xl font-bold mb-2">Time's Up!</h3>
+                <p class="text-gray-400 mb-8">Your calculation skills result:</p>
+
+                <div class="text-6xl font-black text-green-500 mb-2" id="math-final-score">0</div>
+                <p class="text-sm uppercase tracking-widest text-gray-500 mb-10">Total Score</p>
+
+                <button onclick="startMathQuiz()" class="w-full py-4 rounded-xl bg-green-600 hover:bg-green-500 transition font-bold text-lg mb-4">Play Again</button>
+                <button onclick="closeMathGame()" class="w-full py-4 rounded-xl bg-white/10 hover:bg-white/20 transition font-bold text-lg">Exit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Typing Speed Modal -->
+    <div id="typingGameModal" class="fixed inset-0 bg-black/95 backdrop-blur-xl flex items-center justify-center hidden z-[70]">
+        <div class="glass-card p-6 md:p-8 rounded-3xl max-w-3xl w-full mx-4 flex flex-col items-center relative">
+            <button onclick="closeTypingGame()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fas fa-times text-2xl"></i></button>
+
+            <!-- Game Header -->
+            <div class="flex justify-between w-full mb-6">
+                <div class="text-left">
+                    <p class="text-gray-400 text-xs uppercase tracking-widest">WPM</p>
+                    <p class="text-2xl font-bold text-blue-400" id="typing-wpm">0</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-gray-400 text-xs uppercase tracking-widest">Time</p>
+                    <p class="text-2xl font-bold text-yellow-500" id="typing-timer">60s</p>
+                </div>
+            </div>
+
+            <!-- Game View -->
+            <div id="typing-game-view" class="w-full">
+                <div class="bg-black/30 p-6 rounded-xl mb-6 text-left min-h-[150px] relative">
+                    <p id="typing-text" class="text-xl md:text-2xl font-mono leading-relaxed text-gray-500 select-none"></p>
+                    <textarea id="typing-input" class="absolute inset-0 w-full h-full opacity-0 cursor-text" spellcheck="false" autocomplete="off"></textarea>
+                </div>
+                <p class="text-sm text-gray-400 text-center">Click text to focus. Start typing to begin.</p>
+            </div>
+
+            <!-- Game Over View -->
+            <div id="typing-game-over" class="hidden w-full text-center">
+                <h3 class="text-3xl font-bold mb-2">Test Complete!</h3>
+                <p class="text-gray-400 mb-8">Your typing speed result:</p>
+
+                <div class="grid grid-cols-2 gap-4 mb-10">
+                    <div class="bg-white/5 p-4 rounded-xl">
+                        <div class="text-4xl font-black text-blue-500 mb-1" id="typing-final-wpm">0</div>
+                        <p class="text-xs uppercase tracking-widest text-gray-500">WPM</p>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded-xl">
+                        <div class="text-4xl font-black text-purple-500 mb-1" id="typing-accuracy">0%</div>
+                        <p class="text-xs uppercase tracking-widest text-gray-500">Accuracy</p>
+                    </div>
+                </div>
+
+                <button onclick="startTypingSpeed()" class="w-full py-4 rounded-xl bg-blue-600 hover:bg-blue-500 transition font-bold text-lg mb-4">Try Again</button>
+                <button onclick="closeTypingGame()" class="w-full py-4 rounded-xl bg-white/10 hover:bg-white/20 transition font-bold text-lg">Exit</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Game Logic Stubs
         const games = [
@@ -275,9 +370,260 @@
             premiumGrid.appendChild(card);
         });
 
-        // Function Stubs
-        function startMathQuiz() { alert('Starting Math Quiz Master...'); }
-        function startTypingSpeed() { alert('Starting Typing Speed Pro...'); }
+        // --- MATH QUIZ LOGIC ---
+        let mathTimerInterval;
+        let mathScore = 0;
+        let mathLevel = 1;
+        let mathTimeLeft = 60;
+        let mathPlaying = false;
+
+        function startMathQuiz() {
+            document.getElementById('mathGameModal').classList.remove('hidden');
+            document.getElementById('math-game-view').classList.remove('hidden');
+            document.getElementById('math-game-over').classList.add('hidden');
+            mathScore = 0;
+            mathLevel = 1;
+            mathTimeLeft = 60;
+            mathPlaying = true;
+            updateMathUI();
+            generateMathQuestion();
+            clearInterval(mathTimerInterval);
+            mathTimerInterval = setInterval(() => {
+                mathTimeLeft--;
+                updateMathUI();
+                if(mathTimeLeft <= 0) endMathGame();
+            }, 1000);
+        }
+
+        function closeMathGame() {
+            document.getElementById('mathGameModal').classList.add('hidden');
+            clearInterval(mathTimerInterval);
+            mathPlaying = false;
+        }
+
+        function updateMathUI() {
+            document.getElementById('math-score').textContent = mathScore;
+            document.getElementById('math-level').textContent = mathLevel;
+            document.getElementById('math-timer').textContent = mathTimeLeft + 's';
+        }
+
+        function generateMathQuestion() {
+            if(!mathPlaying) return;
+
+            // Difficulty logic based on Level
+            // Level 1-5: Simple Ops
+            // Level 6-10: Medium Ops
+            // Level 11+: Hard Ops
+
+            let ops = ['+'];
+            if(mathLevel > 2) ops.push('-');
+            if(mathLevel > 5) ops.push('*');
+            if(mathLevel > 10) ops.push('/');
+
+            const op = ops[Math.floor(Math.random() * ops.length)];
+            let a, b, ans;
+
+            const maxNum = 10 + (mathLevel * 5); // Increase range with level
+
+            if(op === '+') {
+                a = r(1, maxNum);
+                b = r(1, maxNum);
+                ans = a + b;
+            } else if(op === '-') {
+                a = r(5, maxNum);
+                b = r(1, a);
+                ans = a - b;
+            } else if(op === '*') {
+                const maxFactor = 2 + Math.floor(mathLevel / 2);
+                a = r(2, maxFactor);
+                b = r(2, 12);
+                ans = a * b;
+            } else if(op === '/') {
+                b = r(2, 10);
+                ans = r(2, 10 + mathLevel);
+                a = b * ans; // Ensure clean division
+            }
+
+            document.getElementById('math-question').textContent = `${a} ${op} ${b} = ?`;
+
+            // Generate options
+            let options = [ans];
+            while(options.length < 4) {
+                let range = 5 + Math.floor(mathLevel / 2);
+                let wrong = ans + r(-range, range);
+                if(wrong !== ans && wrong >= 0 && !options.includes(wrong)) options.push(wrong);
+            }
+            options = options.sort(() => Math.random() - 0.5);
+
+            const container = document.getElementById('math-options');
+            container.innerHTML = '';
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-2xl font-bold transition";
+                btn.textContent = opt;
+                btn.onclick = () => checkMathAnswer(opt === ans);
+                container.appendChild(btn);
+            });
+        }
+
+        function checkMathAnswer(isCorrect) {
+            if(isCorrect) {
+                mathScore += (10 * mathLevel);
+                mathLevel++; // Level up on every correct answer? Or maybe every few? Let's make it every correct answer for rapid progression as requested "levels from 1 going forward"
+                // Visual feedback?
+            } else {
+                // Deny and move next
+                const gameView = document.getElementById('math-game-view');
+                gameView.classList.add('animate-pulse');
+                gameView.style.borderColor = "red";
+                setTimeout(() => {
+                    gameView.classList.remove('animate-pulse');
+                    gameView.style.borderColor = "transparent"; // Reset
+                }, 200);
+            }
+            // Always generate new question
+            generateMathQuestion();
+            updateMathUI();
+        }
+
+        function endMathGame() {
+            mathPlaying = false;
+            clearInterval(mathTimerInterval);
+            document.getElementById('math-game-view').classList.add('hidden');
+            document.getElementById('math-game-over').classList.remove('hidden');
+            document.getElementById('math-final-score').textContent = mathScore;
+        }
+
+        function r(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+
+        // --- TYPING SPEED LOGIC ---
+        let typingTimerInterval;
+        let typingTimeLeft = 60;
+        let typingLevel = 1;
+        let typingStarted = false;
+        let typingText = "";
+        let totalChars = 0;
+        let correctChars = 0;
+
+        const typingTexts = [
+            "cat dog run sky blue red hot sun", // Level 1
+            "The quick brown fox jumps over the lazy dog.", // Level 2
+            "Programming is the art of telling another human what one wants the computer to do.", // Level 3
+            "Technology is best when it brings people together. It is only when they go wrong that machines remind you how powerful they are.", // Level 4
+            "To be or not to be, that is the question. Whether 'tis nobler in the mind to suffer the slings and arrows of outrageous fortune.", // Level 5
+            "Success is not final, failure is not fatal: It is the courage to continue that counts. Believe you can and you're halfway there.", // Level 6
+            "In the middle of difficulty lies opportunity. The only way to do great work is to love what you do. Stay hungry, stay foolish." // Level 7
+        ];
+
+        function startTypingSpeed() {
+            document.getElementById('typingGameModal').classList.remove('hidden');
+            document.getElementById('typing-game-view').classList.remove('hidden');
+            document.getElementById('typing-game-over').classList.add('hidden');
+
+            typingTimeLeft = 60;
+            typingLevel = 1;
+            typingStarted = false;
+            correctChars = 0;
+            totalChars = 0;
+
+            // Setup Text
+            loadTypingLevel();
+
+            const input = document.getElementById('typing-input');
+            input.value = '';
+            input.focus();
+            input.oninput = handleTyping;
+
+            updateTypingUI();
+            clearInterval(typingTimerInterval);
+        }
+
+        function loadTypingLevel() {
+            const index = Math.min(typingLevel - 1, typingTexts.length - 1);
+            typingText = typingTexts[index];
+            renderTypingText('');
+            document.getElementById('typing-input').value = '';
+        }
+
+        function handleTyping(e) {
+            if(!typingStarted) {
+                typingStarted = true;
+                typingTimerInterval = setInterval(() => {
+                    typingTimeLeft--;
+                    updateTypingUI();
+                    if(typingTimeLeft <= 0) endTypingGame();
+                }, 1000);
+            }
+
+            const inputVal = e.target.value;
+            renderTypingText(inputVal);
+
+            // Auto finish if complete
+            if(inputVal.length >= typingText.length) {
+                // Check if accuracy is good enough to proceed?
+                // For now, just level up
+                typingLevel++;
+                loadTypingLevel();
+            }
+        }
+
+        function renderTypingText(inputVal) {
+            const display = document.getElementById('typing-text');
+            display.innerHTML = '';
+            let correctCount = 0;
+
+            for(let i=0; i<typingText.length; i++) {
+                const span = document.createElement('span');
+                const char = typingText[i];
+                const inputChar = inputVal[i];
+
+                if(inputChar == null) {
+                    span.textContent = char; // Not typed yet
+                } else if(inputChar === char) {
+                    span.textContent = char;
+                    span.className = "text-green-400";
+                    correctCount++;
+                } else {
+                    span.textContent = char;
+                    span.className = "text-red-500 bg-red-900/30";
+                }
+                display.appendChild(span);
+            }
+            correctChars = correctCount;
+            totalChars = inputVal.length;
+
+            // Live WPM calculation
+            if(typingTimeLeft < 60) {
+                 const elapsed = 60 - typingTimeLeft;
+                 const wpm = Math.round((correctChars / 5) / (elapsed / 60));
+                 document.getElementById('typing-wpm').textContent = isFinite(wpm) ? wpm : 0;
+            }
+        }
+
+        function updateTypingUI() {
+            document.getElementById('typing-timer').textContent = typingTimeLeft + 's';
+        }
+
+        function closeTypingGame() {
+             document.getElementById('typingGameModal').classList.add('hidden');
+             clearInterval(typingTimerInterval);
+             typingStarted = false;
+        }
+
+        function endTypingGame() {
+            clearInterval(typingTimerInterval);
+            document.getElementById('typing-game-view').classList.add('hidden');
+            document.getElementById('typing-game-over').classList.remove('hidden');
+
+            const elapsed = 60 - typingTimeLeft;
+            const time = elapsed === 0 ? 1 : elapsed; // Avoid div by zero
+            const wpm = Math.round((correctChars / 5) / (time / 60));
+            const accuracy = totalChars > 0 ? Math.round((correctChars / totalChars) * 100) : 0;
+
+            document.getElementById('typing-final-wpm').textContent = wpm;
+            document.getElementById('typing-accuracy').textContent = accuracy + '%';
+        }
         
         // Dynamic functions for premium games
         games.forEach(game => {
