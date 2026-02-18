@@ -1,681 +1,1235 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spudy Games - Premium Arcade</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap');
-        
-        body { margin: 0; overflow-x: hidden; color: white; font-family: 'Outfit', sans-serif; background-color: #050505; }
-        #bg-video { position: fixed; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; transform: translateX(-50%) translateY(-50%); z-index: -3; object-fit: cover; opacity: 0.4; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, rgba(10,10,30,0.8), #000); z-index: -2; }
-        
-        .glass-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-            transition: all 0.3s ease;
-        }
-        .glass-card:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.07);
-            border-color: rgba(255, 215, 0, 0.3);
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spudy Games — Premium Arcade</title>
 
-        .premium-text {
-            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .btn-gold {
-            background: linear-gradient(45deg, #d4af37, #f1c40f);
-            color: black;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-        .btn-gold:hover {
-            filter: brightness(1.2);
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
-        }
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
 
-        .locked-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(4px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .glass-card:not(.unlocked) .locked-overlay {
-            opacity: 1;
-        }
-        .glass-card.unlocked .locked-overlay {
-            display: none;
-        }
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap');
 
-    </style>
+    :root{
+      --bg:#050505;
+      --glass: rgba(255,255,255,.05);
+      --glass2: rgba(255,255,255,.075);
+      --b: rgba(255,255,255,.10);
+      --b2: rgba(255,255,255,.16);
+      --gold1:#d4af37;
+      --gold2:#f1c40f;
+      --cyan1:#38bdf8;
+      --cyan2:#0ea5e9;
+      --emer:#22c55e;
+    }
+
+    html,body{ margin:0; background:var(--bg); color:#fff; font-family:'Outfit',sans-serif; overflow-x:hidden; }
+    #bg-video{
+      position:fixed; top:50%; left:50%;
+      min-width:100%; min-height:100%;
+      width:auto; height:auto;
+      transform:translate(-50%,-50%);
+      z-index:-3; object-fit:cover; opacity:.38;
+      filter:saturate(1.2) contrast(1.05);
+    }
+    .overlay{
+      position:fixed; inset:0;
+      background:
+        radial-gradient(1200px 700px at 20% 10%, rgba(56,189,248,.12), transparent 55%),
+        radial-gradient(900px 600px at 85% 25%, rgba(212,175,55,.12), transparent 55%),
+        radial-gradient(1100px 700px at 50% 95%, rgba(34,197,94,.10), transparent 55%),
+        radial-gradient(circle at center, rgba(10,10,30,.78), #000);
+      z-index:-2;
+    }
+
+    .glass{
+      background:var(--glass);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border:1px solid var(--b);
+      box-shadow: 0 18px 70px rgba(0,0,0,.55);
+    }
+    .glass:hover{
+      background:var(--glass2);
+      border-color: rgba(212,175,55,.22);
+      transform: translateY(-4px);
+      box-shadow: 0 22px 85px rgba(0,0,0,.65);
+    }
+
+    .nav-glass{
+      background: rgba(0,0,0,.72);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    .premium-text{
+      background: linear-gradient(90deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      text-shadow: 0 10px 30px rgba(212,175,55,.12);
+    }
+
+    .btn-gold{
+      background: linear-gradient(135deg, var(--gold1), var(--gold2));
+      color:#0b0b0b;
+      font-weight: 900;
+      transition: all .25s ease;
+      box-shadow: 0 14px 35px rgba(212,175,55,.18);
+    }
+    .btn-gold:hover{
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+      box-shadow: 0 18px 45px rgba(212,175,55,.28);
+    }
+
+    .btn-outline{
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.18);
+      transition: .25s ease;
+      font-weight: 800;
+    }
+    .btn-outline:hover{
+      border-color: rgba(56,189,248,.45);
+      box-shadow: 0 0 0 3px rgba(56,189,248,.10);
+      transform: translateY(-1px);
+    }
+
+    .chip{
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.12);
+      transition:.2s ease;
+      font-weight: 900;
+    }
+    .chip:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.22); }
+    .chip.active{
+      background: rgba(56,189,248,.12);
+      border-color: rgba(56,189,248,.35);
+      box-shadow: 0 0 0 3px rgba(56,189,248,.10);
+    }
+
+    /* lock overlay */
+    .locked-overlay{
+      position:absolute; inset:0;
+      background: rgba(0,0,0,.62);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      opacity:0;
+      transition: opacity .25s ease;
+    }
+    .game-card:not(.unlocked) .locked-overlay{ opacity:1; }
+    .game-card.unlocked .locked-overlay{ display:none; }
+
+    /* modal */
+    .modalBack{
+      background: rgba(0,0,0,.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .no-scrollbar::-webkit-scrollbar{ display:none; }
+    .no-scrollbar{ scrollbar-width:none; -ms-overflow-style:none; }
+
+    /* small toast */
+    .toast{
+      position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%);
+      z-index: 9999;
+      padding: 12px 16px;
+      border-radius: 16px;
+      background: rgba(0,0,0,.62);
+      border: 1px solid rgba(255,255,255,.10);
+      font-weight: 900;
+    }
+  </style>
 </head>
+
 <body>
 
-    <!-- Background -->
-    <video autoplay muted loop playsinline id="bg-video">
-        <source src="https://cdn.coverr.co/videos/coverr-neon-gaming-setup-5831/1080p.mp4" type="video/mp4">
-    </video>
-    <div class="overlay"></div>
+  <!-- Background -->
+  <video autoplay muted loop playsinline id="bg-video">
+    <source src="https://cdn.coverr.co/videos/coverr-neon-gaming-setup-5831/1080p.mp4" type="video/mp4">
+  </video>
+  <div class="overlay"></div>
 
-    <!-- Nav -->
-    <nav class="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
-        <div class="max-w-7xl mx-auto flex justify-between items-center p-4">
-            <h1 class="text-3xl font-black tracking-tighter"><span class="text-yellow-500">SPUDY</span> GAMES</h1>
-            <div class="hidden md:flex gap-6 text-sm font-medium uppercase tracking-widest text-gray-300">
-                <a href="#home" class="hover:text-yellow-400 transition">Home</a>
-                <a href="#games" class="hover:text-yellow-400 transition">Collection</a>
-                <a href="#pricing" class="hover:text-yellow-400 transition">Premium</a>
-            </div>
-            <button id="authBtn" onclick="openLogin()" class="btn-gold px-6 py-2 rounded-full text-sm">Login</button>
+  <!-- NAV -->
+  <nav class="fixed top-0 w-full z-50 nav-glass">
+    <div class="max-w-7xl mx-auto flex justify-between items-center p-4">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
+          <i class="fas fa-gamepad text-yellow-400"></i>
         </div>
-    </nav>
-
-    <!-- Hero -->
-    <section id="home" class="min-h-[80vh] flex flex-col justify-center items-center text-center px-4 pt-20">
-        <h2 class="text-sm font-bold tracking-[0.3em] text-yellow-500 mb-4 animate-pulse">NEXT GEN GAMING</h2>
-        <h1 class="text-6xl md:text-8xl font-black mb-6 leading-tight">PLAY THE <br><span class="premium-text">EXTRAORDINARY</span></h1>
-        <p class="text-gray-400 text-lg md:text-xl max-w-2xl mb-10">Experience our curated collection of premium games. Dive into beloved classics and new favorites.</p>
-        <div class="flex gap-4">
-            <button onclick="document.getElementById('free-games').scrollIntoView({behavior:'smooth'})" class="px-8 py-3 rounded-full border border-white/30 hover:bg-white/10 transition font-bold">Free Games</button>
-            <button onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})" class="btn-gold px-8 py-3 rounded-full shadow-lg">Go Premium</button>
-        </div>
-    </section>
-
-    <!-- Games Section -->
-    <section id="games" class="py-20 px-4 max-w-7xl mx-auto">
-        
-        <!-- Free Games -->
-        <div id="free-games" class="mb-20">
-            <h3 class="text-3xl font-bold mb-8 border-l-4 border-green-500 pl-4">Free Access</h3>
-            <div class="grid md:grid-cols-2 gap-6">
-                <!-- Math Quiz -->
-                <div class="glass-card p-8 rounded-2xl relative overflow-hidden group unlocked">
-                    <div class="absolute top-0 right-0 bg-green-500 text-black text-xs font-bold px-3 py-1 rounded-bl-lg">FREE</div>
-                    <div class="flex items-center gap-6">
-                        <div class="h-16 w-16 bg-green-500/20 rounded-full flex items-center justify-center text-green-400 text-3xl">
-                            <i class="fas fa-calculator"></i>
-                        </div>
-                        <div>
-                            <h4 class="text-2xl font-bold">Math Quiz Master</h4>
-                            <p class="text-gray-400 text-sm">Test your calculation skills.</p>
-                        </div>
-                    </div>
-                    <button onclick="startMathQuiz()" class="mt-6 w-full py-3 rounded-xl bg-green-600 hover:bg-green-500 transition font-bold">Play Now</button>
-                </div>
-
-                <!-- Typing Speed -->
-                <div class="glass-card p-8 rounded-2xl relative overflow-hidden group unlocked">
-                    <div class="absolute top-0 right-0 bg-green-500 text-black text-xs font-bold px-3 py-1 rounded-bl-lg">FREE</div>
-                    <div class="flex items-center gap-6">
-                        <div class="h-16 w-16 bg-blue-500/20 rounded-full flex items-center justify-center text-blue-400 text-3xl">
-                            <i class="fas fa-keyboard"></i>
-                        </div>
-                        <div>
-                            <h4 class="text-2xl font-bold">Typing Speed Pro</h4>
-                            <p class="text-gray-400 text-sm">How fast can you type?</p>
-                        </div>
-                    </div>
-                    <button onclick="startTypingSpeed()" class="mt-6 w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 transition font-bold">Play Now</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Premium Games -->
         <div>
-            <div class="flex items-center justify-between mb-8">
-                <h3 class="text-3xl font-bold border-l-4 border-yellow-500 pl-4"><span class="premium-text">Premium Collection</span></h3>
-                <span class="text-xs font-bold bg-yellow-500/10 text-yellow-500 px-3 py-1 rounded-full border border-yellow-500/20">LOCKED</span>
-            </div>
-
-            <!-- Container for JS injection -->
-            <div id="premium-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"></div>
+          <div class="text-2xl font-black tracking-tight leading-none">
+            <span class="text-yellow-400">SPUDY</span> <span class="text-white">GAMES</span>
+          </div>
+          <div class="text-[11px] text-gray-500 font-black tracking-[0.22em]">PREMIUM ARCADE</div>
         </div>
-    </section>
+      </div>
 
-    <!-- Pricing -->
-    <section id="pricing" class="py-20 px-4 bg-black/50">
-        <div class="max-w-5xl mx-auto text-center">
-            <h2 class="text-4xl font-bold mb-4">Unlock the <span class="premium-text">Full Experience</span></h2>
-            <p class="text-gray-400 mb-12">Get instant access to all premium games including new releases.</p>
-            
-            <div class="grid md:grid-cols-2 gap-8">
-                <div class="glass-card p-10 rounded-3xl border-t-4 border-purple-500 relative">
-                    <h3 class="text-2xl font-bold mb-2">Gamer Pro</h3>
-                    <div class="text-4xl font-black mb-6 text-purple-400">$2.51<span class="text-lg text-gray-500">/mo</span></div>
-                    <ul class="text-left space-y-3 mb-8 text-gray-300 text-sm">
-                        <li><i class="fas fa-check text-purple-500 mr-2"></i> All Premium Games</li>
-                        <li><i class="fas fa-check text-purple-500 mr-2"></i> Ad-free Experience</li>
-                        <li><i class="fas fa-check text-purple-500 mr-2"></i> New Games Monthly</li>
-                    </ul>
-                    <button onclick="openPayment('Gamer Pro', 2.51)" class="w-full py-3 bg-purple-600 hover:bg-purple-500 rounded-xl font-bold shadow-lg shadow-purple-900/50">Subscribe</button>
-                </div>
+      <div class="hidden md:flex items-center gap-6 text-sm font-black uppercase tracking-widest text-gray-300">
+        <a href="#home" class="hover:text-yellow-300 transition">Home</a>
+        <a href="#games" class="hover:text-yellow-300 transition">Collection</a>
+        <a href="#arena" class="hover:text-yellow-300 transition">Arena</a>
+        <a href="#pricing" class="hover:text-yellow-300 transition">Premium</a>
 
-                <div class="glass-card p-10 rounded-3xl border-t-4 border-yellow-500 relative transform md:-translate-y-4">
-                    <div class="absolute top-0 center bg-yellow-500 text-black text-xs font-bold px-3 py-1 rounded-b-lg left-1/2 -translate-x-1/2">BEST VALUE</div>
-                    <h3 class="text-2xl font-bold mb-2 text-yellow-100">Lifetime Legend</h3>
-                    <div class="text-4xl font-black mb-6 text-yellow-400">$49<span class="text-lg text-gray-500">/once</span></div>
-                    <ul class="text-left space-y-3 mb-8 text-gray-300 text-sm">
-                        <li><i class="fas fa-star text-yellow-500 mr-2"></i> Lifetime Access</li>
-                        <li><i class="fas fa-star text-yellow-500 mr-2"></i> Exclusive Founder Badge</li>
-                        <li><i class="fas fa-star text-yellow-500 mr-2"></i> Early Access to Betas</li>
-                    </ul>
-                    <button onclick="openPayment('Lifetime Legend', 49)" class="w-full py-3 btn-gold rounded-xl font-bold shadow-lg shadow-yellow-900/50">Get Lifetime Access</button>
-                </div>
-            </div>
+        <div id="navWelcome" class="hidden items-center gap-3">
+          <div class="px-3 py-2 rounded-2xl bg-white/5 border border-white/10 text-xs text-gray-200">
+            <i class="fas fa-sparkles text-yellow-300 mr-2"></i>
+            <span id="welcomeName">Welcome</span>
+          </div>
+          <button onclick="logout()" class="btn-outline px-4 py-2 rounded-full text-xs">
+            <i class="fas fa-right-from-bracket mr-2"></i>Logout
+          </button>
         </div>
-    </section>
 
-    <!-- Footer -->
-    <footer class="py-12 border-t border-white/10 bg-black text-center">
-        <h4 class="text-2xl font-bold mb-8">Spudy Games</h4>
-        <div class="flex justify-center gap-8 text-2xl mb-8">
-            <a href="https://api.whatsapp.com/send?phone=263776998296" class="text-green-500 hover:scale-110 transition"><i class="fab fa-whatsapp"></i></a>
-            <a href="mailto:spudytv14@gmail.com" class="text-blue-400 hover:scale-110 transition"><i class="fas fa-envelope"></i></a>
-            <a href="#" class="text-blue-600 hover:scale-110 transition"><i class="fab fa-facebook"></i></a>
-            <a href="#" class="text-white hover:scale-110 transition"><i class="fab fa-x-twitter"></i></a>
-        </div>
-        <p class="text-gray-500 text-sm">© 2026 Spudy Games. Created by Matipaishe.</p>
-    </footer>
+        <button id="authBtn" onclick="openAuth('login')" class="btn-gold px-6 py-2 rounded-full text-sm">
+          Login / Register
+        </button>
+      </div>
 
-    <!-- Payment Modal -->
-    <div id="paymentModal" class="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center hidden z-[60]">
-        <div class="glass-card p-8 rounded-3xl max-w-lg w-full text-center relative mx-4">
-            <button onclick="closePayment()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fas fa-times text-2xl"></i></button>
-            <h2 class="text-3xl font-bold mb-2" id="planName">Gamer Pro</h2>
-            <p class="text-4xl font-black text-yellow-500 mb-8" id="planPrice">$2.51</p>
-            
-            <div class="bg-white/5 p-4 rounded-xl mb-6">
-                <p class="text-sm text-gray-400 mb-2">Send payment via EcoCash to:</p>
-                <p class="text-2xl font-mono font-bold text-white tracking-wider select-all">0776998296</p>
-                <p class="text-xs text-green-400 mt-1"><i class="fas fa-check-circle"></i> Matipaishe</p>
-            </div>
-
-            <p class="mb-4 text-sm text-gray-300">Choose method to confirm:</p>
-            <div class="grid grid-cols-3 gap-4">
-                <button onclick="pay('EcoCash')" class="p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-blue-900 transition flex flex-col items-center gap-2">
-                    <i class="fas fa-wallet text-2xl text-blue-400"></i>
-                    <span class="text-xs font-bold">EcoCash</span>
-                </button>
-                <button onclick="pay('OneMoney')" class="p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-orange-900 transition flex flex-col items-center gap-2">
-                    <i class="fas fa-mobile-alt text-2xl text-orange-400"></i>
-                    <span class="text-xs font-bold">OneMoney</span>
-                </button>
-                <button onclick="pay('NetOne')" class="p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-red-900 transition flex flex-col items-center gap-2">
-                    <i class="fas fa-sim-card text-2xl text-red-400"></i>
-                    <span class="text-xs font-bold">NetOne</span>
-                </button>
-            </div>
-            <p class="mt-6 text-xs text-gray-500">Clicking a method will open WhatsApp to confirm your payment.</p>
-        </div>
+      <button class="md:hidden text-gray-200 text-2xl" onclick="toggleMobileMenu()">
+        <i class="fas fa-bars"></i>
+      </button>
     </div>
 
-    <!-- Math Quiz Modal -->
-    <div id="mathGameModal" class="fixed inset-0 bg-black/95 backdrop-blur-xl flex items-center justify-center hidden z-[70]">
-        <div class="glass-card p-6 md:p-8 rounded-3xl max-w-2xl w-full mx-4 flex flex-col items-center text-center relative">
-            <button onclick="closeMathGame()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fas fa-times text-2xl"></i></button>
-            
-            <!-- Game Header -->
-            <div class="flex justify-between w-full mb-8">
-                <div class="text-left">
-                    <p class="text-gray-400 text-xs uppercase tracking-widest">Score</p>
-                    <p class="text-2xl font-bold text-green-400" id="math-score">0</p>
-                </div>
-                <div class="text-center">
-                    <p class="text-gray-400 text-xs uppercase tracking-widest">Level</p>
-                    <p class="text-2xl font-bold text-blue-400" id="math-level">1</p>
-                </div>
-                <div class="text-right">
-                    <p class="text-gray-400 text-xs uppercase tracking-widest">Time</p>
-                    <p class="text-2xl font-bold text-yellow-500" id="math-timer">60s</p>
-                </div>
-            </div>
+    <!-- mobile -->
+    <div id="mobileMenu" class="hidden md:hidden border-t border-white/10">
+      <div class="max-w-7xl mx-auto p-5 flex flex-col gap-3 text-center">
+        <a href="#home" class="text-gray-300 hover:text-white font-black uppercase tracking-widest" onclick="toggleMobileMenu()">Home</a>
+        <a href="#games" class="text-gray-300 hover:text-white font-black uppercase tracking-widest" onclick="toggleMobileMenu()">Collection</a>
+        <a href="#arena" class="text-gray-300 hover:text-white font-black uppercase tracking-widest" onclick="toggleMobileMenu()">Arena</a>
+        <a href="#pricing" class="text-gray-300 hover:text-white font-black uppercase tracking-widest" onclick="toggleMobileMenu()">Premium</a>
 
-            <!-- Question -->
-            <div id="math-game-view" class="w-full">
-                <div class="mb-10 py-10">
-                    <span id="math-question" class="text-5xl md:text-7xl font-black text-white tracking-tight"></span>
-                </div>
-                
-                <!-- Options -->
-                <div class="grid grid-cols-2 gap-4 w-full" id="math-options">
-                    <!-- Buttons injected via JS -->
-                </div>
-            </div>
-
-            <!-- Game Over View -->
-            <div id="math-game-over" class="hidden w-full">
-                <h3 class="text-3xl font-bold mb-2">Time's Up!</h3>
-                <p class="text-gray-400 mb-8">Your calculation skills result:</p>
-                
-                <div class="text-6xl font-black text-green-500 mb-2" id="math-final-score">0</div>
-                <p class="text-sm uppercase tracking-widest text-gray-500 mb-10">Total Score</p>
-                
-                <button onclick="startMathQuiz()" class="w-full py-4 rounded-xl bg-green-600 hover:bg-green-500 transition font-bold text-lg mb-4">Play Again</button>
-                <button onclick="closeMathGame()" class="w-full py-4 rounded-xl bg-white/10 hover:bg-white/20 transition font-bold text-lg">Exit</button>
-            </div>
+        <div id="mobileWelcome" class="hidden">
+          <div class="px-4 py-3 rounded-2xl bg-white/5 border border-white/10 text-sm text-gray-200 mb-2">
+            <i class="fas fa-sparkles text-yellow-300 mr-2"></i>
+            <span id="welcomeNameMobile">Welcome</span>
+          </div>
+          <button onclick="logout(); toggleMobileMenu()" class="btn-outline px-6 py-3 rounded-2xl text-sm w-full">
+            <i class="fas fa-right-from-bracket mr-2"></i>Logout
+          </button>
         </div>
+
+        <button id="mobileAuthBtn" onclick="openAuth('login'); toggleMobileMenu()" class="btn-gold px-6 py-3 rounded-2xl text-sm w-full">
+          Login / Register
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="home" class="min-h-[86vh] flex flex-col justify-center items-center text-center px-4 pt-24">
+    <div class="max-w-5xl mx-auto">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs text-gray-200 font-black mb-7">
+        <i class="fas fa-bolt text-emerald-400"></i>
+        <span>NEXT GEN GAMING</span>
+        <span class="opacity-40">•</span>
+        <span class="opacity-80">2 Free • 17 Premium</span>
+      </div>
+
+      <div id="heroWelcome" class="hidden text-sm font-black tracking-[0.22em] text-gray-400 mb-3 uppercase"></div>
+
+      <h1 class="text-5xl md:text-7xl font-black mb-6 leading-[1.02]">
+        PLAY THE <span class="premium-text">EXTRAORDINARY</span>
+      </h1>
+
+      <div class="h-10 mb-6">
+        <span id="typed" class="text-lg md:text-2xl text-gray-300 font-bold"></span>
+      </div>
+
+      <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-10">
+        A premium arcade experience with clean UI, progression-based games, and members-only challenges.
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <button onclick="document.getElementById('free-games').scrollIntoView({behavior:'smooth'})"
+          class="btn-outline px-8 py-4 rounded-full">
+          <i class="fas fa-unlock mr-2"></i>Free Games
+        </button>
+
+        <button onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})"
+          class="btn-gold px-8 py-4 rounded-full">
+          <i class="fas fa-crown mr-2"></i>Go Premium
+        </button>
+
+        <button onclick="requireAuth(() => toast('Member mode enabled ✅'))"
+          class="btn-outline px-8 py-4 rounded-full">
+          <i class="fas fa-user-check mr-2"></i>Member Tools
+        </button>
+      </div>
+
+      <!-- quick stats -->
+      <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+        <div class="glass rounded-3xl p-5 border border-white/10">
+          <div class="text-xs text-gray-500 font-black tracking-widest">GAMES</div>
+          <div id="statGames" class="text-2xl font-black text-white mt-1">—</div>
+          <div class="text-xs text-gray-500 mt-1">available</div>
+        </div>
+        <div class="glass rounded-3xl p-5 border border-white/10">
+          <div class="text-xs text-gray-500 font-black tracking-widest">FREE</div>
+          <div class="text-2xl font-black text-white mt-1">2</div>
+          <div class="text-xs text-gray-500 mt-1">instant play</div>
+        </div>
+        <div class="glass rounded-3xl p-5 border border-white/10">
+          <div class="text-xs text-gray-500 font-black tracking-widest">PLAYERS</div>
+          <div class="text-2xl font-black text-white mt-1">15,000+</div>
+          <div class="text-xs text-gray-500 mt-1">community</div>
+        </div>
+        <div class="glass rounded-3xl p-5 border border-white/10">
+          <div class="text-xs text-gray-500 font-black tracking-widest">BEST WPM</div>
+          <div id="bestWpm" class="text-2xl font-black text-white mt-1">0</div>
+          <div class="text-xs text-gray-500 mt-1">your record</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GAMES -->
+  <section id="games" class="py-20 px-4 max-w-7xl mx-auto">
+    <!-- toolbar -->
+    <div class="glass rounded-3xl p-5 md:p-6 mb-10 border border-white/10">
+      <div class="flex flex-col lg:flex-row gap-4 lg:items-center lg:justify-between">
+        <div class="flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/5 border border-white/10">
+          <i class="fas fa-magnifying-glass text-gray-300"></i>
+          <input id="q" placeholder="Search premium games..." class="w-full bg-transparent outline-none text-white placeholder:text-gray-500 font-bold" />
+        </div>
+
+        <div class="flex gap-2 overflow-x-auto no-scrollbar">
+          <button class="chip active px-4 py-2 rounded-full text-sm whitespace-nowrap" data-filter="all">
+            <i class="fas fa-grid-2 mr-2"></i>All
+          </button>
+          <button class="chip px-4 py-2 rounded-full text-sm whitespace-nowrap" data-filter="new">
+            <i class="fas fa-sparkles mr-2"></i>New
+          </button>
+          <button class="chip px-4 py-2 rounded-full text-sm whitespace-nowrap" data-filter="brain">
+            <i class="fas fa-brain mr-2"></i>Logic
+          </button>
+          <button class="chip px-4 py-2 rounded-full text-sm whitespace-nowrap" data-filter="arcade">
+            <i class="fas fa-rocket mr-2"></i>Arcade
+          </button>
+          <button class="chip px-4 py-2 rounded-full text-sm whitespace-nowrap" data-filter="words">
+            <i class="fas fa-font mr-2"></i>Words
+          </button>
+        </div>
+      </div>
+      <div class="mt-4 text-xs text-gray-500">
+        <b class="text-gray-300">Tip:</b> Premium games open after login. Payment confirmation stays WhatsApp-based as you built it.
+      </div>
     </div>
 
-    <!-- Typing Speed Modal -->
-    <div id="typingGameModal" class="fixed inset-0 bg-black/95 backdrop-blur-xl flex items-center justify-center hidden z-[70]">
-        <div class="glass-card p-6 md:p-8 rounded-3xl max-w-3xl w-full mx-4 flex flex-col items-center relative">
-            <button onclick="closeTypingGame()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fas fa-times text-2xl"></i></button>
-            
-            <!-- Game Header -->
-            <div class="flex justify-between w-full mb-6">
-                <div class="text-left">
-                    <p class="text-gray-400 text-xs uppercase tracking-widest">WPM</p>
-                    <p class="text-2xl font-bold text-blue-400" id="typing-wpm">0</p>
-                </div>
-                <div class="text-right">
-                    <p class="text-gray-400 text-xs uppercase tracking-widest">Time</p>
-                    <p class="text-2xl font-bold text-yellow-500" id="typing-timer">60s</p>
-                </div>
-            </div>
+    <!-- Free Games -->
+    <div id="free-games" class="mb-16">
+      <div class="flex items-center justify-between mb-8">
+        <h3 class="text-3xl font-black border-l-4 border-emerald-500 pl-4">Free Access</h3>
+        <span class="text-xs font-black bg-emerald-500/10 text-emerald-300 px-3 py-1 rounded-full border border-emerald-500/20">
+          UNLOCKED
+        </span>
+      </div>
 
-            <!-- Game View -->
-            <div id="typing-game-view" class="w-full">
-                <div class="bg-black/30 p-6 rounded-xl mb-6 text-left min-h-[150px] relative">
-                    <p id="typing-text" class="text-xl md:text-2xl font-mono leading-relaxed text-gray-500 select-none"></p>
-                    <textarea id="typing-input" class="absolute inset-0 w-full h-full opacity-0 cursor-text" spellcheck="false" autocomplete="off"></textarea>
-                </div>
-                <p class="text-sm text-gray-400 text-center">Click text to focus. Start typing to begin.</p>
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- Math Quiz -->
+        <div class="glass game-card unlocked p-8 rounded-3xl relative overflow-hidden group border border-white/10">
+          <div class="absolute top-0 right-0 bg-emerald-500 text-black text-xs font-black px-3 py-1 rounded-bl-lg">FREE</div>
+          <div class="flex items-center gap-6">
+            <div class="h-16 w-16 bg-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-300 text-3xl border border-emerald-500/20">
+              <i class="fas fa-calculator"></i>
             </div>
-
-            <!-- Game Over View -->
-            <div id="typing-game-over" class="hidden w-full text-center">
-                <h3 class="text-3xl font-bold mb-2">Test Complete!</h3>
-                <p class="text-gray-400 mb-8">Your typing speed result:</p>
-                
-                <div class="grid grid-cols-2 gap-4 mb-10">
-                    <div class="bg-white/5 p-4 rounded-xl">
-                        <div class="text-4xl font-black text-blue-500 mb-1" id="typing-final-wpm">0</div>
-                        <p class="text-xs uppercase tracking-widest text-gray-500">WPM</p>
-                    </div>
-                    <div class="bg-white/5 p-4 rounded-xl">
-                        <div class="text-4xl font-black text-purple-500 mb-1" id="typing-accuracy">0%</div>
-                        <p class="text-xs uppercase tracking-widest text-gray-500">Accuracy</p>
-                    </div>
-                </div>
-                
-                <button onclick="startTypingSpeed()" class="w-full py-4 rounded-xl bg-blue-600 hover:bg-blue-500 transition font-bold text-lg mb-4">Try Again</button>
-                <button onclick="closeTypingGame()" class="w-full py-4 rounded-xl bg-white/10 hover:bg-white/20 transition font-bold text-lg">Exit</button>
+            <div>
+              <h4 class="text-2xl font-black">Math Quiz Master</h4>
+              <p class="text-gray-400 text-sm">Level up from 1 and build speed + accuracy.</p>
             </div>
+          </div>
+          <button onclick="startMathQuiz()" class="mt-6 w-full py-4 rounded-2xl bg-emerald-600 hover:bg-emerald-500 transition font-black">
+            <i class="fas fa-play mr-2"></i>Play Now
+          </button>
         </div>
+
+        <!-- Typing Speed -->
+        <div class="glass game-card unlocked p-8 rounded-3xl relative overflow-hidden group border border-white/10">
+          <div class="absolute top-0 right-0 bg-emerald-500 text-black text-xs font-black px-3 py-1 rounded-bl-lg">FREE</div>
+          <div class="flex items-center gap-6">
+            <div class="h-16 w-16 bg-sky-500/20 rounded-2xl flex items-center justify-center text-sky-300 text-3xl border border-sky-500/20">
+              <i class="fas fa-keyboard"></i>
+            </div>
+            <div>
+              <h4 class="text-2xl font-black">Typing Speed Pro</h4>
+              <p class="text-gray-400 text-sm">WPM + accuracy tracking with best record.</p>
+            </div>
+          </div>
+          <button onclick="startTypingSpeed()" class="mt-6 w-full py-4 rounded-2xl bg-sky-600 hover:bg-sky-500 transition font-black">
+            <i class="fas fa-play mr-2"></i>Play Now
+          </button>
+        </div>
+      </div>
     </div>
 
-    <script>
-        // Game Logic Stubs
-        const games = [
-            { name: "Spelling Bee", id: "startSpellingBee", icon: "fa-spell-check", color: "purple", colorClass: "text-purple-400", bgClass: "bg-purple-500/20" },
-            { name: "Flag Quiz", id: "startFlagQuiz", icon: "fa-flag", color: "red", colorClass: "text-red-400", bgClass: "bg-red-500/20" },
-            { name: "Color Mixing", id: "startColorMixing", icon: "fa-palette", color: "yellow", colorClass: "text-yellow-400", bgClass: "bg-yellow-500/20" },
-            { name: "Logic Puzzle", id: "startLogicPuzzle", icon: "fa-puzzle-piece", color: "cyan", colorClass: "text-cyan-400", bgClass: "bg-cyan-500/20" },
-            { name: "Cryptography", id: "startCryptography", icon: "fa-key", color: "orange", colorClass: "text-orange-400", bgClass: "bg-orange-500/20" },
-            { name: "Memory Matrix", id: "startMemoryMatrix", icon: "fa-brain", color: "pink", colorClass: "text-pink-400", bgClass: "bg-pink-500/20" },
-            { name: "Spudy Snake", id: "startSnake", icon: "fa-dragon", color: "indigo", colorClass: "text-indigo-400", bgClass: "bg-indigo-500/20" },
-            { name: "Tic Tac Toe AI", id: "startTicTacToe", icon: "fa-times", color: "teal", colorClass: "text-teal-400", bgClass: "bg-teal-500/20", new: true },
-            { name: "Word Search", id: "startWordSearch", icon: "fa-search", color: "lime", colorClass: "text-lime-400", bgClass: "bg-lime-500/20" },
-            { name: "2048 Spudy", id: "start2048", icon: "fa-th", color: "rose", colorClass: "text-rose-400", bgClass: "bg-rose-500/20", new: true },
-            { name: "Sudoku Master", id: "startSudoku", icon: "fa-border-all", color: "emerald", colorClass: "text-emerald-400", bgClass: "bg-emerald-500/20" },
-            { name: "Hangman", id: "startHangman", icon: "fa-user-injured", color: "amber", colorClass: "text-amber-400", bgClass: "bg-amber-500/20" },
-            { name: "Connect Four", id: "startConnectFour", icon: "fa-circle", color: "violet", colorClass: "text-violet-400", bgClass: "bg-violet-500/20" },
-            { name: "Spudy Racer", id: "startRacer", icon: "fa-car", color: "sky", colorClass: "text-sky-400", bgClass: "bg-sky-500/20", new: true },
-            { name: "Chess Master", id: "startChess", icon: "fa-chess-knight", color: "white", colorClass: "text-white", bgClass: "bg-white/20", new: true },
-            { name: "Space Invaders", id: "startSpace", icon: "fa-rocket", color: "red", colorClass: "text-red-500", bgClass: "bg-red-500/20", new: true },
-            { name: "Cyber Poker", id: "startPoker", icon: "fa-dice", color: "purple", colorClass: "text-purple-400", bgClass: "bg-purple-500/20", new: true },
-        ];
+    <!-- Premium Games -->
+    <div>
+      <div class="flex items-center justify-between mb-8">
+        <h3 class="text-3xl font-black border-l-4 border-yellow-500 pl-4">
+          <span class="premium-text">Premium Collection</span>
+        </h3>
+        <span id="premiumStatus" class="text-xs font-black bg-yellow-500/10 text-yellow-300 px-3 py-1 rounded-full border border-yellow-500/20">
+          LOCKED
+        </span>
+      </div>
 
-        const premiumGrid = document.getElementById('premium-grid');
-        
-        games.forEach(game => {
-            const card = document.createElement('div');
-            card.className = `glass-card p-6 rounded-xl relative overflow-hidden group`;
-            card.innerHTML = `
-                ${game.new ? '<div class="absolute top-0 right-0 bg-yellow-500 text-black text-[10px] font-bold px-2 py-0.5 rounded-bl-lg z-10">NEW</div>' : ''}
-                <div class="flex flex-col items-center text-center gap-4">
-                    <div class="h-12 w-12 ${game.bgClass} rounded-full flex items-center justify-center ${game.colorClass} text-2xl">
-                        <i class="fas ${game.icon}"></i>
-                    </div>
-                    <div>
-                        <h4 class="text-lg font-bold leading-tight mb-1">${game.name}</h4>
-                    </div>
-                </div>
-                <button onclick="checkLogin('${game.id}', '${game.name}')" class="mt-4 w-full py-2 rounded-lg bg-white/10 hover:bg-white/20 transition text-sm font-bold border border-white/10">Play</button>
-                
-                <!-- Lock Overlay -->
-                <div class="locked-overlay" onclick="checkLogin('${game.id}', '${game.name}')">
-                    <i class="fas fa-lock text-3xl text-yellow-500 mb-2"></i>
-                    <span class="text-xs font-bold uppercase tracking-widest text-gray-300">Premium</span>
-                </div>
-            `;
-            premiumGrid.appendChild(card);
+      <div id="premium-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"></div>
+    </div>
+  </section>
+
+  <!-- ARENA -->
+  <section id="arena" class="py-20 px-4 bg-black/45 border-t border-white/10">
+    <div class="max-w-7xl mx-auto grid lg:grid-cols-3 gap-8 items-start">
+      <div class="lg:col-span-2">
+        <h2 class="text-4xl font-black mb-3">Arena</h2>
+        <p class="text-gray-400 mb-8">Daily challenges + simple leaderboard (saved on your device).</p>
+
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="glass rounded-3xl p-7 border border-white/10">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-xs text-gray-500 font-black tracking-widest">DAILY CHALLENGE</div>
+                <div class="text-2xl font-black mt-2">Beat 45 WPM</div>
+                <div class="text-gray-400 text-sm mt-1">Typing Speed Pro</div>
+              </div>
+              <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
+                <i class="fas fa-fire text-orange-400"></i>
+              </div>
+            </div>
+            <button onclick="startTypingSpeed()" class="btn-outline w-full mt-6 py-3 rounded-2xl">
+              <i class="fas fa-play mr-2"></i>Start Challenge
+            </button>
+          </div>
+
+          <div class="glass rounded-3xl p-7 border border-white/10">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-xs text-gray-500 font-black tracking-widest">DAILY CHALLENGE</div>
+                <div class="text-2xl font-black mt-2">Score 300+</div>
+                <div class="text-gray-400 text-sm mt-1">Math Quiz Master</div>
+              </div>
+              <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
+                <i class="fas fa-bolt text-yellow-300"></i>
+              </div>
+            </div>
+            <button onclick="startMathQuiz()" class="btn-outline w-full mt-6 py-3 rounded-2xl">
+              <i class="fas fa-play mr-2"></i>Start Challenge
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass rounded-3xl p-7 border border-white/10">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <div class="text-xs text-gray-500 font-black tracking-widest">LEADERBOARD</div>
+            <div class="text-2xl font-black mt-1">Your Records</div>
+          </div>
+          <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
+            <i class="fas fa-trophy text-yellow-400"></i>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center justify-between">
+            <div>
+              <div class="text-xs text-gray-500 font-black tracking-widest">BEST WPM</div>
+              <div id="lbWpm" class="text-2xl font-black">0</div>
+            </div>
+            <i class="fas fa-keyboard text-sky-300"></i>
+          </div>
+
+          <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center justify-between">
+            <div>
+              <div class="text-xs text-gray-500 font-black tracking-widest">BEST MATH SCORE</div>
+              <div id="lbMath" class="text-2xl font-black">0</div>
+            </div>
+            <i class="fas fa-calculator text-emerald-300"></i>
+          </div>
+        </div>
+
+        <button onclick="resetRecords()" class="btn-outline w-full mt-6 py-3 rounded-2xl">
+          <i class="fas fa-rotate-left mr-2"></i>Reset Records
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing" class="py-20 px-4">
+    <div class="max-w-5xl mx-auto text-center">
+      <h2 class="text-4xl md:text-5xl font-black mb-4">Unlock the <span class="premium-text">Full Experience</span></h2>
+      <p class="text-gray-400 mb-12">Instant access to all premium games, new releases, and member challenges.</p>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="glass p-10 rounded-3xl border-t-4 border-purple-500 relative">
+          <h3 class="text-2xl font-black mb-2">Gamer Pro</h3>
+          <div class="text-4xl font-black mb-6 text-purple-300">$2.51<span class="text-lg text-gray-500">/mo</span></div>
+          <ul class="text-left space-y-3 mb-8 text-gray-300 text-sm font-bold">
+            <li><i class="fas fa-check text-purple-400 mr-2"></i> All Premium Games</li>
+            <li><i class="fas fa-check text-purple-400 mr-2"></i> Ad-free Experience</li>
+            <li><i class="fas fa-check text-purple-400 mr-2"></i> New Games Monthly</li>
+          </ul>
+          <button onclick="openPayment('Gamer Pro', 2.51)" class="w-full py-4 bg-purple-600 hover:bg-purple-500 rounded-2xl font-black shadow-lg shadow-purple-900/50">
+            Subscribe
+          </button>
+        </div>
+
+        <div class="glass p-10 rounded-3xl border-t-4 border-yellow-500 relative transform md:-translate-y-4">
+          <div class="absolute top-0 bg-yellow-500 text-black text-xs font-black px-3 py-1 rounded-b-lg left-1/2 -translate-x-1/2">
+            BEST VALUE
+          </div>
+          <h3 class="text-2xl font-black mb-2 text-yellow-100">Lifetime Legend</h3>
+          <div class="text-4xl font-black mb-6 text-yellow-300">$49<span class="text-lg text-gray-500">/once</span></div>
+          <ul class="text-left space-y-3 mb-8 text-gray-300 text-sm font-bold">
+            <li><i class="fas fa-star text-yellow-400 mr-2"></i> Lifetime Access</li>
+            <li><i class="fas fa-star text-yellow-400 mr-2"></i> Founder Badge</li>
+            <li><i class="fas fa-star text-yellow-400 mr-2"></i> Early Access to Betas</li>
+          </ul>
+          <button onclick="openPayment('Lifetime Legend', 49)" class="w-full py-4 btn-gold rounded-2xl font-black shadow-lg shadow-yellow-900/50">
+            Get Lifetime Access
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="py-12 border-t border-white/10 bg-black text-center">
+    <h4 class="text-2xl font-black mb-8">Spudy Games</h4>
+    <div class="flex justify-center gap-8 text-2xl mb-8">
+      <a href="https://api.whatsapp.com/send?phone=263776998296" class="text-green-500 hover:scale-110 transition"><i class="fab fa-whatsapp"></i></a>
+      <a href="mailto:spudytv14@gmail.com" class="text-sky-400 hover:scale-110 transition"><i class="fas fa-envelope"></i></a>
+      <a href="#" class="text-blue-600 hover:scale-110 transition"><i class="fab fa-facebook"></i></a>
+      <a href="#" class="text-white hover:scale-110 transition"><i class="fab fa-x-twitter"></i></a>
+    </div>
+    <p class="text-gray-500 text-sm font-bold">© 2026 Spudy Games. Created by Matipaishe.</p>
+  </footer>
+
+  <!-- PAYMENT MODAL -->
+  <div id="paymentModal" class="fixed inset-0 hidden items-center justify-center z-[60] modalBack p-4">
+    <div class="glass p-8 rounded-3xl max-w-lg w-full text-center relative mx-4 border border-white/10">
+      <button onclick="closePayment()" class="absolute top-4 right-4 text-gray-300 hover:text-white">
+        <i class="fas fa-times text-2xl"></i>
+      </button>
+
+      <h2 class="text-3xl font-black mb-2" id="planName">Gamer Pro</h2>
+      <p class="text-4xl font-black text-yellow-300 mb-8" id="planPrice">$2.51</p>
+
+      <div class="bg-white/5 p-4 rounded-2xl mb-6 border border-white/10">
+        <p class="text-sm text-gray-400 mb-2 font-bold">Send payment via EcoCash to:</p>
+        <p class="text-2xl font-mono font-black text-white tracking-wider select-all">0776998296</p>
+        <p class="text-xs text-emerald-400 mt-1 font-black"><i class="fas fa-check-circle"></i> Matipaishe</p>
+      </div>
+
+      <p class="mb-4 text-sm text-gray-300 font-bold">Choose a method to confirm:</p>
+      <div class="grid grid-cols-3 gap-4">
+        <button onclick="pay('EcoCash')" class="p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-blue-900/40 transition flex flex-col items-center gap-2">
+          <i class="fas fa-wallet text-2xl text-blue-300"></i>
+          <span class="text-xs font-black">EcoCash</span>
+        </button>
+        <button onclick="pay('OneMoney')" class="p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-orange-900/40 transition flex flex-col items-center gap-2">
+          <i class="fas fa-mobile-alt text-2xl text-orange-300"></i>
+          <span class="text-xs font-black">OneMoney</span>
+        </button>
+        <button onclick="pay('NetOne')" class="p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-red-900/40 transition flex flex-col items-center gap-2">
+          <i class="fas fa-sim-card text-2xl text-red-300"></i>
+          <span class="text-xs font-black">NetOne</span>
+        </button>
+      </div>
+      <p class="mt-6 text-xs text-gray-500 font-bold">Clicking a method opens WhatsApp to confirm.</p>
+    </div>
+  </div>
+
+  <!-- AUTH MODAL -->
+  <div id="authModal" class="fixed inset-0 hidden items-center justify-center z-[80] modalBack p-4">
+    <div class="glass w-full max-w-md rounded-3xl border border-white/10 overflow-hidden">
+      <div class="p-6 border-b border-white/10 bg-white/5 flex items-start justify-between">
+        <div>
+          <div class="text-xs text-gray-500 font-black tracking-[0.22em]">SECURE ACCESS</div>
+          <h3 id="authTitle" class="text-2xl font-black text-white mt-1">Login</h3>
+        </div>
+        <button onclick="closeAuth()" class="text-gray-300 hover:text-white text-xl px-3 py-2 rounded-xl border border-white/10 bg-white/5">
+          <i class="fas fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="p-6">
+        <div class="grid grid-cols-2 gap-2 mb-5">
+          <button id="tabLogin" class="chip active px-4 py-3 rounded-2xl text-sm" onclick="switchAuth('login')">
+            <i class="fas fa-right-to-bracket mr-2"></i>Login
+          </button>
+          <button id="tabRegister" class="chip px-4 py-3 rounded-2xl text-sm" onclick="switchAuth('register')">
+            <i class="fas fa-user-plus mr-2"></i>Register
+          </button>
+        </div>
+
+        <div id="authError" class="hidden mb-4 p-3 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-300 text-sm font-black"></div>
+
+        <div class="space-y-3">
+          <div id="nameWrap" class="hidden">
+            <label class="text-xs text-gray-400 font-black tracking-widest">FULL NAME</label>
+            <input id="regName" type="text" placeholder="e.g. Spudy"
+              class="w-full p-4 rounded-2xl bg-black/40 border border-white/10 text-white outline-none focus:border-sky-400 transition font-bold">
+          </div>
+
+          <div>
+            <label class="text-xs text-gray-400 font-black tracking-widest">EMAIL</label>
+            <input id="authEmail" type="email" placeholder="you@example.com"
+              class="w-full p-4 rounded-2xl bg-black/40 border border-white/10 text-white outline-none focus:border-sky-400 transition font-bold">
+          </div>
+
+          <div>
+            <label class="text-xs text-gray-400 font-black tracking-widest">PASSWORD</label>
+            <input id="authPass" type="password" placeholder="••••••••"
+              class="w-full p-4 rounded-2xl bg-black/40 border border-white/10 text-white outline-none focus:border-sky-400 transition font-bold">
+          </div>
+
+          <button id="authSubmit" class="btn-gold w-full py-4 rounded-2xl text-sm" onclick="submitAuth()">
+            Continue
+          </button>
+
+          <div class="text-xs text-gray-500 text-center font-bold">Demo auth (localStorage). For real users, connect a backend.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MATH QUIZ MODAL -->
+  <div id="mathGameModal" class="fixed inset-0 hidden items-center justify-center z-[90] modalBack p-4">
+    <div class="glass p-6 md:p-8 rounded-3xl max-w-2xl w-full mx-4 flex flex-col items-center text-center relative border border-white/10">
+      <button onclick="closeMathGame()" class="absolute top-4 right-4 text-gray-300 hover:text-white">
+        <i class="fas fa-times text-2xl"></i>
+      </button>
+
+      <div class="flex justify-between w-full mb-8">
+        <div class="text-left">
+          <p class="text-gray-400 text-xs uppercase tracking-widest font-black">Score</p>
+          <p class="text-2xl font-black text-emerald-300" id="math-score">0</p>
+        </div>
+        <div class="text-center">
+          <p class="text-gray-400 text-xs uppercase tracking-widest font-black">Level</p>
+          <p class="text-2xl font-black text-sky-300" id="math-level">1</p>
+        </div>
+        <div class="text-right">
+          <p class="text-gray-400 text-xs uppercase tracking-widest font-black">Time</p>
+          <p class="text-2xl font-black text-yellow-300" id="math-timer">60s</p>
+        </div>
+      </div>
+
+      <div id="math-game-view" class="w-full">
+        <div class="mb-10 py-10">
+          <span id="math-question" class="text-5xl md:text-7xl font-black text-white tracking-tight"></span>
+        </div>
+        <div class="grid grid-cols-2 gap-4 w-full" id="math-options"></div>
+      </div>
+
+      <div id="math-game-over" class="hidden w-full">
+        <h3 class="text-3xl font-black mb-2">Time’s Up!</h3>
+        <p class="text-gray-400 mb-8 font-bold">Your result:</p>
+
+        <div class="text-6xl font-black text-emerald-300 mb-2" id="math-final-score">0</div>
+        <p class="text-sm uppercase tracking-widest text-gray-500 mb-10 font-black">Total Score</p>
+
+        <button onclick="startMathQuiz()" class="w-full py-4 rounded-2xl bg-emerald-600 hover:bg-emerald-500 transition font-black text-lg mb-4">
+          Play Again
+        </button>
+        <button onclick="closeMathGame()" class="w-full py-4 rounded-2xl bg-white/10 hover:bg-white/20 transition font-black text-lg">
+          Exit
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TYPING MODAL -->
+  <div id="typingGameModal" class="fixed inset-0 hidden items-center justify-center z-[90] modalBack p-4">
+    <div class="glass p-6 md:p-8 rounded-3xl max-w-3xl w-full mx-4 flex flex-col items-center relative border border-white/10">
+      <button onclick="closeTypingGame()" class="absolute top-4 right-4 text-gray-300 hover:text-white">
+        <i class="fas fa-times text-2xl"></i>
+      </button>
+
+      <div class="flex justify-between w-full mb-6">
+        <div class="text-left">
+          <p class="text-gray-400 text-xs uppercase tracking-widest font-black">WPM</p>
+          <p class="text-2xl font-black text-sky-300" id="typing-wpm">0</p>
+        </div>
+        <div class="text-right">
+          <p class="text-gray-400 text-xs uppercase tracking-widest font-black">Time</p>
+          <p class="text-2xl font-black text-yellow-300" id="typing-timer">60s</p>
+        </div>
+      </div>
+
+      <div id="typing-game-view" class="w-full">
+        <div class="bg-black/35 p-6 rounded-2xl mb-6 text-left min-h-[150px] relative border border-white/10">
+          <p id="typing-text" class="text-xl md:text-2xl font-mono leading-relaxed text-gray-500 select-none"></p>
+          <textarea id="typing-input" class="absolute inset-0 w-full h-full opacity-0 cursor-text" spellcheck="false" autocomplete="off"></textarea>
+        </div>
+        <p class="text-sm text-gray-400 text-center font-bold">Click the text area to focus. Start typing to begin.</p>
+      </div>
+
+      <div id="typing-game-over" class="hidden w-full text-center">
+        <h3 class="text-3xl font-black mb-2">Test Complete!</h3>
+        <p class="text-gray-400 mb-8 font-bold">Your result:</p>
+
+        <div class="grid grid-cols-2 gap-4 mb-10">
+          <div class="bg-white/5 p-4 rounded-2xl border border-white/10">
+            <div class="text-4xl font-black text-sky-300 mb-1" id="typing-final-wpm">0</div>
+            <p class="text-xs uppercase tracking-widest text-gray-500 font-black">WPM</p>
+          </div>
+          <div class="bg-white/5 p-4 rounded-2xl border border-white/10">
+            <div class="text-4xl font-black text-purple-300 mb-1" id="typing-accuracy">0%</div>
+            <p class="text-xs uppercase tracking-widest text-gray-500 font-black">Accuracy</p>
+          </div>
+        </div>
+
+        <button onclick="startTypingSpeed()" class="w-full py-4 rounded-2xl bg-sky-600 hover:bg-sky-500 transition font-black text-lg mb-4">
+          Try Again
+        </button>
+        <button onclick="closeTypingGame()" class="w-full py-4 rounded-2xl bg-white/10 hover:bg-white/20 transition font-black text-lg">
+          Exit
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ---------------------------
+      helpers
+    ----------------------------*/
+    const $ = (s, r=document) => r.querySelector(s);
+    const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+    const clamp = (n,min,max) => Math.max(min, Math.min(max, n));
+    function toggleMobileMenu(){ $("#mobileMenu").classList.toggle("hidden"); }
+
+    function toast(msg){
+      const t = document.createElement("div");
+      t.className = "toast";
+      t.textContent = msg;
+      document.body.appendChild(t);
+      setTimeout(() => t.style.opacity = "0", 1600);
+      setTimeout(() => t.remove(), 2000);
+    }
+
+    /* ---------------------------
+      simple demo auth (localStorage)
+    ----------------------------*/
+    const USERS_KEY="spudy_games_users";
+    const SESSION_KEY="spudy_games_session";
+    let authMode="login";
+
+    function getUsers(){ try{return JSON.parse(localStorage.getItem(USERS_KEY)||"[]")}catch{return[]} }
+    function setUsers(u){ localStorage.setItem(USERS_KEY, JSON.stringify(u)); }
+    function getSession(){ try{return JSON.parse(localStorage.getItem(SESSION_KEY)||"null")}catch{return null} }
+    function setSession(s){ localStorage.setItem(SESSION_KEY, JSON.stringify(s)); }
+    function currentUser(){
+      const sess=getSession(); if(!sess) return null;
+      return getUsers().find(u=>u.id===sess.userId) || null;
+    }
+    function requireAuth(onOk){
+      const u=currentUser();
+      if(!u){ openAuth("login"); return; }
+      onOk && onOk(u);
+    }
+
+    function openAuth(mode="login"){
+      switchAuth(mode);
+      $("#authModal").classList.remove("hidden");
+      $("#authModal").classList.add("flex");
+      document.body.style.overflow="hidden";
+      $("#authEmail").focus();
+    }
+    function closeAuth(){
+      $("#authModal").classList.add("hidden");
+      $("#authModal").classList.remove("flex");
+      document.body.style.overflow="";
+      hideAuthError();
+    }
+    function switchAuth(mode){
+      authMode=mode;
+      $("#tabLogin").classList.toggle("active", mode==="login");
+      $("#tabRegister").classList.toggle("active", mode==="register");
+      $("#authTitle").textContent = mode==="login" ? "Login" : "Register";
+      $("#nameWrap").classList.toggle("hidden", mode!=="register");
+      $("#authSubmit").innerHTML = mode==="login"
+        ? `<i class="fas fa-right-to-bracket mr-2"></i>Login`
+        : `<i class="fas fa-user-plus mr-2"></i>Create Account`;
+      hideAuthError();
+    }
+    function showAuthError(msg){
+      const box=$("#authError");
+      box.textContent=msg;
+      box.classList.remove("hidden");
+    }
+    function hideAuthError(){ $("#authError").classList.add("hidden"); }
+
+    function submitAuth(){
+      const email=($("#authEmail").value||"").trim().toLowerCase();
+      const pass=($("#authPass").value||"").trim();
+      const name=($("#regName").value||"").trim();
+      if(!email.includes("@")) return showAuthError("Enter a valid email.");
+      if(pass.length < 4) return showAuthError("Password must be at least 4 characters.");
+
+      const users=getUsers();
+
+      if(authMode==="register"){
+        if(name.length < 2) return showAuthError("Enter your name.");
+        if(users.some(u=>u.email===email)) return showAuthError("This email is already registered.");
+        const user={ id:"u_"+Math.random().toString(16).slice(2,10), name, email, pass };
+        users.push(user); setUsers(users);
+        setSession({ userId:user.id });
+        closeAuth();
+        syncAuthUI();
+        toast(`Welcome, ${user.name} ✅`);
+        return;
+      }
+
+      const u=users.find(x=>x.email===email && x.pass===pass);
+      if(!u) return showAuthError("Wrong email or password.");
+      setSession({ userId:u.id });
+      closeAuth();
+      syncAuthUI();
+      toast(`Welcome back, ${u.name} ✅`);
+    }
+
+    function logout(){
+      localStorage.removeItem(SESSION_KEY);
+      syncAuthUI();
+      toast("Logged out.");
+    }
+
+    function syncAuthUI(){
+      const u=currentUser();
+
+      $("#navWelcome").classList.toggle("hidden", !u);
+      $("#navWelcome").classList.toggle("flex", !!u);
+      $("#authBtn").classList.toggle("hidden", !!u);
+
+      $("#mobileWelcome").classList.toggle("hidden", !u);
+      $("#mobileAuthBtn").classList.toggle("hidden", !!u);
+
+      if(u){
+        $("#welcomeName").textContent = `Welcome, ${u.name}`;
+        $("#welcomeNameMobile").textContent = `Welcome, ${u.name}`;
+        $("#heroWelcome").classList.remove("hidden");
+        $("#heroWelcome").textContent = `WELCOME, ${u.name}`;
+        $("#premiumStatus").textContent = "MEMBER";
+        $("#premiumStatus").className = "text-xs font-black bg-emerald-500/10 text-emerald-300 px-3 py-1 rounded-full border border-emerald-500/20";
+        unlockPremiumUI(true);
+      } else {
+        $("#heroWelcome").classList.add("hidden");
+        $("#premiumStatus").textContent = "LOCKED";
+        $("#premiumStatus").className = "text-xs font-black bg-yellow-500/10 text-yellow-300 px-3 py-1 rounded-full border border-yellow-500/20";
+        unlockPremiumUI(false);
+      }
+    }
+
+    function unlockPremiumUI(isUnlocked){
+      $$(".game-card").forEach(c => {
+        if(isUnlocked) c.classList.add("unlocked");
+        else c.classList.remove("unlocked");
+      });
+    }
+
+    /* ---------------------------
+      payment
+    ----------------------------*/
+    function openPayment(plan, price){
+      $("#planName").textContent = plan;
+      $("#planPrice").textContent = price === 49 ? "$49 Lifetime" : "$" + price + "/month";
+      $("#paymentModal").classList.remove("hidden");
+      $("#paymentModal").classList.add("flex");
+      document.body.style.overflow="hidden";
+    }
+    function closePayment(){
+      $("#paymentModal").classList.add("hidden");
+      $("#paymentModal").classList.remove("flex");
+      document.body.style.overflow="";
+    }
+    function pay(method){
+      const msg = `I want to pay for Spudy Games ${$("#planName").textContent} using ${method}. Please send payment details for EcoCash 0776998296.`;
+      window.open(`https://api.whatsapp.com/send?phone=263776998296&text=${encodeURIComponent(msg)}`, "_blank");
+    }
+
+    /* ---------------------------
+      premium games data + render
+    ----------------------------*/
+    const games = [
+      { name:"Spelling Bee", id:"startSpellingBee", icon:"fa-spell-check", tag:"words", colorClass:"text-purple-300", bgClass:"bg-purple-500/20" },
+      { name:"Flag Quiz", id:"startFlagQuiz", icon:"fa-flag", tag:"brain", colorClass:"text-red-300", bgClass:"bg-red-500/20" },
+      { name:"Color Mixing", id:"startColorMixing", icon:"fa-palette", tag:"brain", colorClass:"text-yellow-200", bgClass:"bg-yellow-500/20" },
+      { name:"Logic Puzzle", id:"startLogicPuzzle", icon:"fa-puzzle-piece", tag:"brain", colorClass:"text-cyan-200", bgClass:"bg-cyan-500/20" },
+      { name:"Cryptography", id:"startCryptography", icon:"fa-key", tag:"brain", colorClass:"text-orange-200", bgClass:"bg-orange-500/20" },
+      { name:"Memory Matrix", id:"startMemoryMatrix", icon:"fa-brain", tag:"brain", colorClass:"text-pink-200", bgClass:"bg-pink-500/20" },
+      { name:"Spudy Snake", id:"startSnake", icon:"fa-dragon", tag:"arcade", colorClass:"text-indigo-200", bgClass:"bg-indigo-500/20" },
+      { name:"Tic Tac Toe AI", id:"startTicTacToe", icon:"fa-times", tag:"brain", colorClass:"text-teal-200", bgClass:"bg-teal-500/20", isNew:true },
+      { name:"Word Search", id:"startWordSearch", icon:"fa-search", tag:"words", colorClass:"text-lime-200", bgClass:"bg-lime-500/20" },
+      { name:"2048 Spudy", id:"start2048", icon:"fa-th", tag:"arcade", colorClass:"text-rose-200", bgClass:"bg-rose-500/20", isNew:true },
+      { name:"Sudoku Master", id:"startSudoku", icon:"fa-border-all", tag:"brain", colorClass:"text-emerald-200", bgClass:"bg-emerald-500/20" },
+      { name:"Hangman", id:"startHangman", icon:"fa-user-injured", tag:"words", colorClass:"text-amber-200", bgClass:"bg-amber-500/20" },
+      { name:"Connect Four", id:"startConnectFour", icon:"fa-circle", tag:"brain", colorClass:"text-violet-200", bgClass:"bg-violet-500/20" },
+      { name:"Spudy Racer", id:"startRacer", icon:"fa-car", tag:"arcade", colorClass:"text-sky-200", bgClass:"bg-sky-500/20", isNew:true },
+      { name:"Chess Master", id:"startChess", icon:"fa-chess-knight", tag:"brain", colorClass:"text-white", bgClass:"bg-white/15", isNew:true },
+      { name:"Space Invaders", id:"startSpace", icon:"fa-rocket", tag:"arcade", colorClass:"text-red-200", bgClass:"bg-red-500/20", isNew:true },
+      { name:"Cyber Poker", id:"startPoker", icon:"fa-dice", tag:"arcade", colorClass:"text-purple-200", bgClass:"bg-purple-500/20", isNew:true },
+    ];
+
+    const premiumGrid = $("#premium-grid");
+    function renderPremium(){
+      const q = ($("#q").value || "").trim().toLowerCase();
+      const active = $(".chip.active")?.dataset.filter || "all";
+
+      premiumGrid.innerHTML = "";
+      games
+        .filter(g => {
+          if(active === "all") return true;
+          if(active === "new") return !!g.isNew;
+          return g.tag === active;
+        })
+        .filter(g => !q || g.name.toLowerCase().includes(q))
+        .forEach(g => {
+          const card = document.createElement("div");
+          card.className = `glass game-card p-6 rounded-2xl relative overflow-hidden group border border-white/10`;
+          card.innerHTML = `
+            ${g.isNew ? `<div class="absolute top-0 right-0 bg-yellow-500 text-black text-[10px] font-black px-2 py-0.5 rounded-bl-lg z-10">NEW</div>` : ""}
+            <div class="flex flex-col items-center text-center gap-4">
+              <div class="h-12 w-12 ${g.bgClass} rounded-2xl flex items-center justify-center ${g.colorClass} text-2xl border border-white/10">
+                <i class="fas ${g.icon}"></i>
+              </div>
+              <div>
+                <h4 class="text-lg font-black leading-tight mb-1">${g.name}</h4>
+                <div class="text-[11px] text-gray-500 font-black uppercase tracking-widest">${g.tag}</div>
+              </div>
+            </div>
+
+            <button class="mt-4 w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition text-sm font-black border border-white/10"
+              onclick="checkPremium('${g.id}', '${g.name}')">
+              Play
+            </button>
+
+            <div class="locked-overlay" onclick="checkPremium('${g.id}', '${g.name}')">
+              <i class="fas fa-lock text-3xl text-yellow-300 mb-2"></i>
+              <span class="text-xs font-black uppercase tracking-widest text-gray-200">Premium</span>
+              <span class="text-[11px] text-gray-500 font-black mt-1">Login to unlock</span>
+            </div>
+          `;
+          premiumGrid.appendChild(card);
         });
 
-        // --- MATH QUIZ LOGIC ---
-        let mathTimerInterval;
-        let mathScore = 0;
-        let mathLevel = 1;
-        let mathTimeLeft = 60;
-        let mathPlaying = false;
+      // unlock based on auth
+      unlockPremiumUI(!!currentUser());
+    }
 
-        function startMathQuiz() { 
-            document.getElementById('mathGameModal').classList.remove('hidden');
-            document.getElementById('math-game-view').classList.remove('hidden');
-            document.getElementById('math-game-over').classList.add('hidden');
-            mathScore = 0;
-            mathLevel = 1;
-            mathTimeLeft = 60;
-            mathPlaying = true;
-            updateMathUI();
-            generateMathQuestion();
-            clearInterval(mathTimerInterval);
-            mathTimerInterval = setInterval(() => {
-                mathTimeLeft--;
-                updateMathUI();
-                if(mathTimeLeft <= 0) endMathGame();
-            }, 1000);
-        }
+    function checkPremium(funcName, gameName){
+      if(currentUser()){
+        if(typeof window[funcName] === "function") window[funcName]();
+        else toast(`Starting ${gameName}...`);
+      } else {
+        openAuth("login");
+      }
+    }
 
-        function closeMathGame() {
-            document.getElementById('mathGameModal').classList.add('hidden');
-            clearInterval(mathTimerInterval);
-            mathPlaying = false;
-        }
+    // attach stub game functions
+    games.forEach(g => window[g.id] = () => toast(`Starting ${g.name}... (premium demo)`));
 
-        function updateMathUI() {
-            document.getElementById('math-score').textContent = mathScore;
-            document.getElementById('math-level').textContent = mathLevel;
-            document.getElementById('math-timer').textContent = mathTimeLeft + 's';
-        }
+    /* ---------------------------
+      math quiz
+    ----------------------------*/
+    let mathTimerInterval;
+    let mathScore=0, mathLevel=1, mathTimeLeft=60, mathPlaying=false;
 
-        function generateMathQuestion() {
-            if(!mathPlaying) return;
-            
-            // Difficulty logic based on Level
-            // Level 1-5: Simple Ops
-            // Level 6-10: Medium Ops
-            // Level 11+: Hard Ops
-            
-            let ops = ['+'];
-            if(mathLevel > 2) ops.push('-');
-            if(mathLevel > 5) ops.push('*');
-            if(mathLevel > 10) ops.push('/');
+    function startMathQuiz(){
+      $("#mathGameModal").classList.remove("hidden");
+      $("#mathGameModal").classList.add("flex");
+      document.body.style.overflow="hidden";
 
-            const op = ops[Math.floor(Math.random() * ops.length)];
-            let a, b, ans;
+      $("#math-game-view").classList.remove("hidden");
+      $("#math-game-over").classList.add("hidden");
 
-            const maxNum = 10 + (mathLevel * 5); // Increase range with level
-            
-            if(op === '+') { 
-                a = r(1, maxNum); 
-                b = r(1, maxNum); 
-                ans = a + b; 
-            } else if(op === '-') { 
-                a = r(5, maxNum); 
-                b = r(1, a); 
-                ans = a - b; 
-            } else if(op === '*') { 
-                const maxFactor = 2 + Math.floor(mathLevel / 2);
-                a = r(2, maxFactor); 
-                b = r(2, 12); 
-                ans = a * b; 
-            } else if(op === '/') {
-                b = r(2, 10);
-                ans = r(2, 10 + mathLevel);
-                a = b * ans; // Ensure clean division
-            }
+      mathScore=0; mathLevel=1; mathTimeLeft=60; mathPlaying=true;
+      updateMathUI(); generateMathQuestion();
 
-            document.getElementById('math-question').textContent = `${a} ${op} ${b} = ?`;
+      clearInterval(mathTimerInterval);
+      mathTimerInterval = setInterval(() => {
+        mathTimeLeft--;
+        updateMathUI();
+        if(mathTimeLeft <= 0) endMathGame();
+      }, 1000);
+    }
 
-            // Generate options
-            let options = [ans];
-            while(options.length < 4) {
-                let range = 5 + Math.floor(mathLevel / 2);
-                let wrong = ans + r(-range, range);
-                if(wrong !== ans && wrong >= 0 && !options.includes(wrong)) options.push(wrong);
-            }
-            options = options.sort(() => Math.random() - 0.5);
+    function closeMathGame(){
+      $("#mathGameModal").classList.add("hidden");
+      $("#mathGameModal").classList.remove("flex");
+      document.body.style.overflow="";
+      clearInterval(mathTimerInterval);
+      mathPlaying=false;
+    }
 
-            const container = document.getElementById('math-options');
-            container.innerHTML = '';
-            options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = "p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-2xl font-bold transition";
-                btn.textContent = opt;
-                btn.onclick = () => checkMathAnswer(opt === ans);
-                container.appendChild(btn);
-            });
-        }
+    function updateMathUI(){
+      $("#math-score").textContent = mathScore;
+      $("#math-level").textContent = mathLevel;
+      $("#math-timer").textContent = mathTimeLeft + "s";
+    }
 
-        function checkMathAnswer(isCorrect) {
-            if(isCorrect) {
-                mathScore += (10 * mathLevel);
-                mathLevel++; // Level up on every correct answer? Or maybe every few? Let's make it every correct answer for rapid progression as requested "levels from 1 going forward"
-                // Visual feedback?
-            } else {
-                // Deny and move next
-                const gameView = document.getElementById('math-game-view');
-                gameView.classList.add('animate-pulse'); 
-                gameView.style.borderColor = "red";
-                setTimeout(() => {
-                    gameView.classList.remove('animate-pulse');
-                    gameView.style.borderColor = "transparent"; // Reset
-                }, 200);
-            }
-            // Always generate new question
-            generateMathQuestion();
-            updateMathUI();
-        }
+    function r(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
 
-        function endMathGame() {
-            mathPlaying = false;
-            clearInterval(mathTimerInterval);
-            document.getElementById('math-game-view').classList.add('hidden');
-            document.getElementById('math-game-over').classList.remove('hidden');
-            document.getElementById('math-final-score').textContent = mathScore;
-        }
+    function generateMathQuestion(){
+      if(!mathPlaying) return;
 
-        function r(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+      let ops = ["+"];
+      if(mathLevel > 2) ops.push("-");
+      if(mathLevel > 5) ops.push("*");
+      if(mathLevel > 10) ops.push("/");
 
+      const op = ops[Math.floor(Math.random()*ops.length)];
+      const maxNum = 10 + (mathLevel * 5);
 
-        // --- TYPING SPEED LOGIC ---
-        let typingTimerInterval;
-        let typingTimeLeft = 60;
-        let typingLevel = 1;
-        let typingStarted = false;
-        let typingText = "";
-        let totalChars = 0;
-        let correctChars = 0;
+      let a,b,ans;
+      if(op==="+"){ a=r(1,maxNum); b=r(1,maxNum); ans=a+b; }
+      else if(op==="-"){ a=r(5,maxNum); b=r(1,a); ans=a-b; }
+      else if(op==="*"){ const maxFactor=2+Math.floor(mathLevel/2); a=r(2,maxFactor); b=r(2,12); ans=a*b; }
+      else { b=r(2,10); ans=r(2,10+mathLevel); a=b*ans; }
 
-        const typingTexts = [
-            "cat dog run sky blue red hot sun", // Level 1
-            "The quick brown fox jumps over the lazy dog.", // Level 2
-            "Programming is the art of telling another human what one wants the computer to do.", // Level 3
-            "Technology is best when it brings people together. It is only when they go wrong that machines remind you how powerful they are.", // Level 4
-            "To be or not to be, that is the question. Whether 'tis nobler in the mind to suffer the slings and arrows of outrageous fortune.", // Level 5
-            "Success is not final, failure is not fatal: It is the courage to continue that counts. Believe you can and you're halfway there.", // Level 6
-            "In the middle of difficulty lies opportunity. The only way to do great work is to love what you do. Stay hungry, stay foolish." // Level 7
-        ];
+      $("#math-question").textContent = `${a} ${op} ${b} = ?`;
 
-        function startTypingSpeed() {
-            document.getElementById('typingGameModal').classList.remove('hidden');
-            document.getElementById('typing-game-view').classList.remove('hidden');
-            document.getElementById('typing-game-over').classList.add('hidden');
-            
-            typingTimeLeft = 60;
-            typingLevel = 1;
-            typingStarted = false;
-            correctChars = 0;
-            totalChars = 0;
-            
-            // Setup Text
-            loadTypingLevel();
-            
-            const input = document.getElementById('typing-input');
-            input.value = '';
-            input.focus();
-            input.oninput = handleTyping;
-            
-            updateTypingUI();
-            clearInterval(typingTimerInterval);
-        }
-        
-        function loadTypingLevel() {
-            const index = Math.min(typingLevel - 1, typingTexts.length - 1);
-            typingText = typingTexts[index];
-            renderTypingText('');
-            document.getElementById('typing-input').value = '';
-        }
+      let options=[ans];
+      while(options.length<4){
+        let range = 5 + Math.floor(mathLevel/2);
+        let wrong = ans + r(-range, range);
+        if(wrong!==ans && wrong>=0 && !options.includes(wrong)) options.push(wrong);
+      }
+      options.sort(()=>Math.random()-0.5);
 
-        function handleTyping(e) {
-            if(!typingStarted) {
-                typingStarted = true;
-                typingTimerInterval = setInterval(() => {
-                    typingTimeLeft--;
-                    updateTypingUI();
-                    if(typingTimeLeft <= 0) endTypingGame();
-                }, 1000);
-            }
-            
-            const inputVal = e.target.value;
-            renderTypingText(inputVal);
-            
-            // Auto finish if complete
-            if(inputVal.length >= typingText.length) {
-                // Check if accuracy is good enough to proceed?
-                // For now, just level up
-                typingLevel++;
-                loadTypingLevel();
-            }
-        }
+      const cont=$("#math-options");
+      cont.innerHTML="";
+      options.forEach(opt=>{
+        const btn=document.createElement("button");
+        btn.className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-2xl font-black transition";
+        btn.textContent=opt;
+        btn.onclick=()=>checkMathAnswer(opt===ans);
+        cont.appendChild(btn);
+      });
+    }
 
-        function renderTypingText(inputVal) {
-            const display = document.getElementById('typing-text');
-            display.innerHTML = '';
-            let correctCount = 0;
-            
-            for(let i=0; i<typingText.length; i++) {
-                const span = document.createElement('span');
-                const char = typingText[i];
-                const inputChar = inputVal[i];
-                
-                if(inputChar == null) {
-                    span.textContent = char; // Not typed yet
-                } else if(inputChar === char) {
-                    span.textContent = char;
-                    span.className = "text-green-400";
-                    correctCount++;
-                } else {
-                    span.textContent = char;
-                    span.className = "text-red-500 bg-red-900/30";
-                }
-                display.appendChild(span);
-            }
-            correctChars = correctCount;
-            totalChars = inputVal.length;
-            
-            // Live WPM calculation
-            if(typingTimeLeft < 60) {
-                 const elapsed = 60 - typingTimeLeft;
-                 const wpm = Math.round((correctChars / 5) / (elapsed / 60));
-                 document.getElementById('typing-wpm').textContent = isFinite(wpm) ? wpm : 0;
-            }
-        }
+    function checkMathAnswer(ok){
+      if(ok){
+        mathScore += 10 * mathLevel;
+        mathLevel++;
+      } else {
+        const view=$("#math-game-view");
+        view.classList.add("animate-pulse");
+        setTimeout(()=>view.classList.remove("animate-pulse"), 180);
+      }
+      updateMathUI();
+      generateMathQuestion();
+    }
 
-        function updateTypingUI() {
-            document.getElementById('typing-timer').textContent = typingTimeLeft + 's';
-        }
+    function endMathGame(){
+      mathPlaying=false;
+      clearInterval(mathTimerInterval);
+      $("#math-game-view").classList.add("hidden");
+      $("#math-game-over").classList.remove("hidden");
+      $("#math-final-score").textContent = mathScore;
 
-        function closeTypingGame() {
-             document.getElementById('typingGameModal').classList.add('hidden');
-             clearInterval(typingTimerInterval);
-             typingStarted = false;
-        }
+      // record
+      const best = Number(localStorage.getItem("spudy_best_math") || "0");
+      if(mathScore > best){
+        localStorage.setItem("spudy_best_math", String(mathScore));
+        updateLeaderboard();
+        toast("New Math Record ✅");
+      }
+    }
 
-        function endTypingGame() {
-            clearInterval(typingTimerInterval);
-            document.getElementById('typing-game-view').classList.add('hidden');
-            document.getElementById('typing-game-over').classList.remove('hidden');
-            
-            const elapsed = 60 - typingTimeLeft;
-            const time = elapsed === 0 ? 1 : elapsed; // Avoid div by zero
-            const wpm = Math.round((correctChars / 5) / (time / 60));
-            const accuracy = totalChars > 0 ? Math.round((correctChars / totalChars) * 100) : 0;
-            
-            document.getElementById('typing-final-wpm').textContent = wpm;
-            document.getElementById('typing-accuracy').textContent = accuracy + '%';
-        }
-        
-        // Dynamic functions for premium games
-        games.forEach(game => {
-            window[game.id] = function() {
-                alert(`Starting ${game.name}... (This is a premium feature!)`);
-            };
+    /* ---------------------------
+      typing speed
+    ----------------------------*/
+    let typingTimerInterval;
+    let typingTimeLeft=60;
+    let typingLevel=1;
+    let typingStarted=false;
+    let typingText="";
+    let totalChars=0, correctChars=0;
+
+    const typingTexts=[
+      "cat dog run sky blue red hot sun",
+      "The quick brown fox jumps over the lazy dog.",
+      "Programming is the art of telling another human what one wants the computer to do.",
+      "Technology is best when it brings people together.",
+      "Success is not final, failure is not fatal: It is the courage to continue that counts.",
+      "In the middle of difficulty lies opportunity. Stay hungry, stay foolish."
+    ];
+
+    function startTypingSpeed(){
+      $("#typingGameModal").classList.remove("hidden");
+      $("#typingGameModal").classList.add("flex");
+      document.body.style.overflow="hidden";
+
+      $("#typing-game-view").classList.remove("hidden");
+      $("#typing-game-over").classList.add("hidden");
+
+      typingTimeLeft=60;
+      typingLevel=1;
+      typingStarted=false;
+      correctChars=0;
+      totalChars=0;
+
+      loadTypingLevel();
+      const input=$("#typing-input");
+      input.value="";
+      input.focus();
+      input.oninput=handleTyping;
+
+      $("#typing-wpm").textContent="0";
+      $("#typing-timer").textContent="60s";
+      clearInterval(typingTimerInterval);
+    }
+
+    function loadTypingLevel(){
+      const index = Math.min(typingLevel-1, typingTexts.length-1);
+      typingText = typingTexts[index];
+      renderTypingText("");
+      $("#typing-input").value="";
+    }
+
+    function handleTyping(e){
+      if(!typingStarted){
+        typingStarted=true;
+        typingTimerInterval=setInterval(()=>{
+          typingTimeLeft--;
+          $("#typing-timer").textContent = typingTimeLeft+"s";
+          if(typingTimeLeft<=0) endTypingGame();
+        },1000);
+      }
+
+      const val=e.target.value;
+      renderTypingText(val);
+
+      if(val.length >= typingText.length){
+        typingLevel++;
+        loadTypingLevel();
+      }
+    }
+
+    function renderTypingText(val){
+      const display=$("#typing-text");
+      display.innerHTML="";
+      let correctCount=0;
+
+      for(let i=0;i<typingText.length;i++){
+        const span=document.createElement("span");
+        const ch=typingText[i];
+        const inCh=val[i];
+
+        if(inCh==null){ span.textContent=ch; }
+        else if(inCh===ch){ span.textContent=ch; span.className="text-emerald-300"; correctCount++; }
+        else { span.textContent=ch; span.className="text-red-300 bg-red-900/25"; }
+        display.appendChild(span);
+      }
+
+      correctChars=correctCount;
+      totalChars=val.length;
+
+      if(typingTimeLeft < 60){
+        const elapsed = 60 - typingTimeLeft;
+        const wpm = Math.round((correctChars/5) / (elapsed/60));
+        $("#typing-wpm").textContent = isFinite(wpm) ? wpm : 0;
+      }
+    }
+
+    function closeTypingGame(){
+      $("#typingGameModal").classList.add("hidden");
+      $("#typingGameModal").classList.remove("flex");
+      document.body.style.overflow="";
+      clearInterval(typingTimerInterval);
+      typingStarted=false;
+    }
+
+    function endTypingGame(){
+      clearInterval(typingTimerInterval);
+      $("#typing-game-view").classList.add("hidden");
+      $("#typing-game-over").classList.remove("hidden");
+
+      const elapsed = 60 - typingTimeLeft;
+      const time = elapsed === 0 ? 1 : elapsed;
+      const wpm = Math.round((correctChars/5) / (time/60));
+      const accuracy = totalChars > 0 ? Math.round((correctChars/totalChars) * 100) : 0;
+
+      $("#typing-final-wpm").textContent = wpm;
+      $("#typing-accuracy").textContent = accuracy + "%";
+
+      const best = Number(localStorage.getItem("spudy_best_wpm") || "0");
+      if(wpm > best){
+        localStorage.setItem("spudy_best_wpm", String(wpm));
+        updateLeaderboard();
+        toast("New WPM Record ✅");
+      }
+    }
+
+    /* ---------------------------
+      leaderboard
+    ----------------------------*/
+    function updateLeaderboard(){
+      const bestWpm = Number(localStorage.getItem("spudy_best_wpm") || "0");
+      const bestMath = Number(localStorage.getItem("spudy_best_math") || "0");
+      $("#lbWpm").textContent = bestWpm;
+      $("#lbMath").textContent = bestMath;
+      $("#bestWpm").textContent = bestWpm;
+    }
+
+    function resetRecords(){
+      localStorage.removeItem("spudy_best_wpm");
+      localStorage.removeItem("spudy_best_math");
+      updateLeaderboard();
+      toast("Records reset.");
+    }
+
+    /* ---------------------------
+      wiring
+    ----------------------------*/
+    function wireFilters(){
+      $$(".chip[data-filter]").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          $$(".chip[data-filter]").forEach(b=>b.classList.remove("active"));
+          btn.classList.add("active");
+          renderPremium();
         });
-
-        // Auth & Payment Logic
-        if (localStorage.getItem('spudyLoggedIn') === 'true') {
-            document.getElementById('authBtn').textContent = 'Account';
-            // Unlock games visually
-            document.querySelectorAll('.glass-card').forEach(c => c.classList.add('unlocked'));
+      });
+      $("#q").addEventListener("input", renderPremium);
+      document.addEventListener("keydown", (e)=>{
+        if(e.key === "Escape"){
+          if(!$("#paymentModal").classList.contains("hidden")) closePayment();
+          if(!$("#authModal").classList.contains("hidden")) closeAuth();
+          if(!$("#mathGameModal").classList.contains("hidden")) closeMathGame();
+          if(!$("#typingGameModal").classList.contains("hidden")) closeTypingGame();
         }
+      });
+      $("#authModal").addEventListener("click", (e)=>{ if(e.target === $("#authModal")) closeAuth(); });
+      $("#paymentModal").addEventListener("click", (e)=>{ if(e.target === $("#paymentModal")) closePayment(); });
+    }
 
-        function openLogin() { 
-            const wantLogin = confirm('Contact +263 77 699 8296 on WhatsApp for login credentials?');
-            if(wantLogin) {
-                 window.open('https://api.whatsapp.com/send?phone=263776998296&text=Hello, I would like to login to Spudy Games.', '_blank');
-            }
-        }
+    /* ---------------------------
+      init
+    ----------------------------*/
+    document.addEventListener("DOMContentLoaded", ()=>{
+      new Typed("#typed", {
+        strings: ["17 Premium Games", "2 Free • 15,000+ Players", "Compete in the Arena", "Game On!"],
+        typeSpeed: 70,
+        backSpeed: 38,
+        loop: true,
+        showCursor: false
+      });
 
-        function checkLogin(funcName, gameName) {
-            if (localStorage.getItem('spudyLoggedIn') === 'true') {
-                if (typeof window[funcName] === 'function') {
-                    window[funcName]();
-                }
-            } else {
-                // Shake effect or visual cue?
-                // alert('Premium game! Please login first.');
-                openPayment('Premium Access', 2.51); // Suggest upgrade immediately
-            }
-        }
-
-        function openPayment(plan, price) {
-            document.getElementById('planName').textContent = plan;
-            document.getElementById('planPrice').textContent = price === 49 ? '$49 Lifetime' : '$' + price + (price === 2.51 ? '/month' : '');
-            document.getElementById('paymentModal').classList.remove('hidden');
-        }
-
-        function pay(method) {
-            // New number: 263776998296
-            const msg = `I want to pay for Spudy Games ${document.getElementById('planName').textContent} using ${method}. Please send payment details for EcoCash 0776998296.`;
-            window.open(`https://api.whatsapp.com/send?phone=263776998296&text=${encodeURIComponent(msg)}`, '_blank');
-        }
-
-        function closePayment() { document.getElementById('paymentModal').classList.add('hidden'); }
-
-        new Typed('#typed', { 
-            strings: ["16 Games", "2 Free • 14 Premium", "Join 15,000+ Players", "Game On!"], 
-            typeSpeed: 80, loop: true 
-        });
-    </script>
+      $("#statGames").textContent = String(2 + games.length);
+      updateLeaderboard();
+      wireFilters();
+      renderPremium();
+      syncAuthUI();
+    });
+  </script>
 </body>
 </html>
