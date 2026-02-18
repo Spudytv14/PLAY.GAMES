@@ -17,12 +17,8 @@
       --glass: rgba(255,255,255,.05);
       --glass2: rgba(255,255,255,.075);
       --b: rgba(255,255,255,.10);
-      --b2: rgba(255,255,255,.16);
       --gold1:#d4af37;
       --gold2:#f1c40f;
-      --cyan1:#38bdf8;
-      --cyan2:#0ea5e9;
-      --emer:#22c55e;
     }
 
     html,body{ margin:0; background:var(--bg); color:#fff; font-family:'Outfit',sans-serif; overflow-x:hidden; }
@@ -50,6 +46,7 @@
       -webkit-backdrop-filter: blur(16px);
       border:1px solid var(--b);
       box-shadow: 0 18px 70px rgba(0,0,0,.55);
+      transition: all .25s ease;
     }
     .glass:hover{
       background:var(--glass2);
@@ -125,7 +122,7 @@
     .game-card:not(.unlocked) .locked-overlay{ opacity:1; }
     .game-card.unlocked .locked-overlay{ display:none; }
 
-    /* modal */
+    /* modal back */
     .modalBack{
       background: rgba(0,0,0,.88);
       backdrop-filter: blur(14px);
@@ -135,7 +132,6 @@
     .no-scrollbar::-webkit-scrollbar{ display:none; }
     .no-scrollbar{ scrollbar-width:none; -ms-overflow-style:none; }
 
-    /* small toast */
     .toast{
       position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%);
       z-index: 9999;
@@ -229,7 +225,7 @@
         <i class="fas fa-bolt text-emerald-400"></i>
         <span>NEXT GEN GAMING</span>
         <span class="opacity-40">•</span>
-        <span class="opacity-80">2 Free • 17 Premium</span>
+        <span class="opacity-80">Free + Premium Demos</span>
       </div>
 
       <div id="heroWelcome" class="hidden text-sm font-black tracking-[0.22em] text-gray-400 mb-3 uppercase"></div>
@@ -243,7 +239,7 @@
       </div>
 
       <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-10">
-        A premium arcade experience with clean UI, progression-based games, and members-only challenges.
+        Premium UI, smooth experience, and every premium game has a playable demo.
       </p>
 
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
@@ -257,13 +253,11 @@
           <i class="fas fa-crown mr-2"></i>Go Premium
         </button>
 
-        <button onclick="requireAuth(() => toast('Member mode enabled ✅'))"
-          class="btn-outline px-8 py-4 rounded-full">
-          <i class="fas fa-user-check mr-2"></i>Member Tools
+        <button onclick="openAuth('register')" class="btn-outline px-8 py-4 rounded-full">
+          <i class="fas fa-user-plus mr-2"></i>Create Account
         </button>
       </div>
 
-      <!-- quick stats -->
       <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
         <div class="glass rounded-3xl p-5 border border-white/10">
           <div class="text-xs text-gray-500 font-black tracking-widest">GAMES</div>
@@ -276,13 +270,13 @@
           <div class="text-xs text-gray-500 mt-1">instant play</div>
         </div>
         <div class="glass rounded-3xl p-5 border border-white/10">
-          <div class="text-xs text-gray-500 font-black tracking-widest">PLAYERS</div>
-          <div class="text-2xl font-black text-white mt-1">15,000+</div>
-          <div class="text-xs text-gray-500 mt-1">community</div>
-        </div>
-        <div class="glass rounded-3xl p-5 border border-white/10">
           <div class="text-xs text-gray-500 font-black tracking-widest">BEST WPM</div>
           <div id="bestWpm" class="text-2xl font-black text-white mt-1">0</div>
+          <div class="text-xs text-gray-500 mt-1">your record</div>
+        </div>
+        <div class="glass rounded-3xl p-5 border border-white/10">
+          <div class="text-xs text-gray-500 font-black tracking-widest">BEST MATH</div>
+          <div id="bestMath" class="text-2xl font-black text-white mt-1">0</div>
           <div class="text-xs text-gray-500 mt-1">your record</div>
         </div>
       </div>
@@ -291,7 +285,7 @@
 
   <!-- GAMES -->
   <section id="games" class="py-20 px-4 max-w-7xl mx-auto">
-    <!-- toolbar -->
+
     <div class="glass rounded-3xl p-5 md:p-6 mb-10 border border-white/10">
       <div class="flex flex-col lg:flex-row gap-4 lg:items-center lg:justify-between">
         <div class="flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/5 border border-white/10">
@@ -318,7 +312,7 @@
         </div>
       </div>
       <div class="mt-4 text-xs text-gray-500">
-        <b class="text-gray-300">Tip:</b> Premium games open after login. Payment confirmation stays WhatsApp-based as you built it.
+        <b class="text-gray-300">Note:</b> Premium games show a demo. Full versions can be unlocked via premium access.
       </div>
     </div>
 
@@ -332,7 +326,6 @@
       </div>
 
       <div class="grid md:grid-cols-2 gap-6">
-        <!-- Math Quiz -->
         <div class="glass game-card unlocked p-8 rounded-3xl relative overflow-hidden group border border-white/10">
           <div class="absolute top-0 right-0 bg-emerald-500 text-black text-xs font-black px-3 py-1 rounded-bl-lg">FREE</div>
           <div class="flex items-center gap-6">
@@ -349,7 +342,6 @@
           </button>
         </div>
 
-        <!-- Typing Speed -->
         <div class="glass game-card unlocked p-8 rounded-3xl relative overflow-hidden group border border-white/10">
           <div class="absolute top-0 right-0 bg-emerald-500 text-black text-xs font-black px-3 py-1 rounded-bl-lg">FREE</div>
           <div class="flex items-center gap-6">
@@ -368,14 +360,14 @@
       </div>
     </div>
 
-    <!-- Premium Games -->
+    <!-- Premium -->
     <div>
       <div class="flex items-center justify-between mb-8">
         <h3 class="text-3xl font-black border-l-4 border-yellow-500 pl-4">
           <span class="premium-text">Premium Collection</span>
         </h3>
         <span id="premiumStatus" class="text-xs font-black bg-yellow-500/10 text-yellow-300 px-3 py-1 rounded-full border border-yellow-500/20">
-          LOCKED
+          DEMOS AVAILABLE
         </span>
       </div>
 
@@ -465,14 +457,14 @@
   <section id="pricing" class="py-20 px-4">
     <div class="max-w-5xl mx-auto text-center">
       <h2 class="text-4xl md:text-5xl font-black mb-4">Unlock the <span class="premium-text">Full Experience</span></h2>
-      <p class="text-gray-400 mb-12">Instant access to all premium games, new releases, and member challenges.</p>
+      <p class="text-gray-400 mb-12">Instant access to full premium games, new releases, and member-only features.</p>
 
       <div class="grid md:grid-cols-2 gap-8">
         <div class="glass p-10 rounded-3xl border-t-4 border-purple-500 relative">
           <h3 class="text-2xl font-black mb-2">Gamer Pro</h3>
           <div class="text-4xl font-black mb-6 text-purple-300">$2.51<span class="text-lg text-gray-500">/mo</span></div>
           <ul class="text-left space-y-3 mb-8 text-gray-300 text-sm font-bold">
-            <li><i class="fas fa-check text-purple-400 mr-2"></i> All Premium Games</li>
+            <li><i class="fas fa-check text-purple-400 mr-2"></i> Full Premium Games</li>
             <li><i class="fas fa-check text-purple-400 mr-2"></i> Ad-free Experience</li>
             <li><i class="fas fa-check text-purple-400 mr-2"></i> New Games Monthly</li>
           </ul>
@@ -488,7 +480,7 @@
           <h3 class="text-2xl font-black mb-2 text-yellow-100">Lifetime Legend</h3>
           <div class="text-4xl font-black mb-6 text-yellow-300">$49<span class="text-lg text-gray-500">/once</span></div>
           <ul class="text-left space-y-3 mb-8 text-gray-300 text-sm font-bold">
-            <li><i class="fas fa-star text-yellow-400 mr-2"></i> Lifetime Access</li>
+            <li><i class="fas fa-star text-yellow-400 mr-2"></i> Lifetime Full Access</li>
             <li><i class="fas fa-star text-yellow-400 mr-2"></i> Founder Badge</li>
             <li><i class="fas fa-star text-yellow-400 mr-2"></i> Early Access to Betas</li>
           </ul>
@@ -601,6 +593,51 @@
     </div>
   </div>
 
+  <!-- PREMIUM DEMO MODAL -->
+  <div id="demoModal" class="fixed inset-0 hidden items-center justify-center z-[95] modalBack p-4">
+    <div class="glass w-full max-w-2xl rounded-3xl border border-white/10 overflow-hidden relative">
+      <div class="p-6 border-b border-white/10 bg-white/5 flex items-start justify-between">
+        <div>
+          <div class="text-xs text-gray-500 font-black tracking-[0.22em]">PREMIUM DEMO</div>
+          <h3 id="demoTitle" class="text-2xl font-black text-white mt-1">Game Demo</h3>
+          <p id="demoSub" class="text-sm text-gray-400 font-bold mt-1">Try a short demo experience.</p>
+        </div>
+        <button onclick="closeDemo()" class="text-gray-300 hover:text-white text-xl px-3 py-2 rounded-xl border border-white/10 bg-white/5">
+          <i class="fas fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="p-6">
+        <div class="flex flex-col md:flex-row gap-3 md:items-center md:justify-between mb-5">
+          <div class="flex gap-2">
+            <span id="demoTag" class="text-[11px] font-black uppercase tracking-widest px-3 py-2 rounded-full bg-white/5 border border-white/10 text-gray-300">premium</span>
+            <span class="text-[11px] font-black uppercase tracking-widest px-3 py-2 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-200">
+              Demo Mode
+            </span>
+          </div>
+          <div class="text-sm font-black text-gray-300">
+            Time: <span id="demoTime" class="text-yellow-300">30</span>s • Score: <span id="demoScore" class="text-emerald-300">0</span>
+          </div>
+        </div>
+
+        <div id="demoView" class="bg-black/35 border border-white/10 rounded-3xl p-5 min-h-[210px]"></div>
+
+        <div class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-3">
+          <button id="demoStartBtn" onclick="startDemoRound()" class="btn-gold py-4 rounded-2xl font-black">
+            <i class="fas fa-play mr-2"></i>Start Demo
+          </button>
+          <button onclick="openPayment('Gamer Pro', 2.51)" class="btn-outline py-4 rounded-2xl font-black">
+            <i class="fas fa-lock mr-2"></i>Unlock Full Game
+          </button>
+        </div>
+
+        <div class="mt-4 text-xs text-gray-500 font-bold">
+          Demo is limited. Full gameplay unlocks after premium access.
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- MATH QUIZ MODAL -->
   <div id="mathGameModal" class="fixed inset-0 hidden items-center justify-center z-[90] modalBack p-4">
     <div class="glass p-6 md:p-8 rounded-3xl max-w-2xl w-full mx-4 flex flex-col items-center text-center relative border border-white/10">
@@ -699,26 +736,33 @@
   </div>
 
   <script>
-    /* ---------------------------
-      helpers
-    ----------------------------*/
+    /* ---------------- helpers ---------------- */
     const $ = (s, r=document) => r.querySelector(s);
     const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
-    const clamp = (n,min,max) => Math.max(min, Math.min(max, n));
     function toggleMobileMenu(){ $("#mobileMenu").classList.toggle("hidden"); }
-
     function toast(msg){
-      const t = document.createElement("div");
-      t.className = "toast";
-      t.textContent = msg;
+      const t=document.createElement("div");
+      t.className="toast";
+      t.textContent=msg;
       document.body.appendChild(t);
-      setTimeout(() => t.style.opacity = "0", 1600);
-      setTimeout(() => t.remove(), 2000);
+      setTimeout(()=>t.style.opacity="0",1600);
+      setTimeout(()=>t.remove(),2000);
     }
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+    function randItem(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+    function caesar(str, shift){
+      const A="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      return str.toUpperCase().split("").map(ch=>{
+        const i=A.indexOf(ch);
+        if(i<0) return ch;
+        return A[(i+shift)%26];
+      }).join("");
+    }
+    function r(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
 
-    /* ---------------------------
-      simple demo auth (localStorage)
-    ----------------------------*/
+    /* ---------------- demo auth (localStorage) ---------------- */
     const USERS_KEY="spudy_games_users";
     const SESSION_KEY="spudy_games_session";
     let authMode="login";
@@ -731,25 +775,9 @@
       const sess=getSession(); if(!sess) return null;
       return getUsers().find(u=>u.id===sess.userId) || null;
     }
-    function requireAuth(onOk){
-      const u=currentUser();
-      if(!u){ openAuth("login"); return; }
-      onOk && onOk(u);
-    }
 
-    function openAuth(mode="login"){
-      switchAuth(mode);
-      $("#authModal").classList.remove("hidden");
-      $("#authModal").classList.add("flex");
-      document.body.style.overflow="hidden";
-      $("#authEmail").focus();
-    }
-    function closeAuth(){
-      $("#authModal").classList.add("hidden");
-      $("#authModal").classList.remove("flex");
-      document.body.style.overflow="";
-      hideAuthError();
-    }
+    function openAuth(mode="login"){ switchAuth(mode); $("#authModal").classList.remove("hidden"); $("#authModal").classList.add("flex"); document.body.style.overflow="hidden"; $("#authEmail").focus(); }
+    function closeAuth(){ $("#authModal").classList.add("hidden"); $("#authModal").classList.remove("flex"); document.body.style.overflow=""; hideAuthError(); }
     function switchAuth(mode){
       authMode=mode;
       $("#tabLogin").classList.toggle("active", mode==="login");
@@ -761,11 +789,7 @@
         : `<i class="fas fa-user-plus mr-2"></i>Create Account`;
       hideAuthError();
     }
-    function showAuthError(msg){
-      const box=$("#authError");
-      box.textContent=msg;
-      box.classList.remove("hidden");
-    }
+    function showAuthError(msg){ const b=$("#authError"); b.textContent=msg; b.classList.remove("hidden"); }
     function hideAuthError(){ $("#authError").classList.add("hidden"); }
 
     function submitAuth(){
@@ -783,29 +807,20 @@
         const user={ id:"u_"+Math.random().toString(16).slice(2,10), name, email, pass };
         users.push(user); setUsers(users);
         setSession({ userId:user.id });
-        closeAuth();
-        syncAuthUI();
-        toast(`Welcome, ${user.name} ✅`);
+        closeAuth(); syncAuthUI(); toast(`Welcome, ${user.name} ✅`);
         return;
       }
 
       const u=users.find(x=>x.email===email && x.pass===pass);
       if(!u) return showAuthError("Wrong email or password.");
       setSession({ userId:u.id });
-      closeAuth();
-      syncAuthUI();
-      toast(`Welcome back, ${u.name} ✅`);
+      closeAuth(); syncAuthUI(); toast(`Welcome back, ${u.name} ✅`);
     }
 
-    function logout(){
-      localStorage.removeItem(SESSION_KEY);
-      syncAuthUI();
-      toast("Logged out.");
-    }
+    function logout(){ localStorage.removeItem(SESSION_KEY); syncAuthUI(); toast("Logged out."); }
 
     function syncAuthUI(){
       const u=currentUser();
-
       $("#navWelcome").classList.toggle("hidden", !u);
       $("#navWelcome").classList.toggle("flex", !!u);
       $("#authBtn").classList.toggle("hidden", !!u);
@@ -818,27 +833,18 @@
         $("#welcomeNameMobile").textContent = `Welcome, ${u.name}`;
         $("#heroWelcome").classList.remove("hidden");
         $("#heroWelcome").textContent = `WELCOME, ${u.name}`;
-        $("#premiumStatus").textContent = "MEMBER";
-        $("#premiumStatus").className = "text-xs font-black bg-emerald-500/10 text-emerald-300 px-3 py-1 rounded-full border border-emerald-500/20";
         unlockPremiumUI(true);
       } else {
         $("#heroWelcome").classList.add("hidden");
-        $("#premiumStatus").textContent = "LOCKED";
-        $("#premiumStatus").className = "text-xs font-black bg-yellow-500/10 text-yellow-300 px-3 py-1 rounded-full border border-yellow-500/20";
         unlockPremiumUI(false);
       }
     }
 
     function unlockPremiumUI(isUnlocked){
-      $$(".game-card").forEach(c => {
-        if(isUnlocked) c.classList.add("unlocked");
-        else c.classList.remove("unlocked");
-      });
+      $$(".game-card").forEach(c => isUnlocked ? c.classList.add("unlocked") : c.classList.remove("unlocked"));
     }
 
-    /* ---------------------------
-      payment
-    ----------------------------*/
+    /* ---------------- payment ---------------- */
     function openPayment(plan, price){
       $("#planName").textContent = plan;
       $("#planPrice").textContent = price === 49 ? "$49 Lifetime" : "$" + price + "/month";
@@ -856,30 +862,61 @@
       window.open(`https://api.whatsapp.com/send?phone=263776998296&text=${encodeURIComponent(msg)}`, "_blank");
     }
 
-    /* ---------------------------
-      premium games data + render
-    ----------------------------*/
+    /* ---------------- premium games + demos ---------------- */
     const games = [
-      { name:"Spelling Bee", id:"startSpellingBee", icon:"fa-spell-check", tag:"words", colorClass:"text-purple-300", bgClass:"bg-purple-500/20" },
-      { name:"Flag Quiz", id:"startFlagQuiz", icon:"fa-flag", tag:"brain", colorClass:"text-red-300", bgClass:"bg-red-500/20" },
-      { name:"Color Mixing", id:"startColorMixing", icon:"fa-palette", tag:"brain", colorClass:"text-yellow-200", bgClass:"bg-yellow-500/20" },
-      { name:"Logic Puzzle", id:"startLogicPuzzle", icon:"fa-puzzle-piece", tag:"brain", colorClass:"text-cyan-200", bgClass:"bg-cyan-500/20" },
-      { name:"Cryptography", id:"startCryptography", icon:"fa-key", tag:"brain", colorClass:"text-orange-200", bgClass:"bg-orange-500/20" },
-      { name:"Memory Matrix", id:"startMemoryMatrix", icon:"fa-brain", tag:"brain", colorClass:"text-pink-200", bgClass:"bg-pink-500/20" },
-      { name:"Spudy Snake", id:"startSnake", icon:"fa-dragon", tag:"arcade", colorClass:"text-indigo-200", bgClass:"bg-indigo-500/20" },
-      { name:"Tic Tac Toe AI", id:"startTicTacToe", icon:"fa-times", tag:"brain", colorClass:"text-teal-200", bgClass:"bg-teal-500/20", isNew:true },
-      { name:"Word Search", id:"startWordSearch", icon:"fa-search", tag:"words", colorClass:"text-lime-200", bgClass:"bg-lime-500/20" },
-      { name:"2048 Spudy", id:"start2048", icon:"fa-th", tag:"arcade", colorClass:"text-rose-200", bgClass:"bg-rose-500/20", isNew:true },
-      { name:"Sudoku Master", id:"startSudoku", icon:"fa-border-all", tag:"brain", colorClass:"text-emerald-200", bgClass:"bg-emerald-500/20" },
-      { name:"Hangman", id:"startHangman", icon:"fa-user-injured", tag:"words", colorClass:"text-amber-200", bgClass:"bg-amber-500/20" },
-      { name:"Connect Four", id:"startConnectFour", icon:"fa-circle", tag:"brain", colorClass:"text-violet-200", bgClass:"bg-violet-500/20" },
-      { name:"Spudy Racer", id:"startRacer", icon:"fa-car", tag:"arcade", colorClass:"text-sky-200", bgClass:"bg-sky-500/20", isNew:true },
-      { name:"Chess Master", id:"startChess", icon:"fa-chess-knight", tag:"brain", colorClass:"text-white", bgClass:"bg-white/15", isNew:true },
-      { name:"Space Invaders", id:"startSpace", icon:"fa-rocket", tag:"arcade", colorClass:"text-red-200", bgClass:"bg-red-500/20", isNew:true },
-      { name:"Cyber Poker", id:"startPoker", icon:"fa-dice", tag:"arcade", colorClass:"text-purple-200", bgClass:"bg-purple-500/20", isNew:true },
+      { name:"Spelling Bee", id:"startSpellingBee", icon:"fa-spell-check", tag:"words", colorClass:"text-purple-300", bgClass:"bg-purple-500/20", demoType:"spell", demoData:["receive","library","rhythm","separate","beautiful"] },
+      { name:"Flag Quiz", id:"startFlagQuiz", icon:"fa-flag", tag:"brain", colorClass:"text-red-300", bgClass:"bg-red-500/20", demoType:"mcq",
+        demoData:[
+          {q:"Which country has the capital Harare?", a:["Zambia","Zimbabwe","Kenya","Ghana"], c:1},
+          {q:"Which is a primary color?", a:["Purple","Orange","Blue","Pink"], c:2},
+          {q:"What is 9 × 7?", a:["56","63","72","49"], c:1}
+        ]
+      },
+      { name:"Color Mixing", id:"startColorMixing", icon:"fa-palette", tag:"brain", colorClass:"text-yellow-200", bgClass:"bg-yellow-500/20", demoType:"mcq",
+        demoData:[
+          {q:"Red + Blue = ?", a:["Green","Purple","Orange","Brown"], c:1},
+          {q:"Blue + Yellow = ?", a:["Green","Purple","Orange","Pink"], c:0}
+        ]
+      },
+      { name:"Logic Puzzle", id:"startLogicPuzzle", icon:"fa-puzzle-piece", tag:"brain", colorClass:"text-cyan-200", bgClass:"bg-cyan-500/20", demoType:"mcq",
+        demoData:[
+          {q:"I speak without a mouth and hear without ears. What am I?", a:["Echo","Wind","Cloud","Fire"], c:0},
+          {q:"What has keys but can’t open locks?", a:["Map","Piano","Phone","Car"], c:1}
+        ]
+      },
+      { name:"Cryptography", id:"startCryptography", icon:"fa-key", tag:"brain", colorClass:"text-orange-200", bgClass:"bg-orange-500/20", demoType:"cipher",
+        demoData:[
+          {plain:"SPUDY", shift:3},{plain:"GAMES", shift:4},{plain:"ARCADE", shift:2}
+        ]
+      },
+      { name:"Memory Matrix", id:"startMemoryMatrix", icon:"fa-brain", tag:"brain", colorClass:"text-pink-200", bgClass:"bg-pink-500/20", demoType:"memory" },
+      { name:"Spudy Snake", id:"startSnake", icon:"fa-dragon", tag:"arcade", colorClass:"text-indigo-200", bgClass:"bg-indigo-500/20", demoType:"reflex" },
+      { name:"Tic Tac Toe AI", id:"startTicTacToe", icon:"fa-times", tag:"brain", colorClass:"text-teal-200", bgClass:"bg-teal-500/20", isNew:true, demoType:"tictactoe" },
+      { name:"Word Search", id:"startWordSearch", icon:"fa-search", tag:"words", colorClass:"text-lime-200", bgClass:"bg-lime-500/20", demoType:"anagram",
+        demoData:["SPUDY","LIBRARY","GAMES","ARCADE"]
+      },
+      { name:"2048 Spudy", id:"start2048", icon:"fa-th", tag:"arcade", colorClass:"text-rose-200", bgClass:"bg-rose-500/20", isNew:true, demoType:"tapscore" },
+      { name:"Sudoku Master", id:"startSudoku", icon:"fa-border-all", tag:"brain", colorClass:"text-emerald-200", bgClass:"bg-emerald-500/20", demoType:"mcq",
+        demoData:[{q:"In Sudoku, each row contains digits:", a:["1–6","1–7","1–8","1–9"], c:3}]
+      },
+      { name:"Hangman", id:"startHangman", icon:"fa-user-injured", tag:"words", colorClass:"text-amber-200", bgClass:"bg-amber-500/20", demoType:"hangman",
+        demoData:["SPUDY","ARCADE","PREMIUM","TYPING"]
+      },
+      { name:"Connect Four", id:"startConnectFour", icon:"fa-circle", tag:"brain", colorClass:"text-violet-200", bgClass:"bg-violet-500/20", demoType:"mcq",
+        demoData:[{q:"Connect Four is won by connecting:", a:["3","4","5","6"], c:1}]
+      },
+      { name:"Spudy Racer", id:"startRacer", icon:"fa-car", tag:"arcade", colorClass:"text-sky-200", bgClass:"bg-sky-500/20", isNew:true, demoType:"reflex" },
+      { name:"Chess Master", id:"startChess", icon:"fa-chess-knight", tag:"brain", colorClass:"text-white", bgClass:"bg-white/15", isNew:true, demoType:"mcq",
+        demoData:[{q:"A knight moves in:", a:["Straight line","Diagonal","L-shape","Circle"], c:2}]
+      },
+      { name:"Space Invaders", id:"startSpace", icon:"fa-rocket", tag:"arcade", colorClass:"text-red-200", bgClass:"bg-red-500/20", isNew:true, demoType:"tapscore" },
+      { name:"Cyber Poker", id:"startPoker", icon:"fa-dice", tag:"arcade", colorClass:"text-purple-200", bgClass:"bg-purple-500/20", isNew:true, demoType:"mcq",
+        demoData:[{q:"A standard deck has:", a:["40","52","60","64"], c:1}]
+      },
     ];
 
     const premiumGrid = $("#premium-grid");
+
     function renderPremium(){
       const q = ($("#q").value || "").trim().toLowerCase();
       const active = $(".chip.active")?.dataset.filter || "all";
@@ -902,46 +939,421 @@
                 <i class="fas ${g.icon}"></i>
               </div>
               <div>
-                <h4 class="text-lg font-black leading-tight mb-1">${g.name}</h4>
-                <div class="text-[11px] text-gray-500 font-black uppercase tracking-widest">${g.tag}</div>
+                <h4 class="text-lg font-black leading-tight mb-1">${escapeHtml(g.name)}</h4>
+                <div class="text-[11px] text-gray-500 font-black uppercase tracking-widest">${escapeHtml(g.tag)}</div>
               </div>
             </div>
 
             <button class="mt-4 w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition text-sm font-black border border-white/10"
-              onclick="checkPremium('${g.id}', '${g.name}')">
-              Play
+              onclick="openDemoById('${g.id}')">
+              Play Demo
             </button>
 
-            <div class="locked-overlay" onclick="checkPremium('${g.id}', '${g.name}')">
+            <div class="locked-overlay" onclick="openAuth('login')">
               <i class="fas fa-lock text-3xl text-yellow-300 mb-2"></i>
-              <span class="text-xs font-black uppercase tracking-widest text-gray-200">Premium</span>
-              <span class="text-[11px] text-gray-500 font-black mt-1">Login to unlock</span>
+              <span class="text-xs font-black uppercase tracking-widest text-gray-200">Full Game Locked</span>
+              <span class="text-[11px] text-gray-500 font-black mt-1">Login + Premium to unlock</span>
             </div>
           `;
           premiumGrid.appendChild(card);
         });
 
-      // unlock based on auth
       unlockPremiumUI(!!currentUser());
     }
 
-    function checkPremium(funcName, gameName){
-      if(currentUser()){
-        if(typeof window[funcName] === "function") window[funcName]();
-        else toast(`Starting ${gameName}...`);
-      } else {
-        openAuth("login");
-      }
+    function openDemoById(gameId){
+      const g = games.find(x => x.id === gameId);
+      if(!g) return;
+      openDemo(g);
     }
 
-    // attach stub game functions
-    games.forEach(g => window[g.id] = () => toast(`Starting ${g.name}... (premium demo)`));
+    /* ---------------- demo engine ---------------- */
+    let demoGame=null, demoTimer=null, demoTimeLeft=30, demoScore=0, demoState={};
 
-    /* ---------------------------
-      math quiz
-    ----------------------------*/
-    let mathTimerInterval;
-    let mathScore=0, mathLevel=1, mathTimeLeft=60, mathPlaying=false;
+    function openDemo(game){
+      demoGame = game;
+      demoTimeLeft = 30;
+      demoScore = 0;
+      demoState = {};
+
+      $("#demoTitle").textContent = game.name;
+      $("#demoSub").textContent = "Play a short interactive demo.";
+      $("#demoTag").textContent = (game.tag || "premium");
+      $("#demoTime").textContent = demoTimeLeft;
+      $("#demoScore").textContent = demoScore;
+
+      renderDemoIntro();
+
+      $("#demoModal").classList.remove("hidden");
+      $("#demoModal").classList.add("flex");
+      document.body.style.overflow="hidden";
+    }
+
+    function closeDemo(){
+      clearInterval(demoTimer);
+      $("#demoModal").classList.add("hidden");
+      $("#demoModal").classList.remove("flex");
+      document.body.style.overflow="";
+    }
+
+    function renderDemoIntro(){
+      clearInterval(demoTimer);
+      $("#demoStartBtn").disabled = false;
+      $("#demoStartBtn").innerHTML = `<i class="fas fa-play mr-2"></i>Start Demo`;
+      $("#demoView").innerHTML = `
+        <div class="text-center py-8">
+          <div class="text-xs text-gray-500 font-black tracking-[0.22em]">DEMO READY</div>
+          <div class="text-3xl font-black mt-2">30 seconds</div>
+          <div class="text-gray-400 font-bold mt-2">Score as much as you can in a mini round.</div>
+          <div class="mt-5 text-sm text-gray-500 font-bold">Press “Start Demo” to begin.</div>
+        </div>
+      `;
+    }
+
+    function startDemoRound(){
+      if(!demoGame) return;
+      clearInterval(demoTimer);
+      demoTimeLeft = 30; demoScore = 0; demoState = {};
+      updateDemoHUD();
+
+      $("#demoStartBtn").disabled = true;
+      $("#demoStartBtn").innerHTML = `<i class="fas fa-hourglass-half mr-2"></i>Running...`;
+
+      demoTimer = setInterval(() => {
+        demoTimeLeft--;
+        updateDemoHUD();
+        if(demoTimeLeft <= 0){
+          clearInterval(demoTimer);
+          endDemo();
+        }
+      }, 1000);
+
+      nextDemoStep();
+    }
+
+    function updateDemoHUD(){
+      $("#demoTime").textContent = demoTimeLeft;
+      $("#demoScore").textContent = demoScore;
+    }
+
+    function endDemo(){
+      $("#demoStartBtn").disabled = false;
+      $("#demoStartBtn").innerHTML = `<i class="fas fa-rotate-left mr-2"></i>Replay Demo`;
+      $("#demoView").innerHTML = `
+        <div class="text-center py-10">
+          <div class="text-xs text-gray-500 font-black tracking-[0.22em]">DEMO COMPLETE</div>
+          <div class="text-5xl font-black mt-3 text-emerald-300">${demoScore}</div>
+          <div class="text-gray-400 font-bold mt-2">Demo Score</div>
+          <div class="mt-6 text-sm text-gray-500 font-bold">
+            Unlock premium to play the full <span class="text-white">${escapeHtml(demoGame.name)}</span>.
+          </div>
+        </div>
+      `;
+    }
+
+    function nextDemoStep(){
+      if(!demoGame || demoTimeLeft <= 0) return;
+      const t = demoGame.demoType || "tapscore";
+
+      if(t === "spell") return demoSpell();
+      if(t === "mcq") return demoMCQ();
+      if(t === "cipher") return demoCipher();
+      if(t === "memory") return demoMemory();
+      if(t === "reflex") return demoReflex();
+      if(t === "tictactoe") return demoTicTacToe();
+      if(t === "anagram") return demoAnagram();
+      if(t === "hangman") return demoHangman();
+      return demoTapScore();
+    }
+
+    function demoSpell(){
+      const words = demoGame.demoData || ["spudy","premium","arcade","typing"];
+      const word = words[Math.floor(Math.random() * words.length)];
+      const scrambled = word.split("").sort(() => Math.random() - 0.5).join("").toUpperCase();
+
+      $("#demoView").innerHTML = `
+        <div class="text-center">
+          <div class="text-xs text-gray-500 font-black tracking-[0.22em]">SPELLING BEE</div>
+          <div class="text-4xl font-black mt-3">${scrambled}</div>
+          <div class="text-gray-400 font-bold mt-2">Unscramble the word</div>
+
+          <div class="mt-6 flex gap-2 justify-center">
+            <input id="demoInput" class="w-full max-w-xs p-4 rounded-2xl bg-black/40 border border-white/10 text-white outline-none focus:border-sky-400 transition font-black text-center"
+              placeholder="Type answer..." />
+          </div>
+
+          <button class="btn-outline mt-4 px-6 py-3 rounded-2xl font-black" onclick="checkSpell('${word.toUpperCase()}')">
+            Submit
+          </button>
+        </div>
+      `;
+      setTimeout(() => $("#demoInput")?.focus(), 50);
+    }
+    function checkSpell(ans){
+      const v = ($("#demoInput").value || "").trim().toUpperCase();
+      if(v === ans){ demoScore += 25; updateDemoHUD(); nextDemoStep(); }
+      else { demoScore = Math.max(0, demoScore - 5); updateDemoHUD(); }
+    }
+
+    function demoMCQ(){
+      const bank = demoGame.demoData || [{q:"Demo question?", a:["A","B","C","D"], c:0}];
+      const item = bank[Math.floor(Math.random() * bank.length)];
+
+      $("#demoView").innerHTML = `
+        <div>
+          <div class="text-xs text-gray-500 font-black tracking-[0.22em]">QUIZ</div>
+          <div class="text-2xl font-black mt-2">${escapeHtml(item.q)}</div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-6">
+            ${item.a.map((x,i)=>`
+              <button class="p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 font-black text-left"
+                onclick="answerMCQ(${i}, ${item.c})">
+                ${escapeHtml(x)}
+              </button>
+            `).join("")}
+          </div>
+        </div>
+      `;
+    }
+    function answerMCQ(i, c){
+      if(i === c){ demoScore += 20; }
+      else { demoScore = Math.max(0, demoScore - 5); }
+      updateDemoHUD();
+      nextDemoStep();
+    }
+
+    function demoCipher(){
+      const set = demoGame.demoData || [{plain:"SPUDY", shift:3}];
+      const item = set[Math.floor(Math.random()*set.length)];
+      const enc = caesar(item.plain, item.shift);
+
+      $("#demoView").innerHTML = `
+        <div class="text-center">
+          <div class="text-xs text-gray-500 font-black tracking-[0.22em]">CRYPTO DEMO</div>
+          <div class="text-4xl font-black mt-3">${enc}</div>
+          <div class="text-gray-400 font-bold mt-2">Decode (Shift -${item.shift})</div>
+          <input id="demoInput" class="mt-6 w-full max-w-xs p-4 rounded-2xl bg-black/40 border border-white/10 text-white outline-none focus:border-sky-400 transition font-black text-center"
+            placeholder="Type decoded word..." />
+          <button class="btn-outline mt-4 px-6 py-3 rounded-2xl font-black" onclick="checkCipher('${item.plain.toUpperCase()}')">
+            Submit
+          </button>
+        </div>
+      `;
+      setTimeout(() => $("#demoInput")?.focus(), 50);
+    }
+    function checkCipher(ans){
+      const v = ($("#demoInput").value || "").trim().toUpperCase();
+      if(v === ans){ demoScore += 30; updateDemoHUD(); nextDemoStep(); }
+      else { demoScore = Math.max(0, demoScore - 5); updateDemoHUD(); }
+    }
+
+    function demoMemory(){
+      if(!demoState.seq){
+        demoState.seq = Array.from({length: 3 + Math.floor(demoScore/60)}, () => randItem(["A","B","C","D"]));
+      }
+      const seq = demoState.seq.join(" ");
+
+      $("#demoView").innerHTML = `
+        <div class="text-center">
+          <div class="text-xs text-gray-500 font-black tracking-[0.22em]">MEMORY</div>
+          <div class="text-4xl font-black mt-3">${seq}</div>
+          <div class="text-gray-400 font-bold mt-2">Memorize…</div>
+        </div>
+      `;
+
+      setTimeout(() => {
+        $("#demoView").innerHTML = `
+          <div class="text-center">
+            <div class="text-xs text-gray-500 font-black tracking-[0.22em]">MEMORY</div>
+            <div class="text-2xl font-black mt-3">Repeat the sequence</div>
+            <div class="text-gray-400 font-bold mt-2">Letters separated by space (e.g. A B C)</div>
+            <input id="demoInput" class="mt-6 w-full max-w-xs p-4 rounded-2xl bg-black/40 border border-white/10 text-white outline-none focus:border-sky-400 transition font-black text-center"
+              placeholder="Type sequence..." />
+            <button class="btn-outline mt-4 px-6 py-3 rounded-2xl font-black" onclick="checkMemory('${seq}')">Submit</button>
+          </div>
+        `;
+        setTimeout(() => $("#demoInput")?.focus(), 50);
+      }, 850);
+    }
+    function checkMemory(seq){
+      const v = ($("#demoInput").value || "").trim().toUpperCase().replace(/\s+/g," ");
+      if(v === seq.toUpperCase()){ demoScore += 35; }
+      else { demoScore = Math.max(0, demoScore - 10); }
+      demoState.seq = null;
+      updateDemoHUD();
+      nextDemoStep();
+    }
+
+    function demoReflex(){
+      const delay = 400 + Math.random()*900;
+      $("#demoView").innerHTML = `
+        <div class="text-center py-8">
+          <div class="text-xs text-gray-500 font-black tracking-[0.22em]">REFLEX</div>
+          <div class="text-2xl font-black mt-2">Wait for GO… then click!</div>
+          <div class="text-gray-400 font-bold mt-2">Don’t click early.</div>
+          <button id="refBtn" class="mt-6 px-10 py-5 rounded-3xl bg-white/5 border border-white/10 font-black text-gray-300 cursor-not-allowed" disabled>
+            WAIT…
+          </button>
+        </div>
+      `;
+
+      demoState.canClick = false;
+      $("#demoView").onclick = () => {
+        if(demoState.canClick) return;
+        demoScore = Math.max(0, demoScore - 10);
+        updateDemoHUD();
+      };
+
+      setTimeout(() => {
+        const b = $("#refBtn");
+        if(!b) return;
+        b.disabled = false;
+        b.className = "mt-6 px-10 py-5 rounded-3xl bg-emerald-500/20 border border-emerald-500/25 font-black text-emerald-200";
+        b.textContent = "GO!";
+        demoState.start = performance.now();
+        demoState.canClick = true;
+        b.onclick = (e) => {
+          e.stopPropagation();
+          if(!demoState.canClick) return;
+          const ms = performance.now() - demoState.start;
+          const pts = Math.max(5, Math.round(60 - ms/20));
+          demoScore += pts;
+          updateDemoHUD();
+          nextDemoStep();
+        };
+      }, delay);
+    }
+
+    function demoTicTacToe(){
+      const boards = [
+        {b:["X","X","", "O","","", "","","O"], win:2},
+        {b:["O","","X", "X","O","", "","",""], win:8},
+        {b:["X","","", "O","O","", "X","",""], win:5}
+      ];
+      const pick = boards[Math.floor(Math.random()*boards.length)];
+
+      const cell = (i) => {
+        const v = pick.b[i];
+        const disabled = v !== "";
+        return `
+          <button ${disabled?"disabled":""}
+            class="h-16 rounded-2xl border border-white/10 ${disabled?"bg-white/5 text-gray-300":"bg-white/5 hover:bg-white/10 text-white"} font-black text-2xl"
+            onclick="ttPick(${i}, ${pick.win})">${v || ""}</button>`;
+      };
+
+      $("#demoView").innerHTML = `
+        <div class="text-center">
+          <div class="text-xs text-gray-500 font-black tracking-[0.22em]">TIC TAC TOE</div>
+          <div class="text-gray-400 font-bold mt-2">You are <span class="text-white font-black">X</span>. Tap the winning move.</div>
+          <div class="grid grid-cols-3 gap-2 mt-6 max-w-xs mx-auto">
+            ${Array.from({length:9},(_,i)=>cell(i)).join("")}
+          </div>
+        </div>
+      `;
+    }
+    function ttPick(i, win){
+      if(i === win){ demoScore += 30; }
+      else { demoScore = Math.max(0, demoScore - 8); }
+      updateDemoHUD();
+      nextDemoStep();
+    }
+
+    function demoAnagram(){
+      const raw = (demoGame.demoData && demoGame.demoData.length ? randItem(demoGame.demoData) : "SPUDY").toUpperCase();
+      const an = raw.split("").sort(()=>Math.random()-0.5).join("");
+
+      $("#demoView").innerHTML = `
+        <div class="text-center">
+          <div class="text-xs text-gray-500 font-black tracking-[0.22em]">ANAGRAM</div>
+          <div class="text-4xl font-black mt-3">${an}</div>
+          <div class="text-gray-400 font-bold mt-2">Rearrange into a word</div>
+          <input id="demoInput" class="mt-6 w-full max-w-xs p-4 rounded-2xl bg-black/40 border border-white/10 text-white outline-none focus:border-sky-400 transition font-black text-center"
+            placeholder="Type word..." />
+          <button class="btn-outline mt-4 px-6 py-3 rounded-2xl font-black" onclick="checkAnagram('${raw}')">Submit</button>
+        </div>
+      `;
+      setTimeout(() => $("#demoInput")?.focus(), 50);
+    }
+    function checkAnagram(ans){
+      const v = ($("#demoInput").value || "").trim().toUpperCase();
+      if(v === ans){ demoScore += 25; }
+      else { demoScore = Math.max(0, demoScore - 5); }
+      updateDemoHUD();
+      nextDemoStep();
+    }
+
+    function demoHangman(){
+      if(!demoState.word){
+        const words = demoGame.demoData || ["SPUDY"];
+        demoState.word = randItem(words).toUpperCase();
+        demoState.mask = demoState.word.replace(/[A-Z]/g, "_").split("");
+        demoState.tries = 3;
+      }
+
+      const mask = demoState.mask.join(" ");
+      $("#demoView").innerHTML = `
+        <div class="text-center">
+          <div class="text-xs text-gray-500 font-black tracking-[0.22em]">HANGMAN</div>
+          <div class="text-4xl font-black mt-3 tracking-[0.25em]">${mask}</div>
+          <div class="text-gray-400 font-bold mt-2">Tries left: <span class="text-yellow-300">${demoState.tries}</span></div>
+
+          <div class="mt-6 flex gap-2 justify-center">
+            <input id="demoInput" maxlength="1"
+              class="w-24 p-4 rounded-2xl bg-black/40 border border-white/10 text-white outline-none focus:border-sky-400 transition font-black text-center text-2xl"
+              placeholder="A" />
+            <button class="btn-outline px-6 py-4 rounded-2xl font-black" onclick="hangGuess()">Guess</button>
+          </div>
+        </div>
+      `;
+      setTimeout(() => $("#demoInput")?.focus(), 50);
+    }
+    function hangGuess(){
+      const ch = ($("#demoInput").value || "").trim().toUpperCase();
+      if(!ch) return;
+
+      let hit=false;
+      for(let i=0;i<demoState.word.length;i++){
+        if(demoState.word[i] === ch){
+          demoState.mask[i] = ch;
+          hit=true;
+        }
+      }
+      if(hit) demoScore += 10;
+      else demoState.tries -= 1;
+
+      updateDemoHUD();
+
+      if(demoState.mask.join("") === demoState.word){
+        demoScore += 25;
+        demoState.word=null;
+        nextDemoStep();
+        return;
+      }
+      if(demoState.tries <= 0){
+        demoScore = Math.max(0, demoScore - 10);
+        demoState.word=null;
+        updateDemoHUD();
+        nextDemoStep();
+        return;
+      }
+      demoHangman();
+    }
+
+    function demoTapScore(){
+      $("#demoView").innerHTML = `
+        <div class="text-center py-8">
+          <div class="text-xs text-gray-500 font-black tracking-[0.22em]">ARCADE TAP</div>
+          <div class="text-2xl font-black mt-2">Tap as fast as you can</div>
+          <div class="text-gray-400 font-bold mt-2">Each tap = +1 point</div>
+          <button class="mt-6 px-10 py-6 rounded-3xl bg-white/5 hover:bg-white/10 border border-white/10 font-black text-xl"
+            onclick="demoScore++; updateDemoHUD();">
+            TAP
+          </button>
+        </div>
+      `;
+    }
+
+    /* ---------------- math quiz ---------------- */
+    let mathTimerInterval, mathScore=0, mathLevel=1, mathTimeLeft=60, mathPlaying=false;
 
     function startMathQuiz(){
       $("#mathGameModal").classList.remove("hidden");
@@ -955,11 +1367,11 @@
       updateMathUI(); generateMathQuestion();
 
       clearInterval(mathTimerInterval);
-      mathTimerInterval = setInterval(() => {
+      mathTimerInterval=setInterval(()=>{
         mathTimeLeft--;
         updateMathUI();
-        if(mathTimeLeft <= 0) endMathGame();
-      }, 1000);
+        if(mathTimeLeft<=0) endMathGame();
+      },1000);
     }
 
     function closeMathGame(){
@@ -971,23 +1383,17 @@
     }
 
     function updateMathUI(){
-      $("#math-score").textContent = mathScore;
-      $("#math-level").textContent = mathLevel;
-      $("#math-timer").textContent = mathTimeLeft + "s";
+      $("#math-score").textContent=mathScore;
+      $("#math-level").textContent=mathLevel;
+      $("#math-timer").textContent=mathTimeLeft+"s";
     }
-
-    function r(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
 
     function generateMathQuestion(){
       if(!mathPlaying) return;
 
-      let ops = ["+"];
-      if(mathLevel > 2) ops.push("-");
-      if(mathLevel > 5) ops.push("*");
-      if(mathLevel > 10) ops.push("/");
-
-      const op = ops[Math.floor(Math.random()*ops.length)];
-      const maxNum = 10 + (mathLevel * 5);
+      let ops=["+"]; if(mathLevel>2) ops.push("-"); if(mathLevel>5) ops.push("*"); if(mathLevel>10) ops.push("/");
+      const op=ops[Math.floor(Math.random()*ops.length)];
+      const maxNum=10+(mathLevel*5);
 
       let a,b,ans;
       if(op==="+"){ a=r(1,maxNum); b=r(1,maxNum); ans=a+b; }
@@ -999,8 +1405,8 @@
 
       let options=[ans];
       while(options.length<4){
-        let range = 5 + Math.floor(mathLevel/2);
-        let wrong = ans + r(-range, range);
+        let range=5+Math.floor(mathLevel/2);
+        let wrong=ans + r(-range, range);
         if(wrong!==ans && wrong>=0 && !options.includes(wrong)) options.push(wrong);
       }
       options.sort(()=>Math.random()-0.5);
@@ -1017,13 +1423,11 @@
     }
 
     function checkMathAnswer(ok){
-      if(ok){
-        mathScore += 10 * mathLevel;
-        mathLevel++;
-      } else {
-        const view=$("#math-game-view");
-        view.classList.add("animate-pulse");
-        setTimeout(()=>view.classList.remove("animate-pulse"), 180);
+      if(ok){ mathScore += 10*mathLevel; mathLevel++; }
+      else {
+        const v=$("#math-game-view");
+        v.classList.add("animate-pulse");
+        setTimeout(()=>v.classList.remove("animate-pulse"),180);
       }
       updateMathUI();
       generateMathQuestion();
@@ -1034,27 +1438,18 @@
       clearInterval(mathTimerInterval);
       $("#math-game-view").classList.add("hidden");
       $("#math-game-over").classList.remove("hidden");
-      $("#math-final-score").textContent = mathScore;
+      $("#math-final-score").textContent=mathScore;
 
-      // record
-      const best = Number(localStorage.getItem("spudy_best_math") || "0");
-      if(mathScore > best){
+      const best=Number(localStorage.getItem("spudy_best_math")||"0");
+      if(mathScore>best){
         localStorage.setItem("spudy_best_math", String(mathScore));
         updateLeaderboard();
         toast("New Math Record ✅");
       }
     }
 
-    /* ---------------------------
-      typing speed
-    ----------------------------*/
-    let typingTimerInterval;
-    let typingTimeLeft=60;
-    let typingLevel=1;
-    let typingStarted=false;
-    let typingText="";
-    let totalChars=0, correctChars=0;
-
+    /* ---------------- typing speed ---------------- */
+    let typingTimerInterval, typingTimeLeft=60, typingLevel=1, typingStarted=false, typingText="", totalChars=0, correctChars=0;
     const typingTexts=[
       "cat dog run sky blue red hot sun",
       "The quick brown fox jumps over the lazy dog.",
@@ -1072,13 +1467,9 @@
       $("#typing-game-view").classList.remove("hidden");
       $("#typing-game-over").classList.add("hidden");
 
-      typingTimeLeft=60;
-      typingLevel=1;
-      typingStarted=false;
-      correctChars=0;
-      totalChars=0;
-
+      typingTimeLeft=60; typingLevel=1; typingStarted=false; correctChars=0; totalChars=0;
       loadTypingLevel();
+
       const input=$("#typing-input");
       input.value="";
       input.focus();
@@ -1090,8 +1481,8 @@
     }
 
     function loadTypingLevel(){
-      const index = Math.min(typingLevel-1, typingTexts.length-1);
-      typingText = typingTexts[index];
+      const index=Math.min(typingLevel-1, typingTexts.length-1);
+      typingText=typingTexts[index];
       renderTypingText("");
       $("#typing-input").value="";
     }
@@ -1101,7 +1492,7 @@
         typingStarted=true;
         typingTimerInterval=setInterval(()=>{
           typingTimeLeft--;
-          $("#typing-timer").textContent = typingTimeLeft+"s";
+          $("#typing-timer").textContent=typingTimeLeft+"s";
           if(typingTimeLeft<=0) endTypingGame();
         },1000);
       }
@@ -1128,6 +1519,7 @@
         if(inCh==null){ span.textContent=ch; }
         else if(inCh===ch){ span.textContent=ch; span.className="text-emerald-300"; correctCount++; }
         else { span.textContent=ch; span.className="text-red-300 bg-red-900/25"; }
+
         display.appendChild(span);
       }
 
@@ -1135,8 +1527,8 @@
       totalChars=val.length;
 
       if(typingTimeLeft < 60){
-        const elapsed = 60 - typingTimeLeft;
-        const wpm = Math.round((correctChars/5) / (elapsed/60));
+        const elapsed=60-typingTimeLeft;
+        const wpm=Math.round((correctChars/5) / (elapsed/60));
         $("#typing-wpm").textContent = isFinite(wpm) ? wpm : 0;
       }
     }
@@ -1154,31 +1546,30 @@
       $("#typing-game-view").classList.add("hidden");
       $("#typing-game-over").classList.remove("hidden");
 
-      const elapsed = 60 - typingTimeLeft;
-      const time = elapsed === 0 ? 1 : elapsed;
-      const wpm = Math.round((correctChars/5) / (time/60));
-      const accuracy = totalChars > 0 ? Math.round((correctChars/totalChars) * 100) : 0;
+      const elapsed=60-typingTimeLeft;
+      const time=elapsed===0?1:elapsed;
+      const wpm=Math.round((correctChars/5) / (time/60));
+      const accuracy=totalChars>0?Math.round((correctChars/totalChars)*100):0;
 
-      $("#typing-final-wpm").textContent = wpm;
-      $("#typing-accuracy").textContent = accuracy + "%";
+      $("#typing-final-wpm").textContent=wpm;
+      $("#typing-accuracy").textContent=accuracy+"%";
 
-      const best = Number(localStorage.getItem("spudy_best_wpm") || "0");
-      if(wpm > best){
+      const best=Number(localStorage.getItem("spudy_best_wpm")||"0");
+      if(wpm>best){
         localStorage.setItem("spudy_best_wpm", String(wpm));
         updateLeaderboard();
         toast("New WPM Record ✅");
       }
     }
 
-    /* ---------------------------
-      leaderboard
-    ----------------------------*/
+    /* ---------------- leaderboard ---------------- */
     function updateLeaderboard(){
-      const bestWpm = Number(localStorage.getItem("spudy_best_wpm") || "0");
-      const bestMath = Number(localStorage.getItem("spudy_best_math") || "0");
-      $("#lbWpm").textContent = bestWpm;
-      $("#lbMath").textContent = bestMath;
-      $("#bestWpm").textContent = bestWpm;
+      const bestWpm=Number(localStorage.getItem("spudy_best_wpm")||"0");
+      const bestMath=Number(localStorage.getItem("spudy_best_math")||"0");
+      $("#lbWpm").textContent=bestWpm;
+      $("#lbMath").textContent=bestMath;
+      $("#bestWpm").textContent=bestWpm;
+      $("#bestMath").textContent=bestMath;
     }
 
     function resetRecords(){
@@ -1188,9 +1579,7 @@
       toast("Records reset.");
     }
 
-    /* ---------------------------
-      wiring
-    ----------------------------*/
+    /* ---------------- wiring + init ---------------- */
     function wireFilters(){
       $$(".chip[data-filter]").forEach(btn=>{
         btn.addEventListener("click", ()=>{
@@ -1200,24 +1589,25 @@
         });
       });
       $("#q").addEventListener("input", renderPremium);
-      document.addEventListener("keydown", (e)=>{
-        if(e.key === "Escape"){
+
+      document.addEventListener("keydown",(e)=>{
+        if(e.key==="Escape"){
           if(!$("#paymentModal").classList.contains("hidden")) closePayment();
           if(!$("#authModal").classList.contains("hidden")) closeAuth();
+          if(!$("#demoModal").classList.contains("hidden")) closeDemo();
           if(!$("#mathGameModal").classList.contains("hidden")) closeMathGame();
           if(!$("#typingGameModal").classList.contains("hidden")) closeTypingGame();
         }
       });
-      $("#authModal").addEventListener("click", (e)=>{ if(e.target === $("#authModal")) closeAuth(); });
-      $("#paymentModal").addEventListener("click", (e)=>{ if(e.target === $("#paymentModal")) closePayment(); });
+
+      $("#authModal").addEventListener("click",(e)=>{ if(e.target===$("#authModal")) closeAuth(); });
+      $("#paymentModal").addEventListener("click",(e)=>{ if(e.target===$("#paymentModal")) closePayment(); });
+      $("#demoModal").addEventListener("click",(e)=>{ if(e.target===$("#demoModal")) closeDemo(); });
     }
 
-    /* ---------------------------
-      init
-    ----------------------------*/
     document.addEventListener("DOMContentLoaded", ()=>{
       new Typed("#typed", {
-        strings: ["17 Premium Games", "2 Free • 15,000+ Players", "Compete in the Arena", "Game On!"],
+        strings: ["Premium Demos", "2 Free Games", "Logic • Arcade • Words", "Game On!"],
         typeSpeed: 70,
         backSpeed: 38,
         loop: true,
